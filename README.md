@@ -1,2 +1,2 @@
 # Marbles
-GUI input compiler for Compilers Design course.
+GUI compiler for UWP for our Compilers Design course.
