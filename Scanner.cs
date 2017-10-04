@@ -203,8 +203,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
-	const int maxT = 64;
-	const int noSym = 64;
+	const int maxT = 72;
+	const int noSym = 72;
 
 
 	public Buffer buffer; // scanner buffer
@@ -341,19 +341,27 @@ public class Scanner {
 			case "transparency": t.kind = 48; break;
 			case "size": t.kind = 49; break;
 			case "value": t.kind = 50; break;
-			case "red": t.kind = 51; break;
-			case "orange": t.kind = 52; break;
-			case "yellow": t.kind = 53; break;
-			case "green": t.kind = 54; break;
-			case "blue": t.kind = 55; break;
-			case "violet": t.kind = 56; break;
-			case "purple": t.kind = 57; break;
-			case "pink": t.kind = 58; break;
-			case "brown": t.kind = 59; break;
-			case "white": t.kind = 60; break;
-			case "gray": t.kind = 61; break;
-			case "black": t.kind = 62; break;
-			case "return": t.kind = 63; break;
+			case "length": t.kind = 51; break;
+			case "type": t.kind = 52; break;
+			case "position_x": t.kind = 53; break;
+			case "position_y": t.kind = 54; break;
+			case "rotation": t.kind = 55; break;
+			case "font_size": t.kind = 56; break;
+			case "width": t.kind = 57; break;
+			case "height": t.kind = 58; break;
+			case "red": t.kind = 59; break;
+			case "orange": t.kind = 60; break;
+			case "yellow": t.kind = 61; break;
+			case "green": t.kind = 62; break;
+			case "blue": t.kind = 63; break;
+			case "violet": t.kind = 64; break;
+			case "purple": t.kind = 65; break;
+			case "pink": t.kind = 66; break;
+			case "brown": t.kind = 67; break;
+			case "white": t.kind = 68; break;
+			case "gray": t.kind = 69; break;
+			case "black": t.kind = 70; break;
+			case "return": t.kind = 71; break;
 			default: break;
 		}
 	}

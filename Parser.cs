@@ -12,7 +12,7 @@ public class Parser {
 	public const int _false = 3;
 	public const int _const_i = 4;
 	public const int _const_s = 5;
-	public const int maxT = 64;
+	public const int maxT = 72;
 
 	const bool _T = true;
 	const bool _x = false;
@@ -136,7 +136,7 @@ public class Parser {
 			SUPER_EXP();
 		} else if (StartOf(3)) {
 			COLOR();
-		} else SynErr(65);
+		} else SynErr(73);
 	}
 
 	void CREATE_FUNCTION() {
@@ -144,7 +144,7 @@ public class Parser {
 		TYPE_FUNC();
 		Expect(1);
 		Expect(12);
-		if (la.kind == 16 || la.kind == 17) {
+		if (la.kind == 15 || la.kind == 16 || la.kind == 17) {
 			TYPE_VAR();
 			Expect(1);
 			while (la.kind == 13) {
@@ -186,7 +186,7 @@ public class Parser {
 			} else {
 				IFF();
 			}
-		} else SynErr(66);
+		} else SynErr(74);
 	}
 
 	void TYPE_FUNC() {
@@ -198,15 +198,17 @@ public class Parser {
 			Get();
 		} else if (la.kind == 7) {
 			Get();
-		} else SynErr(67);
+		} else SynErr(75);
 	}
 
 	void TYPE_VAR() {
-		if (la.kind == 16) {
+		if (la.kind == 15) {
+			Get();
+		} else if (la.kind == 16) {
 			Get();
 		} else if (la.kind == 17) {
 			Get();
-		} else SynErr(68);
+		} else SynErr(76);
 	}
 
 	void CALL_TO_FUNCTION() {
@@ -247,7 +249,7 @@ public class Parser {
 	}
 
 	void RETURN() {
-		Expect(63);
+		Expect(71);
 		if (StartOf(2)) {
 			SUPER_EXP();
 		}
@@ -317,7 +319,7 @@ public class Parser {
 			Expect(14);
 		} else if (la.kind == 28) {
 			Get();
-		} else SynErr(69);
+		} else SynErr(77);
 	}
 
 	void SUPER_EXP() {
@@ -329,21 +331,27 @@ public class Parser {
 	}
 
 	void ATTRIBUTE() {
-		if (la.kind == 47) {
-			Get();
-		} else if (la.kind == 48) {
-			Get();
-		} else if (la.kind == 49) {
-			Get();
-		} else if (la.kind == 50) {
-			Get();
-		} else if (la.kind == 15) {
-			Get();
-		} else SynErr(70);
-	}
-
-	void COLOR() {
 		switch (la.kind) {
+		case 47: {
+			Get();
+			break;
+		}
+		case 48: {
+			Get();
+			break;
+		}
+		case 49: {
+			Get();
+			break;
+		}
+		case 50: {
+			Get();
+			break;
+		}
+		case 15: {
+			Get();
+			break;
+		}
 		case 51: {
 			Get();
 			break;
@@ -376,6 +384,12 @@ public class Parser {
 			Get();
 			break;
 		}
+		default: SynErr(78); break;
+		}
+	}
+
+	void COLOR() {
+		switch (la.kind) {
 		case 59: {
 			Get();
 			break;
@@ -392,7 +406,39 @@ public class Parser {
 			Get();
 			break;
 		}
-		default: SynErr(71); break;
+		case 63: {
+			Get();
+			break;
+		}
+		case 64: {
+			Get();
+			break;
+		}
+		case 65: {
+			Get();
+			break;
+		}
+		case 66: {
+			Get();
+			break;
+		}
+		case 67: {
+			Get();
+			break;
+		}
+		case 68: {
+			Get();
+			break;
+		}
+		case 69: {
+			Get();
+			break;
+		}
+		case 70: {
+			Get();
+			break;
+		}
+		default: SynErr(79); break;
 		}
 	}
 
@@ -438,7 +484,7 @@ public class Parser {
 			Get();
 			break;
 		}
-		default: SynErr(72); break;
+		default: SynErr(80); break;
 		}
 	}
 
@@ -481,8 +527,8 @@ public class Parser {
 				BOOL();
 			} else if (la.kind == 5) {
 				Get();
-			} else SynErr(73);
-		} else SynErr(74);
+			} else SynErr(81);
+		} else SynErr(82);
 	}
 
 	void BOOL() {
@@ -490,7 +536,7 @@ public class Parser {
 			Get();
 		} else if (la.kind == 3) {
 			Get();
-		} else SynErr(75);
+		} else SynErr(83);
 	}
 
 
@@ -505,14 +551,14 @@ public class Parser {
 	}
 	
 	static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_T,_x,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x},
-		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_T,_x,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x},
+		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x}
 
 	};
 } // end Parser
@@ -577,31 +623,39 @@ public class Errors {
 			case 48: s = "\"transparency\" expected"; break;
 			case 49: s = "\"size\" expected"; break;
 			case 50: s = "\"value\" expected"; break;
-			case 51: s = "\"red\" expected"; break;
-			case 52: s = "\"orange\" expected"; break;
-			case 53: s = "\"yellow\" expected"; break;
-			case 54: s = "\"green\" expected"; break;
-			case 55: s = "\"blue\" expected"; break;
-			case 56: s = "\"violet\" expected"; break;
-			case 57: s = "\"purple\" expected"; break;
-			case 58: s = "\"pink\" expected"; break;
-			case 59: s = "\"brown\" expected"; break;
-			case 60: s = "\"white\" expected"; break;
-			case 61: s = "\"gray\" expected"; break;
-			case 62: s = "\"black\" expected"; break;
-			case 63: s = "\"return\" expected"; break;
-			case 64: s = "??? expected"; break;
-			case 65: s = "invalid ASSIGNMENT"; break;
-			case 66: s = "invalid INSTRUCTION"; break;
-			case 67: s = "invalid TYPE_FUNC"; break;
-			case 68: s = "invalid TYPE_VAR"; break;
-			case 69: s = "invalid ACTION"; break;
-			case 70: s = "invalid ATTRIBUTE"; break;
-			case 71: s = "invalid COLOR"; break;
-			case 72: s = "invalid OP"; break;
-			case 73: s = "invalid FACTOR"; break;
-			case 74: s = "invalid FACTOR"; break;
-			case 75: s = "invalid BOOL"; break;
+			case 51: s = "\"length\" expected"; break;
+			case 52: s = "\"type\" expected"; break;
+			case 53: s = "\"position_x\" expected"; break;
+			case 54: s = "\"position_y\" expected"; break;
+			case 55: s = "\"rotation\" expected"; break;
+			case 56: s = "\"font_size\" expected"; break;
+			case 57: s = "\"width\" expected"; break;
+			case 58: s = "\"height\" expected"; break;
+			case 59: s = "\"red\" expected"; break;
+			case 60: s = "\"orange\" expected"; break;
+			case 61: s = "\"yellow\" expected"; break;
+			case 62: s = "\"green\" expected"; break;
+			case 63: s = "\"blue\" expected"; break;
+			case 64: s = "\"violet\" expected"; break;
+			case 65: s = "\"purple\" expected"; break;
+			case 66: s = "\"pink\" expected"; break;
+			case 67: s = "\"brown\" expected"; break;
+			case 68: s = "\"white\" expected"; break;
+			case 69: s = "\"gray\" expected"; break;
+			case 70: s = "\"black\" expected"; break;
+			case 71: s = "\"return\" expected"; break;
+			case 72: s = "??? expected"; break;
+			case 73: s = "invalid ASSIGNMENT"; break;
+			case 74: s = "invalid INSTRUCTION"; break;
+			case 75: s = "invalid TYPE_FUNC"; break;
+			case 76: s = "invalid TYPE_VAR"; break;
+			case 77: s = "invalid ACTION"; break;
+			case 78: s = "invalid ATTRIBUTE"; break;
+			case 79: s = "invalid COLOR"; break;
+			case 80: s = "invalid OP"; break;
+			case 81: s = "invalid FACTOR"; break;
+			case 82: s = "invalid FACTOR"; break;
+			case 83: s = "invalid BOOL"; break;
 
 			default: s = "error " + n; break;
 		}
