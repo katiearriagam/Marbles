@@ -45,7 +45,6 @@ namespace Cubo_Semantico_Marbles
             TypeToDataType.Add(typeof(int)    , VarDataTypes.integer);
             TypeToDataType.Add(typeof(String) , VarDataTypes.text   );
             TypeToDataType.Add(typeof(Boolean), VarDataTypes.boolean);
-            
         }
 
         public enum VarDataTypes
@@ -53,7 +52,10 @@ namespace Cubo_Semantico_Marbles
             invalidDataType = 0,
             integer         = 1,
             boolean         = 2,
-            text            = 3
+            text            = 3,
+            color           = 4,
+            character       = 5,
+            shape           = 6
         }
 
         public enum FuncDataTypes
