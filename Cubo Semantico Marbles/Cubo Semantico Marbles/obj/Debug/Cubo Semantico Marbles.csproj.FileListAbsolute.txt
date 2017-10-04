@@ -1,0 +1,7 @@
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\bin\Debug\Cubo Semantico Marbles.exe.config
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\bin\Debug\Cubo Semantico Marbles.exe
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\bin\Debug\Cubo Semantico Marbles.pdb
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\obj\Debug\Cubo Semantico Marbles.csprojResolveAssemblyReference.cache
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\obj\Debug\Cubo Semantico Marbles.csproj.CoreCompileInputs.cache
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\obj\Debug\Cubo Semantico Marbles.exe
+C:\Users\Andres\Documents\Materias AD 2017\Compiladores\Marbles\Cubo Semantico Marbles\Cubo Semantico Marbles\obj\Debug\Cubo Semantico Marbles.pdb
