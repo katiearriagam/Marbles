@@ -8,31 +8,31 @@ namespace Cubo_Semantico_Marbles
 {
     class TypeTypeOperator
     {
-        private Utilities.VarDataTypes DataTypeOne;
-        private Utilities.VarDataTypes DataTypeTwo;
+        private Utilities.DataTypes DataTypeOne;
+        private Utilities.DataTypes DataTypeTwo;
         private Utilities.Operators Operator;
 
-        public TypeTypeOperator(Utilities.VarDataTypes DataTypeOne, Utilities.VarDataTypes DataTypeTwo, Utilities.Operators Operator)
+        public TypeTypeOperator(Utilities.DataTypes DataTypeOne, Utilities.DataTypes DataTypeTwo, Utilities.Operators Operator)
         {
             this.DataTypeOne = DataTypeOne;
             this.DataTypeTwo = DataTypeTwo;
             this.Operator    = Operator;
         }
 
-        public Utilities.VarDataTypes GetDataTypeOne() {
+        public Utilities.DataTypes GetDataTypeOne() {
             return DataTypeOne;
         }
 
-        public void SetDataTypeOne(Utilities.VarDataTypes DataType) {
+        public void SetDataTypeOne(Utilities.DataTypes DataType) {
             DataTypeOne = DataType;
         }
 
-        public Utilities.VarDataTypes GetDataTypeTwo()
+        public Utilities.DataTypes GetDataTypeTwo()
         {
             return DataTypeTwo;
         }
 
-        public void SetDataTypeTwo(Utilities.VarDataTypes DataType)
+        public void SetDataTypeTwo(Utilities.DataTypes DataType)
         {
             DataTypeTwo = DataType;
         }

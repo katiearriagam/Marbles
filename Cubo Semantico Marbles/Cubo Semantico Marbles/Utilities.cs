@@ -10,7 +10,7 @@ namespace Cubo_Semantico_Marbles
     {
         private static Dictionary<Operators, String>  OperatorToString  = new Dictionary<Operators, String>();
         private static Dictionary<String, Operators>  StringToOperator  = new Dictionary<String, Operators>();
-        private static Dictionary<Type, VarDataTypes> TypeToDataType = new Dictionary<Type, VarDataTypes>();
+        private static Dictionary<Type, DataTypes> TypeToDataType = new Dictionary<Type, DataTypes>();
 
         static Utilities()
         {
@@ -25,8 +25,8 @@ namespace Cubo_Semantico_Marbles
             OperatorToString.Add(Operators.equalEqual,           "==");
             OperatorToString.Add(Operators.notEqual,             "!=");
             OperatorToString.Add(Operators.equals,               "=" );
-            OperatorToString.Add(Operators.and,                  "&&");
-            OperatorToString.Add(Operators.or,                   "||");
+            OperatorToString.Add(Operators.and,                  "and");
+            OperatorToString.Add(Operators.or,                   "or");
 
             StringToOperator.Add("+" , Operators.plus);
             StringToOperator.Add("-" , Operators.minus);
@@ -39,32 +39,24 @@ namespace Cubo_Semantico_Marbles
             StringToOperator.Add("==", Operators.equalEqual);
             StringToOperator.Add("!=", Operators.notEqual);
             StringToOperator.Add("=" , Operators.equals);
-            StringToOperator.Add("&&", Operators.and);
-            StringToOperator.Add("||", Operators.or);
+            StringToOperator.Add("and", Operators.and);
+            StringToOperator.Add("or", Operators.or);
             
-            TypeToDataType.Add(typeof(int)    , VarDataTypes.integer);
-            TypeToDataType.Add(typeof(String) , VarDataTypes.text   );
-            TypeToDataType.Add(typeof(Boolean), VarDataTypes.boolean);
+            TypeToDataType.Add(typeof(int)    , DataTypes.number);
+            TypeToDataType.Add(typeof(String) , DataTypes.text   );
+            TypeToDataType.Add(typeof(Boolean), DataTypes.boolean);
         }
 
-        public enum VarDataTypes
+        public enum DataTypes
         {
             invalidDataType = 0,
-            integer         = 1,
+            number          = 1,
             boolean         = 2,
             text            = 3,
             color           = 4,
             character       = 5,
-            shape           = 6
-        }
-
-        public enum FuncDataTypes
-        {
-            invalidDataType = 0,
-            integer         = 1,
-            boolean         = 2,
-            text            = 3,
-            empty           = 4
+            shape           = 6,
+			empty			= 7
         }
 
         public enum Operators
@@ -85,16 +77,16 @@ namespace Cubo_Semantico_Marbles
             invalidOperator       = 13
         }
 
-        public static VarDataTypes GetDataTypeFromType(Type t)
+        public static DataTypes GetDataTypeFromType(Type t)
         {
-            VarDataTypes type;
+            DataTypes type;
             if (TypeToDataType.TryGetValue(t, out type))
             {
                 return type;
             }
             else
             {
-                return VarDataTypes.invalidDataType;
+                return DataTypes.invalidDataType;
             }
         }
 
