@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SemanticCube;
 
 namespace VariableAndFunctionTables
 {
+	/// <summary>
+	/// Class that stores all the functions used in the program.
+	/// </summary>
     public static class FunctionDirectory
     {
+		/// <summary>
+		/// Dictionary that stores all functions by using the ID (function name)
+		/// as the key.
+		/// </summary>
         private static Dictionary<String, Function> FunctionDictionary;
 
         /// <summary>
@@ -21,7 +26,7 @@ namespace VariableAndFunctionTables
         {
             FunctionDictionary = new Dictionary<String, Function>
             {
-                { "_Global", new Function() }
+                { "_Global", new Function("_Global", Utilities.DataTypes.empty) }
             };
         }
 
@@ -42,29 +47,30 @@ namespace VariableAndFunctionTables
         }
 
         /// <summary>
-        /// Inserts a new function into the Function Directory.
-        /// </summary>
-        /// <param name="funcID"></param>
-        /// <returns>
-        /// If the insertion succeeds, returns true.
-        /// If the function's name already exists, returns false.
-        /// </returns>
-        public static bool InsertFunction(String funcID)
+		/// Inserts a new Function into de Function Directory.
+		/// </summary>
+		/// <param name="funcID"></param>
+		/// <param name="func"></param>
+		/// <returns>
+		/// If the insertion succeeds, return true.
+		/// If the insertion fails, return false.
+		/// </returns>
+        public static bool InsertFunction(String funcID, Function func)
         {
             if (FunctionDictionary.ContainsKey(funcID))
             {
                 return false;
             }
 
-            FunctionDictionary.Add(funcID, new Function());
+            FunctionDictionary.Add(funcID, func);
 
             return true;
         }
 
-        /// <summary>
-        /// Returns whether the Function Directory is empty or not.
-        /// </summary>
-        public static bool IsEmpty()
+		/// <summary>
+		/// Returns whether the Function Directory is empty or not.
+		/// </summary>
+		public static bool IsEmpty()
         {
             return FunctionDictionary.Count == 0;
         }
@@ -123,14 +129,14 @@ namespace VariableAndFunctionTables
             return FunctionDictionary.ContainsValue(func);
         }
 
-        /// <summary>
-        /// Returns the _Global Function from the Function Directory.
-        /// </summary>
-        /// <remarks>
-        /// If for some reason the _Global Function has been removed from the directory,
-        /// a KeyNotFound exception will be thrown.
-        /// </remarks>
-        public static Function GlobalFunction()
+		/// <summary>
+		/// Returns the _Global Function from the Function Directory.
+		/// </summary>
+		/// <remarks>
+		/// If for some reason the _Global Function has been removed from the directory,
+		/// a KeyNotFoundException will be thrown.
+		/// </remarks>
+		public static Function GlobalFunction()
         {
             if (!FunctionDictionary.ContainsKey("_Global"))
             {
@@ -139,6 +145,7 @@ namespace VariableAndFunctionTables
 
             return FunctionDictionary["_Global"];
         }
+
 
     }
 }
