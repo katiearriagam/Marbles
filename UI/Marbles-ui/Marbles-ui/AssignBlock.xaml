@@ -1,0 +1,115 @@
+﻿<UserControl
+    x:Class="Marbles.AssignBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+	<Grid Background="#27ae60" Padding="10" Width="Auto" Margin="10">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="0.10*" />
+				<RowDefinition Height="10" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Border Grid.Row="0" Grid.Column="0"/>
+			<Grid Grid.Row="0" Grid.Column="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="70" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="10" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="30" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="10" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="20" Margin="10"
+						   IsTextSelectionEnabled="False"
+						   FontWeight="Light"
+						   FontFamily="Segoe UI Light"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left">
+                       assign
+				</TextBlock>
+				<ComboBox Grid.Row="0" Grid.Column="1" Margin="5" x:Name="FitCombo" SelectedIndex="0">
+					<ComboBox.Resources>
+						<Style TargetType="ComboBox">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ComboBox.Resources>
+					<ComboBoxItem>num</ComboBoxItem>
+					<ComboBoxItem>my_fish</ComboBoxItem>
+					<ComboBoxItem>my_superlongvariablename</ComboBoxItem>
+					<ComboBoxItem>i</ComboBoxItem>
+				</ComboBox>
+				<TextBlock Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="20" Margin="0"
+						   IsTextSelectionEnabled="False"
+						   FontWeight="Normal"
+						   FontFamily="Segoe UI Light"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Center">
+                       .
+				</TextBlock>
+				<ComboBox Grid.Row="0" Grid.Column="3" Margin="5" x:Name="Fit" SelectedIndex="0" Width="Auto">
+					<ComboBox.Resources>
+						<Style TargetType="ComboBox">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ComboBox.Resources>
+					<ComboBoxItem>color</ComboBoxItem>
+					<ComboBoxItem>color</ComboBoxItem>
+					<ComboBoxItem>color</ComboBoxItem>
+					<ComboBoxItem>color</ComboBoxItem>
+				</ComboBox>
+
+				<TextBlock Grid.Row="0" Grid.Column="4" Foreground="White" FontSize="20" Margin="10"
+						   IsTextSelectionEnabled="False"
+						   FontWeight="Light"
+						   FontFamily="Segoe UI Light"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Center">
+                       =
+				</TextBlock>
+				<ComboBox Grid.Row="0" Grid.Column="5" Margin="5" SelectedIndex="0">
+					<ComboBox.Resources>
+						<Style TargetType="ComboBox">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ComboBox.Resources>
+					<ComboBoxItem>num</ComboBoxItem>
+					<ComboBoxItem>my_fish</ComboBoxItem>
+					<ComboBoxItem>my_superlongvariablename</ComboBoxItem>
+					<ComboBoxItem>i</ComboBoxItem>
+				</ComboBox>
+				<TextBlock Grid.Row="0" Grid.Column="6" Foreground="White" FontSize="20" Margin="0"
+						   IsTextSelectionEnabled="False"
+						   FontWeight="Normal"
+						   FontFamily="Segoe UI Light"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Center">
+                       .
+				</TextBlock>
+				<ComboBox Grid.Row="0" Grid.Column="7" Margin="5" SelectedIndex="0" Width="Auto">
+					<ComboBox.Resources>
+						<Style TargetType="ComboBox">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ComboBox.Resources>
+					<ComboBoxItem>color</ComboBoxItem>
+					<ComboBoxItem>color</ComboBoxItem>
+					<ComboBoxItem>color</ComboBoxItem>
+					<ComboBoxItem>color</ComboBoxItem>
+				</ComboBox>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>
