@@ -10,11 +10,34 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 		<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-			<ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="100" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<local1:AssignBlock ></local1:AssignBlock>
+			<ListView	x:Name="TargetListView"
+						Grid.Row="2"
+						ScrollViewer.VerticalScrollBarVisibility="Auto" 
+						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 						ScrollViewer.HorizontalScrollMode="Disabled"                  
 						ScrollViewer.VerticalScrollMode="Enabled"
 						ItemsSource="{Binding Collection}"
+						AllowDrop="True"
+						Drop="TargetListView_Drop"
+						DragEnter="TargetListView_DragEnter"
+						DragLeave="TargetListView_DragLeave"
 						>
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="DragDropGroup">
+						<VisualState x:Name="Outside"/>
+						<VisualState x:Name="Inside">
+							<VisualState.Setters>
+								<Setter Target="TargetListView.(Control.Background).(SolidColorBrush.Color)" Value="LightGreen"/>
+							</VisualState.Setters>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
 						<StackPanel Background="Transparent" Orientation="Vertical" />
@@ -26,13 +49,6 @@
 					</Style>
 				</ListView.ItemContainerStyle>
 				<ListView.Items>
-					<local1:AssignBlock></local1:AssignBlock>
-					<local:StopBlock></local:StopBlock>
-					<local:DoBlock></local:DoBlock>
-					<local:IfBlock></local:IfBlock>
-					<local:ForBlock></local:ForBlock>
-					<local:StopBlock></local:StopBlock>
-					<local:WhileBlock></local:WhileBlock>
 				</ListView.Items>
 			</ListView>
 		</Grid>

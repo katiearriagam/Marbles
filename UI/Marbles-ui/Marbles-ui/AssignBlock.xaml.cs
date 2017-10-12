@@ -23,5 +23,10 @@ namespace Marbles
 		{
 			this.InitializeComponent();
 		}
+
+		private void SourceGrid_DragStarting(UIElement sender, DragStartingEventArgs args)
+		{
+
+		}
 	}
 }

@@ -22,14 +22,29 @@ namespace Marbles_ui
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public MainPage()
+		public MainPage()
         {
             this.InitializeComponent();
         }
 
-		private void IfBlock_Loaded(object sender, RoutedEventArgs e)
+		private void TargetListView_Drop(object sender, DragEventArgs e)
 		{
-
+			VisualStateManager.GoToState(this, "Inside", true);
+			Grid temporaryGrid = e.OriginalSource as Grid;
+			TargetListView.Items.Add(temporaryGrid);
 		}
+
+		private void TargetListView_DragEnter(object sender, DragEventArgs e)
+		{
+			/// Change the background of the target
+			VisualStateManager.GoToState(this, "Inside", true);
+			e.DragUIOverride.Caption = "Drop here to insert.";
+		}
+
+		private void TargetListView_DragLeave(object sender, DragEventArgs e)
+		{
+			VisualStateManager.GoToState(this, "Outside", true);
+		}
+
 	}
 }

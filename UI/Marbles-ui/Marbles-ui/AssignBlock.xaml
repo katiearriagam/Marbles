@@ -8,7 +8,9 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#27ae60" Padding="10" Width="Auto" Margin="10">
+	<Grid Background="#27ae60" Padding="10" Width="Auto" Margin="10"
+		  CanDrag="True"
+		  DragStarting="SourceGrid_DragStarting">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="0.10*" />
