@@ -30,7 +30,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="Marbles_ui.App">
+      EntryPoint="Marbles.App">
       <uap:VisualElements
         DisplayName="Marbles-ui"
         Square150x150Logo="Assets\Square150x150Logo.png"

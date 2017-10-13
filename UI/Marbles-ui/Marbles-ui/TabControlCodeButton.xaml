@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="100"
-    d:DesignWidth="300">
+    d:DesignWidth="300"
+	CanDrag="True"
+	DragStarting="TabControlCodeButton_DragStarting">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="10"/>

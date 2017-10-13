@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace Marbles_ui
+namespace Marbles
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -31,10 +31,30 @@ namespace Marbles_ui
 		private void TargetListView_Drop(object sender, DragEventArgs e)
 		{
 			VisualStateManager.GoToState(this, "Outside", true);
-			
-			if (e.DataView.Properties["InstructionBlock"].GetType() == typeof(Marbles.AssignBlock))
+			TargetListView.Items.Add(e.GetPosition(TargetListView));
+			if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
 			{
 				TargetListView.Items.Add(new Marbles.AssignBlock());
+			}
+			else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
+			{
+				TargetListView.Items.Add(new Marbles.DoBlock());
+			}
+			else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
+			{
+				TargetListView.Items.Add(new Marbles.ForBlock());
+			}
+			else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
+			{
+				TargetListView.Items.Add(new Marbles.WhileBlock());
+			}
+			else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
+			{
+				TargetListView.Items.Add(new Marbles.IfBlock());
+			}
+			else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
+			{
+				TargetListView.Items.Add(new Marbles.StopBlock());
 			}
 		}
 

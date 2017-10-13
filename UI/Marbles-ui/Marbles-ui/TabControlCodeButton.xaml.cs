@@ -43,10 +43,23 @@ namespace Marbles
 			set { SetValue(BackgroundColorProperty, value); }
 		}
 
+		public static readonly DependencyProperty DragStartingProperty = DependencyProperty.Register("DragStartingId", typeof(string), typeof(TabControlCodeButton), new PropertyMetadata(""));
+
+		public string DragStartingId
+		{
+			get { return GetValue(DragStartingProperty) as string; }
+			set { SetValue(DragStartingProperty, value); }
+		}
+
+		private void TabControlCodeButton_DragStarting(UIElement sender, DragStartingEventArgs args)
+		{
+			args.Data.Properties.Add(DragStartingId, sender);
+		}
+
 		public TabControlCodeButton()
         {
             this.InitializeComponent();
 			this.DataContext = this;
 		}
-    }
+	}
 }
