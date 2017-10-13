@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="BlockBaseComponent.App"
+    x:Class="Marbles_ui.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BlockBaseComponent"
+    xmlns:local="using:Marbles_ui"
     RequestedTheme="Light">
 
 </Application>

@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="Marbles.TabControlCodeButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="100"
+    d:DesignWidth="300">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="10"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="10"/>
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="1" Background="{Binding BackgroundColor}" Padding="0,10,0,10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="0.5*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<FontIcon
+				Grid.Column="0"
+				HorizontalAlignment="Center"
+				Margin="10,0,20,0"
+				Glyph="{Binding Glyph}"
+				FontSize="20"
+				Foreground="White"
+				FontWeight="Light"
+				/>
+			<TextBlock
+				Grid.Column="1"
+				FontFamily="Segoe UI Light"
+				FontWeight="Light"
+				Foreground="White"
+				FontSize="20"
+				Text="{Binding Label}"
+				LineStackingStrategy="BlockLineHeight"
+				IsTextScaleFactorEnabled="False"
+				TextAlignment="Center"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"/>
+		</Grid>
+	</Grid>
+</UserControl>

@@ -15,13 +15,13 @@ using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace BlockBaseComponent
+namespace Marbles_ui
 {
-	public sealed partial class BlockBase : UserControl
-	{
-		public BlockBase()
-		{
-			this.InitializeComponent();
-		}
-	}
+    public sealed partial class WhileBlock : UserControl
+    {
+        public WhileBlock()
+        {
+            this.InitializeComponent();
+        }
+    }
 }
