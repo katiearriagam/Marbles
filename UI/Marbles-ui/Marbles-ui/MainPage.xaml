@@ -1,8 +1,8 @@
 ﻿<Page
-    x:Class="Marbles_ui.MainPage"
+    x:Class="Marbles.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Marbles_ui"
+    xmlns:local="using:Marbles"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local1="using:Marbles"
@@ -15,14 +15,7 @@
 				<ColumnDefinition Width="0.33*"/>
 			</Grid.ColumnDefinitions>
 			<Grid Grid.Column="0">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="*" />
-					<RowDefinition Height="100" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-				<local1:AssignBlock x:Name="SourceAssignBlock"></local1:AssignBlock>
 				<ListView	x:Name="TargetListView"
-							Grid.Row="2"
 							ScrollViewer.VerticalScrollBarVisibility="Auto" 
 							ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 							ScrollViewer.HorizontalScrollMode="Disabled"                  

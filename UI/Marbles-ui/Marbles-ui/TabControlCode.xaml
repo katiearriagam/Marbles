@@ -48,7 +48,8 @@
 					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
 						<ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 						ScrollViewer.HorizontalScrollMode="Disabled"                  
-						ScrollViewer.VerticalScrollMode="Enabled">
+						ScrollViewer.VerticalScrollMode="Enabled"
+						SelectionMode="None">
 							<ListView.ItemContainerStyle>
 								<Style TargetType="ListViewItem">
 									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -61,30 +62,30 @@
 								VerticalAlignment="Bottom">
 								Actions
 							</TextBlock>
-							<local:TabControlCodeButton BackgroundColor="#27ae60" Label="Assign" Glyph="&#xE943;"/>
-							<local:TabControlCodeButton BackgroundColor="#f1c40f" Label="Do" Glyph="&#xE943;"/>
+							<local:TabControlCodeButton BackgroundColor="#27ae60" Label="Assign" Glyph="&#xE943;" DragStartingId="AssignInstantiator"/>
+							<local:TabControlCodeButton BackgroundColor="#f1c40f" Label="Do" Glyph="&#xE943;" DragStartingId="DoInstantiator"/>
 							<TextBlock 
 								Style="{StaticResource TitleTextBlockStyle}"
 								Foreground="Gray"
 								VerticalAlignment="Bottom">
 								Loops
 							</TextBlock>
-							<local:TabControlCodeButton BackgroundColor="#16a085" Label="For" Glyph="&#xE943;"/>
-							<local:TabControlCodeButton BackgroundColor="#d35400" Label="While" Glyph="&#xE943;"/>
+							<local:TabControlCodeButton BackgroundColor="#16a085" Label="For" Glyph="&#xE943;" DragStartingId="ForInstantiator"/>
+							<local:TabControlCodeButton BackgroundColor="#d35400" Label="While" Glyph="&#xE943;" DragStartingId="WhileInstantiator"/>
 							<TextBlock 
 								Style="{StaticResource TitleTextBlockStyle}"
 								Foreground="Gray"
 								VerticalAlignment="Bottom">
 								Conditionals
 							</TextBlock>
-							<local:TabControlCodeButton BackgroundColor="#8e44ad" Label="If" Glyph="&#xE943;"/>
+							<local:TabControlCodeButton BackgroundColor="#8e44ad" Label="If" Glyph="&#xE943;" DragStartingId="IfInstantiator"/>
 							<TextBlock 
 								Style="{StaticResource TitleTextBlockStyle}"
 								Foreground="Gray"
 								VerticalAlignment="Bottom">
 								Miscellaneous
 							</TextBlock>
-							<local:TabControlCodeButton BackgroundColor="#c0392b" Label="Stop" Glyph="&#xE943;"/>
+							<local:TabControlCodeButton BackgroundColor="#c0392b" Label="Stop" Glyph="&#xE943;" DragStartingId="StopInstantiator"/>
 						</ListView>
 					</Grid>
 				</PivotItem>
