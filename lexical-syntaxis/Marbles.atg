@@ -51,7 +51,7 @@ TERM                = FACTOR {('*' | '/') FACTOR} .
 FACTOR              = '(' EXP_R ')' | [('-' | "not")] (const_i | id ['.' ATTRIBUTE] | CALL_TO_FUNCTION | BOOL | const_s) .
 OP                  = '>' | '<' | "==" | "<=" | ">=" | "!=".
 BOOL                = true | false.
-ATTRIBUTE           = "color" | "transparency" | "size" | "value" | "text" | "length" | "type" | "position_x" | "position_y" | "rotation" | 						  "font_size" | "width" | "height".
+ATTRIBUTE           = "color" | "size" | "value" | "text" | "length" | "type" | "position_x" | "position_y" | "rotation" | 						  "font_size" | "width" | "height".
 COLOR               = "red" | "orange" | "yellow" | "green" | "blue" | "violet" | "purple" | "pink" | "brown" | "white" | "gray" | "black" .
 RETURN              = "return" [SUPER_EXP] .
  
