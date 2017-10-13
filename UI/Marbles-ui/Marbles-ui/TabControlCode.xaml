@@ -1,0 +1,115 @@
+﻿<UserControl
+    x:Class="Marbles.TabControlCode"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="400"
+    d:DesignWidth="300">
+
+	<!--Microsoft's default pivot item style-->
+	<!--source: https://msdn.microsoft.com/en-us/library/windows/apps/mt299143.aspx-->
+	<UserControl.Resources>
+		<Style x:Key="TabsStylePivotStyle" TargetType="PivotItem">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Margin" Value="{ThemeResource PivotItemMargin}"/>
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+			<Setter Property="VerticalContentAlignment" Value="Stretch" />
+			<Setter Property="IsTabStop" Value="False" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="PivotItem">
+						<Grid Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="Pivot">
+									<VisualState x:Name="Right" />
+									<VisualState x:Name="Left" />
+									<VisualState x:Name="Center" />
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+	
+    <Grid>
+		<ScrollViewer Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+			<Pivot>
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Variable" Glyph="&#xE1DA;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.HorizontalScrollMode="Disabled"                  
+						ScrollViewer.VerticalScrollMode="Enabled">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+									<Setter Property="VerticalContentAlignment" Value="Stretch" />
+								</Style>
+							</ListView.ItemContainerStyle>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Actions
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#27ae60" Label="Assign" Glyph="&#xE943;"/>
+							<local:TabControlCodeButton BackgroundColor="#f1c40f" Label="Do" Glyph="&#xE943;"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Loops
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#16a085" Label="For" Glyph="&#xE943;"/>
+							<local:TabControlCodeButton BackgroundColor="#d35400" Label="While" Glyph="&#xE943;"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Conditionals
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#8e44ad" Label="If" Glyph="&#xE943;"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Miscellaneous
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#c0392b" Label="Stop" Glyph="&#xE943;"/>
+						</ListView>
+					</Grid>
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Function" Glyph="&#xE943;" />
+					</PivotItem.Header>
+					<TextBlock Text="Content function" />
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Instruction" Glyph="&#xE7BC;" />
+					</PivotItem.Header>
+					<TextBlock Text="Content instruction" />
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Value" Glyph="&#xE94A;" />
+					</PivotItem.Header>
+					<TextBlock Text="Content value" />
+				</PivotItem>
+			</Pivot>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

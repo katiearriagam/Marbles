@@ -17,16 +17,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
-	public sealed partial class AssignBlock : UserControl
+	public sealed partial class TabControlCode : UserControl
 	{
-		public AssignBlock()
+		public TabControlCode()
 		{
 			this.InitializeComponent();
-		}
-
-		private void SourceInstructionBlock_DragStarting(UIElement sender, DragStartingEventArgs args)
-		{
-			args.Data.Properties.Add("InstructionBlock", sender);
 		}
 	}
 }

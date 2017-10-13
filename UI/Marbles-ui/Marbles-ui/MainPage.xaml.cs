@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -29,13 +30,17 @@ namespace Marbles_ui
 
 		private void TargetListView_Drop(object sender, DragEventArgs e)
 		{
-			VisualStateManager.GoToState(this, "Inside", true);
-			Grid temporaryGrid = e.OriginalSource as Grid;
-			TargetListView.Items.Add(temporaryGrid);
+			VisualStateManager.GoToState(this, "Outside", true);
+			
+			if (e.DataView.Properties["InstructionBlock"].GetType() == typeof(Marbles.AssignBlock))
+			{
+				TargetListView.Items.Add(new Marbles.AssignBlock());
+			}
 		}
 
 		private void TargetListView_DragEnter(object sender, DragEventArgs e)
 		{
+			e.AcceptedOperation = DataPackageOperation.Copy;
 			/// Change the background of the target
 			VisualStateManager.GoToState(this, "Inside", true);
 			e.DragUIOverride.Caption = "Drop here to insert.";

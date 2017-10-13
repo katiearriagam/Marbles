@@ -114,6 +114,15 @@
     <Compile Include="StopBlock.xaml.cs">
       <DependentUpon>StopBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TabControlCode.xaml.cs">
+      <DependentUpon>TabControlCode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabControlCodeButton.xaml.cs">
+      <DependentUpon>TabControlCodeButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabHeader.xaml.cs">
+      <DependentUpon>TabHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WhileBlock.xaml.cs">
       <DependentUpon>WhileBlock.xaml</DependentUpon>
     </Compile>
@@ -160,6 +169,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="StopBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabControlCode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabControlCodeButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
