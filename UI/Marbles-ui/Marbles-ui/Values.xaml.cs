@@ -29,26 +29,149 @@ namespace Marbles
 		{
 			e.AcceptedOperation = DataPackageOperation.Copy;
 
-			if (e.DataView.Properties.ContainsKey("ConstantNumber"))
+			if (e.DataView.Properties.ContainsKey("ValueTemplate"))
 			{
-				var constantNumber = new Marbles.ConstantNumber();
-				Values valuePlaceHolder = sender as Values;
-				var grid = valuePlaceHolder.Parent as Grid;
-				if (grid != null)
+				if (e.DataView.Properties.ContainsKey("Variable"))
 				{
-					var row = Grid.GetRow(valuePlaceHolder);
-					var column = Grid.GetColumn(valuePlaceHolder);
-					grid.Children.Add(constantNumber);
-					Grid.SetRow(constantNumber, row);
-					Grid.SetColumn(constantNumber, column);
-					grid.Children.Remove(valuePlaceHolder);
+					var constantNumber = new Marbles.VariableCall();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("Function"))
+				{
+					var constantNumber = new Marbles.FunctionCall();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("NumberConstant"))
+				{
+					var constantNumber = new Marbles.ConstantNumber();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("TextConstant"))
+				{
+					var constantNumber = new Marbles.ConstantText();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("BooleanConstant"))
+				{
+					var constantNumber = new Marbles.ConstantBoolean();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("MathExpression"))
+				{
+					var constantNumber = new Marbles.MathExpression();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("BooleanExpression"))
+				{
+					var constantNumber = new Marbles.BooleanExpression();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("AssetProperty"))
+				{
+					var constantNumber = new Marbles.AssetAttribute();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
+				}
+				if (e.DataView.Properties.ContainsKey("AssetFunction"))
+				{
+					var constantNumber = new Marbles.AssetFunction();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Add(constantNumber);
+						Grid.SetRow(constantNumber, row);
+						Grid.SetColumn(constantNumber, column);
+						grid.Children.Remove(valuePlaceHolder);
+					}
 				}
 			}
 		}
 
 		private void Values_OnDragEnter(object sender, DragEventArgs e)
 		{
-			if (e.DataView.Properties.ContainsKey("ConstantNumber"))
+			if (e.DataView.Properties.ContainsKey("ValueTemplate"))
 			{
 				// Change the background of the target
 				e.DragUIOverride.Caption = "Drop value here.";

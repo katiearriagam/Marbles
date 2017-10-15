@@ -17,8 +17,14 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
-    public sealed partial class TabControlCodeButton : UserControl
-    {
+	public sealed partial class TabValueButton : UserControl
+	{
+		public TabValueButton()
+		{
+			this.InitializeComponent();
+			this.DataContext = this;
+		}
+
 		public static readonly DependencyProperty GlyphProperty = DependencyProperty.Register("Glyph", typeof(string), typeof(TabControlCodeButton), null);
 
 		public string Glyph
@@ -51,24 +57,9 @@ namespace Marbles
 			set { SetValue(DragStartingProperty, value); }
 		}
 
-		public static readonly DependencyProperty GroupProperty = DependencyProperty.Register("Group", typeof(string), typeof(TabControlCodeButton), new PropertyMetadata(""));
-
-		public string Group
+		private void TabValueButton_DragStarting(UIElement sender, DragStartingEventArgs args)
 		{
-			get { return GetValue(GroupProperty) as string; }
-			set { SetValue(GroupProperty, value); }
-		}
-
-		private void TabControlCodeButton_DragStarting(UIElement sender, DragStartingEventArgs args)
-		{
-			args.Data.Properties.Add(Group, sender);
 			args.Data.Properties.Add(DragStartingId, sender);
-		}
-
-		public TabControlCodeButton()
-        {
-            this.InitializeComponent();
-			this.DataContext = this;
 		}
 	}
 }

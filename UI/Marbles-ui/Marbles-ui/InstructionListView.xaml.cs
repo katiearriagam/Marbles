@@ -92,30 +92,40 @@ namespace Marbles
 				if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.AssignBlock());
+					heightToAdd = 90;
 				}
 				else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.DoBlock());
+					heightToAdd = 90;
 				}
 				else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.ForBlock());
+					heightToAdd = 182;
 				}
 				else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.WhileBlock());
+					heightToAdd = 182;
 				}
 				else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.IfBlock());
+					heightToAdd = 182;
 				}
 				else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.StopBlock());
+					heightToAdd = 90;
 				}
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
+		}
+
+		private void TargetListView_DragLeave(object sender, DragEventArgs e)
+		{
 		}
 
 		private void TargetListView_DragOver(object sender, DragEventArgs e)
@@ -123,7 +133,7 @@ namespace Marbles
 			dropped = false;
 			ListView_ResumeDragAndDrop();
 			e.AcceptedOperation = DataPackageOperation.Copy;
-			if (!e.DataView.Properties.ContainsKey("ConstantNumber"))
+			if (!e.DataView.Properties.ContainsKey("ValueTemplate"))
 			{
 				e.DragUIOverride.Caption = "Drop here to insert.";
 				e.DragUIOverride.IsCaptionVisible = true;

@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Marbles.ConstantNumber"
+    x:Class="Marbles.ConstantBoolean"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Marbles"
@@ -10,16 +10,16 @@
     d:DesignWidth="180">
 
 	<Grid>
-		<TextBox
+		<ComboBox
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Center"
-			InputScope="Number"
-			TextAlignment="Center"
-			PlaceholderText="Write a number here! (Example: '5')"
 			HorizontalContentAlignment="Center"
-			Width="Auto">
-		</TextBox>
+			Width="Auto"
+			SelectedIndex="0">
+			<ComboBoxItem>TRUE</ComboBoxItem>
+			<ComboBoxItem>FALSE</ComboBoxItem>
+		</ComboBox>
 	</Grid>
 </UserControl>

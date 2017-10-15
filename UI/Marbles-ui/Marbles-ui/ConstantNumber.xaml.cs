@@ -24,10 +24,5 @@ namespace Marbles
         {
             this.InitializeComponent();
         }
-
-		private void ConstantNumber_OnDragStarting(UIElement sender, DragStartingEventArgs args)
-		{
-			args.Data.Properties.Add("ConstantNumber", sender);
-		}
 	}
 }

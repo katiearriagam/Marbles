@@ -9,13 +9,13 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#c0392b" Padding="10" Width="Auto" Margin="10">
-		<Grid>
+    <Grid Background="#c0392b" Padding="10" Width="Auto" Margin="10">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="0.1*" />
             </Grid.ColumnDefinitions>
-			<TextBlock 
+            <TextBlock 
 						Foreground="White" 
 						FontSize="20" 
 						Margin="0,10,10,10"
@@ -27,8 +27,8 @@
                         Grid.Column="0"    
                         >
 				stop
-			</TextBlock>
+            </TextBlock>
             <local:DeleteBlockButton Grid.Column="1" HorizontalAlignment="Right" />
-		</Grid>
-	</Grid>
+        </Grid>
+    </Grid>
 </UserControl>

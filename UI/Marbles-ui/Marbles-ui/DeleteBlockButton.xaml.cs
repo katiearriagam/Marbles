@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -33,7 +32,7 @@ namespace Marbles
 
             ListView listView = ItemsControl.ItemsControlFromItemContainer(parent) as ListView;
             ListViewItem lvi = (parent as ListViewItem);
-            
+
             listView.Items.Remove(lvi.Content);
         }
     }

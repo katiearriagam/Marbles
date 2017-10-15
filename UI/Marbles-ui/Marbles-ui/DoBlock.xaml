@@ -15,7 +15,7 @@
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
                 <ColumnDefinition Width="0.1*" />
-            </Grid.ColumnDefinitions>
+			</Grid.ColumnDefinitions>
 			
 			<TextBlock Grid.Column="0" 
 						 Foreground="White" 
@@ -29,7 +29,7 @@
                        do
 				</TextBlock>
 				<local:Values Grid.Column="1" Name="ValuesInput"></local:Values>
-            <local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right" />
+                <local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right" />
 			</Grid>
 		</Grid>
 </UserControl>
