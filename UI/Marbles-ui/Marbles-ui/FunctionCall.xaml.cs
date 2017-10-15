@@ -17,15 +17,16 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
-	public sealed partial class ForBlock : UserControl
+	public sealed partial class FunctionCall : UserControl
 	{
-		public ForBlock()
+		public FunctionCall()
 		{
 			this.InitializeComponent();
-			var instructions = new Marbles.InstructionListView();
-			var grid = Container;
-			grid.Children.Add(instructions);
-			Grid.SetRow(instructions, 2);
+		}
+
+		private void AddParameter(object sender, RoutedEventArgs e)
+		{
+			Parameters.Items.Add(new TextBox());
 		}
 	}
 }

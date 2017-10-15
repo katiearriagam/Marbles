@@ -17,15 +17,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
-	public sealed partial class ForBlock : UserControl
+	public sealed partial class AssetAttribute : UserControl
 	{
-		public ForBlock()
+		public AssetAttribute()
 		{
 			this.InitializeComponent();
-			var instructions = new Marbles.InstructionListView();
-			var grid = Container;
-			grid.Children.Add(instructions);
-			Grid.SetRow(instructions, 2);
 		}
 	}
 }

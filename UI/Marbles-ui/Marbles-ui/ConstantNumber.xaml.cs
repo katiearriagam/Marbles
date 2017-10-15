@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -17,15 +18,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
-	public sealed partial class ForBlock : UserControl
-	{
-		public ForBlock()
-		{
-			this.InitializeComponent();
-			var instructions = new Marbles.InstructionListView();
-			var grid = Container;
-			grid.Children.Add(instructions);
-			Grid.SetRow(instructions, 2);
-		}
+    public sealed partial class ConstantNumber : UserControl
+    {
+        public ConstantNumber()
+        {
+            this.InitializeComponent();
+        }
 	}
 }

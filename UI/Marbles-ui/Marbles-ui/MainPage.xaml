@@ -14,46 +14,8 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="0.33*"/>
 			</Grid.ColumnDefinitions>
-			<Grid Grid.Column="0">
-				<ListView	x:Name="TargetListView"
-							ScrollViewer.VerticalScrollBarVisibility="Auto" 
-							ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-							ScrollViewer.HorizontalScrollMode="Disabled"                  
-							ScrollViewer.VerticalScrollMode="Enabled"
-							ItemsSource="{Binding Collection}"
-							CanReorderItems="True"
-							AllowDrop="True"
-							Drop="TargetListView_Drop"
-							DragEnter="TargetListView_DragEnter"
-							DragLeave="TargetListView_DragLeave"
-							>
-					<VisualStateManager.VisualStateGroups>
-						<VisualStateGroup x:Name="DragDropGroup">
-							<VisualState x:Name="Outside"/>
-							<VisualState x:Name="Inside">
-								<VisualState.Setters>
-									<Setter Target="TargetListView.(Control.Background).(SolidColorBrush.Color)" Value="LightGreen"/>
-								</VisualState.Setters>
-							</VisualState>
-						</VisualStateGroup>
-					</VisualStateManager.VisualStateGroups>
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<StackPanel Background="Transparent" Orientation="Vertical" />
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-						</Style>
-					</ListView.ItemContainerStyle>
-					<ListView.Items>
-					</ListView.Items>
-				</ListView>
-			</Grid>
-			<Grid Grid.Column="1">
-				<local1:TabControlCode></local1:TabControlCode>
-			</Grid>
+			<local:InstructionListView Name="MainInstructionListView" Grid.Column="0"></local:InstructionListView>
+			<local:TabControlCode Grid.Column="1"></local:TabControlCode>
 		</Grid>
 	</Grid>
 </Page>

@@ -5,70 +5,55 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+	xmlns:local="using:Marbles"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#16a085" Padding="10" Width="Auto" Margin="10">
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="0.10*" />
-				<RowDefinition Height="10" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
+	<Grid Name="Container" Background="#16a085" Padding="10" Width="Auto" Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.10*" />
+			<RowDefinition Height="10" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+		<Grid Grid.Row="0" Grid.Column="0">
 			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="0.1*" />
+            </Grid.ColumnDefinitions>
 
-			<Border Grid.Row="0" Grid.Column="0"/>
-			<Grid Grid.Row="0" Grid.Column="0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-
-				<Border Grid.Row="0" Grid.Column="0"/>
-				<Border Grid.Row="0" Grid.Column="1"/>
-				<Border Grid.Row="0" Grid.Column="2"/>
-				<TextBlock Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="20" Margin="10"
+			<TextBlock Grid.Row="0" Grid.Column="0" 
+						   Foreground="White" 
+						   FontSize="20"
+						   Margin="0,10,10,10"
 						   IsTextSelectionEnabled="False"
 						   FontWeight="Light"
 						   FontFamily="Segoe UI Light"
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Left">
                        for
-				</TextBlock>
+			</TextBlock>
 
-				<TextBox Grid.Row="0" Grid.Column="1" Margin="5"
-						 PlaceholderText="1"></TextBox>
-
-				<TextBlock Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="20" Margin="5"
+            <local:Values Grid.Column="1" Name="ValuesInput"></local:Values>
+            <local:DeleteBlockButton Grid.Column="3" HorizontalAlignment="Right" />
+            <TextBlock Grid.Row="0" Grid.Column="2" 
+						   Foreground="White" 
+						   FontSize="20" 
+						   Margin="10"
 						   IsTextSelectionEnabled="False"
 						   FontWeight="Light"
 						   FontFamily="Segoe UI Light"
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Left">
                        loops
-				</TextBlock>
-			</Grid>
-
-			<ListView Background="#ecf0f1" Grid.Row="2" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-						ScrollViewer.HorizontalScrollMode="Disabled"                  
-						ScrollViewer.VerticalScrollMode="Enabled"
-						ItemsSource="{Binding Collection}">
-				<ListView.ItemsPanel>
-					<ItemsPanelTemplate>
-						<StackPanel Background="Transparent" Orientation="Vertical" />
-					</ItemsPanelTemplate>
-				</ListView.ItemsPanel>
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<Button Width="350" Content="{Binding}" Margin="5" />
-					</DataTemplate>
-				</ListView.ItemTemplate>
-				<x:String>Item #1</x:String>
-				<x:String>Item #2</x:String>
-			</ListView>
+			</TextBlock>
+		</Grid>
+		<Grid Grid.Row="2" Background="White" MinHeight="100">
 		</Grid>
 	</Grid>
 </UserControl>

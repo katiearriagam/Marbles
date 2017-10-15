@@ -23,10 +23,5 @@ namespace Marbles
 		{
 			this.InitializeComponent();
 		}
-
-		private void SourceInstructionBlock_DragStarting(UIElement sender, DragStartingEventArgs args)
-		{
-			args.Data.Properties.Add("InstructionBlock", sender);
-		}
 	}
 }

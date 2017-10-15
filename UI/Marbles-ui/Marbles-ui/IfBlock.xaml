@@ -10,106 +10,39 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#8e44ad" Padding="10" Width="Auto" Margin="10">
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="0.10*" />
-				<RowDefinition Height="10" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
+	<Grid Name="Container" Background="#8e44ad" Padding="10" Width="Auto" Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.10*" />
+			<RowDefinition Height="10" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+		<Grid Grid.Row="0" Grid.Column="0">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0.1*" />
+            </Grid.ColumnDefinitions>
 
-			<Border Grid.Row="0" Grid.Column="0"/>
-			<Grid Grid.Row="0" Grid.Column="0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="70" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-
-				<Border Grid.Row="0" Grid.Column="0"/>
-				<Border Grid.Row="0" Grid.Column="1"/>
-				<Border Grid.Row="0" Grid.Column="2"/>
-				<TextBlock Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="20" Margin="10"
+			<TextBlock Grid.Row="0" Grid.Column="0" 
+						   Foreground="White" 
+						   FontSize="20"
+						   Margin="0,10,10,10"
 						   IsTextSelectionEnabled="False"
 						   FontWeight="Light"
 						   FontFamily="Segoe UI Light"
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Left">
                        if
-				</TextBlock>
+			</TextBlock>
 
-				<ListView Grid.Row="0" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-						ScrollViewer.HorizontalScrollMode="Enabled"                  
-						ScrollViewer.VerticalScrollMode="Disabled"
-						ItemsSource="{Binding Collection}">
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<StackPanel Background="Transparent" Orientation="Horizontal" />
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<ListView.ItemContainerStyle>
-					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-					</Style>
-				</ListView.ItemContainerStyle>
-					<ListView.ItemTemplate>
-						<DataTemplate>
-							<Button Content="{Binding}" Margin="5" />
-						</DataTemplate>
-					</ListView.ItemTemplate>
-					<x:String>Item #1</x:String>
-					<x:String>Item #2</x:String>
-					<x:String>Item #3</x:String>
-					<x:String>Item #4</x:String>
-					<x:String>Item #5</x:String>
-					<x:String>Item #1</x:String>
-					<x:String>Item #2</x:String>
-					<x:String>Item #3</x:String>
-					<x:String>Item #4</x:String>
-					<x:String>Item #5</x:String>
-					<x:String>Item #1</x:String>
-					<x:String>Item #2</x:String>
-					<x:String>Item #3</x:String>
-					<x:String>Item #4</x:String>
-					<x:String>Item #5</x:String>
-					<x:String>Item #1</x:String>
-					<x:String>Item #2</x:String>
-					<x:String>Item #3</x:String>
-					<x:String>Item #4</x:String>
-					<x:String>Item #5</x:String>
-					<x:String>Item #1</x:String>
-					<x:String>Item #2</x:String>
-					<x:String>Item #3</x:String>
-					<x:String>Item #4</x:String>
-					<x:String>Item #5</x:String>
-				</ListView>
-			</Grid>
-
-			<ListView Background="#ecf0f1" Grid.Row="2" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-						ScrollViewer.HorizontalScrollMode="Disabled"                  
-						ScrollViewer.VerticalScrollMode="Enabled"
-						ItemsSource="{Binding Collection}">
-				<ListView.ItemsPanel>
-					<ItemsPanelTemplate>
-						<StackPanel Background="Transparent" Orientation="Vertical" />
-					</ItemsPanelTemplate>
-				</ListView.ItemsPanel>
-				<ListView.ItemContainerStyle>
-					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-					</Style>
-				</ListView.ItemContainerStyle>
-				<ListView.Items>
-					<local1:AssignBlock></local1:AssignBlock>
-					<local:StopBlock></local:StopBlock>
-					<local:DoBlock></local:DoBlock>
-					<local:ForBlock></local:ForBlock>
-					<local:StopBlock></local:StopBlock>
-					<local:WhileBlock></local:WhileBlock>
-				</ListView.Items>
-			</ListView>
+			<local:Values Grid.Column="1" Name="ValuesInput"></local:Values>
+            <local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right" />
+		</Grid>
+		<Grid Grid.Row="2" Background="White" MinHeight="100">
 		</Grid>
 	</Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,49 +28,5 @@ namespace Marbles
         {
             this.InitializeComponent();
         }
-
-		private void TargetListView_Drop(object sender, DragEventArgs e)
-		{
-			VisualStateManager.GoToState(this, "Outside", true);
-			TargetListView.Items.Add(e.GetPosition(TargetListView));
-			if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
-			{
-				TargetListView.Items.Add(new Marbles.AssignBlock());
-			}
-			else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
-			{
-				TargetListView.Items.Add(new Marbles.DoBlock());
-			}
-			else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
-			{
-				TargetListView.Items.Add(new Marbles.ForBlock());
-			}
-			else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
-			{
-				TargetListView.Items.Add(new Marbles.WhileBlock());
-			}
-			else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
-			{
-				TargetListView.Items.Add(new Marbles.IfBlock());
-			}
-			else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
-			{
-				TargetListView.Items.Add(new Marbles.StopBlock());
-			}
-		}
-
-		private void TargetListView_DragEnter(object sender, DragEventArgs e)
-		{
-			e.AcceptedOperation = DataPackageOperation.Copy;
-			/// Change the background of the target
-			VisualStateManager.GoToState(this, "Inside", true);
-			e.DragUIOverride.Caption = "Drop here to insert.";
-		}
-
-		private void TargetListView_DragLeave(object sender, DragEventArgs e)
-		{
-			VisualStateManager.GoToState(this, "Outside", true);
-		}
-
 	}
 }

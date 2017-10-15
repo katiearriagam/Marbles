@@ -13,19 +13,18 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Marbles
 {
-	public sealed partial class ForBlock : UserControl
-	{
-		public ForBlock()
-		{
-			this.InitializeComponent();
-			var instructions = new Marbles.InstructionListView();
-			var grid = Container;
-			grid.Children.Add(instructions);
-			Grid.SetRow(instructions, 2);
-		}
-	}
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class CanvasView : Page
+    {
+        public CanvasView()
+        {
+            this.InitializeComponent();
+        }
+    }
 }
