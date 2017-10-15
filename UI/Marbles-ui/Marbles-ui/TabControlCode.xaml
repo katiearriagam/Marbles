@@ -56,6 +56,7 @@
 									<Setter Property="VerticalContentAlignment" Value="Stretch" />
 								</Style>
 							</ListView.ItemContainerStyle>
+							<local:ConstantNumber></local:ConstantNumber>
 							<TextBlock 
 								Style="{StaticResource TitleTextBlockStyle}"
 								Foreground="Gray"

@@ -4,72 +4,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="using:Marbles"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
 	<Grid Background="#f1c40f" Padding="10" Width="Auto" Margin="10">
 		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="0.10*" />
-				<RowDefinition Height="10" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-
-			<Border Grid.Row="0" Grid.Column="0"/>
-			<Grid Grid.Row="0" Grid.Column="0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="70" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="30" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-
-				<Border Grid.Row="0" Grid.Column="0"/>
-				<Border Grid.Row="0" Grid.Column="1"/>
-				<Border Grid.Row="0" Grid.Column="2"/>
-				<TextBlock Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="20" Margin="10"
-						   IsTextSelectionEnabled="False"
-						   FontWeight="Light"
-						   FontFamily="Segoe UI Light"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left">
+                <ColumnDefinition Width="0.1*" />
+            </Grid.ColumnDefinitions>
+			
+			<TextBlock Grid.Column="0" 
+						 Foreground="White" 
+						 FontSize="20" 
+						 Margin="0,10,10,10"
+						 IsTextSelectionEnabled="False"
+						 FontWeight="Light"
+						 FontFamily="Segoe UI Light"
+						 VerticalAlignment="Center"
+						 HorizontalAlignment="Left">
                        do
 				</TextBlock>
-				<ComboBox Grid.Row="0" Grid.Column="1" Margin="5" x:Name="FitCombo" SelectedIndex="0">
-					<ComboBox.Resources>
-						<Style TargetType="ComboBox">
-							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-						</Style>
-					</ComboBox.Resources>
-					<ComboBoxItem>num</ComboBoxItem>
-					<ComboBoxItem>my_fish</ComboBoxItem>
-					<ComboBoxItem>my_superlongvariablename</ComboBoxItem>
-					<ComboBoxItem>i</ComboBoxItem>
-				</ComboBox>
-				<TextBlock Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="20" Margin="0"
-						   IsTextSelectionEnabled="False"
-						   FontWeight="Light"
-						   FontFamily="Segoe UI Light"
-						   VerticalAlignment="Center"
-						   HorizontalAlignment="Left">
-                       's
-				</TextBlock>
-				<ComboBox Grid.Row="0" Grid.Column="3" Margin="5" x:Name="Fit" SelectedIndex="0" Width="Auto">
-					<ComboBox.Resources>
-						<Style TargetType="ComboBox">
-							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-						</Style>
-					</ComboBox.Resources>
-					<ComboBoxItem>turn</ComboBoxItem>
-					<ComboBoxItem>spin</ComboBoxItem>
-					<ComboBoxItem>move_X</ComboBoxItem>
-					<ComboBoxItem>move_y</ComboBoxItem>
-				</ComboBox>
+				<local:Values Grid.Column="1" Name="ValuesInput"></local:Values>
+            <local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right" />
 			</Grid>
 		</Grid>
-	</Grid>
 </UserControl>

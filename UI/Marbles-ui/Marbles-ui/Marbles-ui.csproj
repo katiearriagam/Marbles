@@ -98,8 +98,11 @@
     <Compile Include="AssignBlock.xaml.cs">
       <DependentUpon>AssignBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CanvasView.xaml.cs">
-      <DependentUpon>CanvasView.xaml</DependentUpon>
+    <Compile Include="ConstantNumber.xaml.cs">
+      <DependentUpon>ConstantNumber.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteBlockButton.xaml.cs">
+      <DependentUpon>DeleteBlockButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="DoBlock.xaml.cs">
       <DependentUpon>DoBlock.xaml</DependentUpon>
@@ -109,6 +112,9 @@
     </Compile>
     <Compile Include="IfBlock.xaml.cs">
       <DependentUpon>IfBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstructionListView.xaml.cs">
+      <DependentUpon>InstructionListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -125,6 +131,9 @@
     </Compile>
     <Compile Include="TabHeader.xaml.cs">
       <DependentUpon>TabHeader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Values.xaml.cs">
+      <DependentUpon>Values.xaml</DependentUpon>
     </Compile>
     <Compile Include="WhileBlock.xaml.cs">
       <DependentUpon>WhileBlock.xaml</DependentUpon>
@@ -155,7 +164,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CanvasView.xaml">
+    <Page Include="ConstantNumber.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeleteBlockButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -168,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="IfBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InstructionListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -191,6 +208,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Values.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WhileBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -198,7 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.1</Version>
+      <Version>5.4.0</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
