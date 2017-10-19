@@ -53,7 +53,7 @@ OP                  = '>' | '<' | "==" | "<=" | ">=" | "!=".
 BOOL                = true | false.
 ATTRIBUTE           = "color" | "size" | "value" | "text" | "length" | "type" | "position_x" | "position_y" | "rotation" | 						  "font_size" | "width" | "height".
 COLOR               = "blue" | "yellow" | "green" | "red" | "purple" | "orange" .
-RETURN              = "return" [SUPER_EXP] .
+RETURN              = "return" SUPER_EXP .
  
 // End of the compiler specification
 END Marbles.
