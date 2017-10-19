@@ -28,7 +28,7 @@ PRODUCTIONS
 // The entry point is the name of the grammar
  
 Marbles             = PROGRAM.
-PROGRAM             = {CREATE_VAR | CREATE_ASSET | ASSIGNMENT ';'} {CREATE_FUNCTION} "empty" "instructions" '{' {INSTRUCTION | RETURN} RETURN '}' .
+PROGRAM             = {CREATE_VAR | CREATE_ASSET | ASSIGNMENT ';'} {CREATE_FUNCTION} "empty" "instructions" '{' {INSTRUCTION | RETURN} '}' .
 CREATE_FUNCTION     = "function" TYPE_FUNC id '(' [TYPE_VAR id {',' TYPE_VAR id}] ')' '{' {CREATE_VAR} {INSTRUCTION} '}' .
 TYPE_FUNC           = "text" | "number" | "bool" | "empty" .
 CREATE_VAR          = "var" TYPE_VAR id ';' .
