@@ -48,7 +48,7 @@ EXP_L               = EXP_R {"and" EXP_R} .
 EXP_R               = EXP [OP EXP] .
 EXP                 = TERM {('+' | '-') TERM} .
 TERM                = FACTOR {('*' | '/') FACTOR} .
-FACTOR              = '(' EXP_R ')' | [('-' | "not")] (const_i | id ['.' ATTRIBUTE] | CALL_TO_FUNCTION | BOOL | const_s) .
+FACTOR              = '(' EXP_R ')' | ['-'] (const_i | id ['.' ATTRIBUTE] | CALL_TO_FUNCTION | BOOL | const_s) .
 OP                  = '>' | '<' | "==" | "<=" | ">=" | "!=".
 BOOL                = true | false.
 ATTRIBUTE           = "color" | "size" | "value" | "text" | "length" | "type" | "position_x" | "position_y" | "rotation" | 						  "font_size" | "width" | "height".
