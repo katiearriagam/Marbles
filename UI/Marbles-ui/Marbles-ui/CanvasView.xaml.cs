@@ -26,5 +26,10 @@ namespace Marbles
         {
             this.InitializeComponent();
         }
+
+        private void FontIcon_Drop(object sender, DragEventArgs e)
+        {
+
+        }
     }
 }

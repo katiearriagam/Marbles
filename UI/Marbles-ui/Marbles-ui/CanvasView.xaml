@@ -14,8 +14,14 @@
                 <ColumnDefinition Width="0.33*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Background="White">
-                <TextBlock Text="Canvas" Margin="50 10 0 0" Style="{StaticResource TitleTextBlockStyle}" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.15*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="0.15*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Canvas" Margin="50 10 0 0" Style="{StaticResource TitleTextBlockStyle}" />
                 <Button x:Name="Run_Button" 
+                        Grid.Row="0"
                         Foreground="White" 
                         Margin="0 15 50 0" 
                         VerticalAlignment="Top" 
@@ -43,18 +49,27 @@
 				            Grid.Column="1"
 				            HorizontalAlignment="Right"
 				            Glyph="&#xE768;"
-				            FontSize="15"
 				            Foreground="White"
+                            FontSize="15"
 				            FontWeight="Light"
 				            />
                     </Grid>
                 </Button>
-                <Grid Margin="50 80 50 50" Background="#ecf0f1" >
-
-                </Grid>
+                <Canvas Grid.Row="1" Margin="50 0 50 0" Background="#ecf0f1">
+                    
+                </Canvas>
+                <FontIcon
+                    Grid.Row="2"
+                    Glyph="&#xE74D;"
+                    Foreground="Gray"
+                    FontSize="35"
+                    FontWeight="Light"
+                    AllowDrop="True"
+                    Drop="FontIcon_Drop"
+                    />
             </Grid>
             <Grid Grid.Column="1">
-                <local:TabControlCode></local:TabControlCode>
+                <local:TabControlAssets></local:TabControlAssets>
             </Grid>
         </Grid>
     </Grid>
