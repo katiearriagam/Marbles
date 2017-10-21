@@ -1,0 +1,127 @@
+﻿<UserControl
+    x:Class="Marbles.TabControlAssets"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <Style x:Key="TabsStylePivotStyle" TargetType="PivotItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="{ThemeResource PivotItemMargin}"/>
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PivotItem">
+                        <Grid Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Pivot">
+                                    <VisualState x:Name="Right" />
+                                    <VisualState x:Name="Left" />
+                                    <VisualState x:Name="Center" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+            <Pivot>
+                <PivotItem Style="{StaticResource TabsStylePivotStyle}">
+                    <PivotItem.Header>
+                        <local:TabHeader Label="Shapes" Glyph="&#xE7BC;" />
+                    </PivotItem.Header>
+                    <Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+                        <ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.HorizontalScrollMode="Disabled"                  
+						ScrollViewer.VerticalScrollMode="Enabled"
+						SelectionMode="None">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Basic Shapes
+                            </TextBlock>
+                            <local:TabControlAssetsButton ImageSource="/Assets/circle.png" Label="Circle" Group="Shapes" DragStartingId="CircleInstantiator" />
+                            <local:TabControlAssetsButton ImageSource="/Assets/triangle.png" Label="Triangle" Group="Shapes" DragStartingId="TriangleInstantiator" />
+                            <local:TabControlAssetsButton ImageSource="/Assets/square.png" Label="Square" Group="Shapes" DragStartingId="SquareInstantiator" />
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Loops
+                            </TextBlock>
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Conditionals
+                            </TextBlock>
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Miscellaneous
+                            </TextBlock>
+                        </ListView>
+                    </Grid>
+                </PivotItem>
+
+                <PivotItem Style="{StaticResource TabsStylePivotStyle}">
+                    <PivotItem.Header>
+                        <local:TabHeader Label="Characters" Glyph="&#xE94A;" />
+                    </PivotItem.Header>
+                    <Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+                        <ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.HorizontalScrollMode="Disabled"                  
+						ScrollViewer.VerticalScrollMode="Enabled"
+						SelectionMode="None">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								People
+                            </TextBlock>
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Animals
+                            </TextBlock>
+                            <TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Others
+                            </TextBlock>
+                        </ListView>
+                    </Grid>
+                </PivotItem>
+            </Pivot>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

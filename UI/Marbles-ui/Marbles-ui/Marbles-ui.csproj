@@ -95,6 +95,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Asset.xaml.cs">
+      <DependentUpon>Asset.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AssetAttribute.xaml.cs">
       <DependentUpon>AssetAttribute.xaml</DependentUpon>
     </Compile>
@@ -147,6 +150,12 @@
     <Compile Include="StopBlock.xaml.cs">
       <DependentUpon>StopBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TabControlAssets.xaml.cs">
+      <DependentUpon>TabControlAssets.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabControlAssetsButton.xaml.cs">
+      <DependentUpon>TabControlAssetsButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TabControlCode.xaml.cs">
       <DependentUpon>TabControlCode.xaml</DependentUpon>
     </Compile>
@@ -159,6 +168,7 @@
     <Compile Include="TabValueButton.xaml.cs">
       <DependentUpon>TabValueButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities.cs" />
     <Compile Include="Values.xaml.cs">
       <DependentUpon>Values.xaml</DependentUpon>
     </Compile>
@@ -176,6 +186,9 @@
     <None Include="Marbles-ui_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\circle.png" />
+    <Content Include="Assets\square.png" />
+    <Content Include="Assets\triangle.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -190,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Asset.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AssetAttribute.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -255,6 +272,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StopBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabControlAssets.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabControlAssetsButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

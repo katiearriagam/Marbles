@@ -92,32 +92,26 @@ namespace Marbles
 				if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.AssignBlock());
-					heightToAdd = 90;
 				}
 				else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.DoBlock());
-					heightToAdd = 90;
 				}
 				else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.ForBlock());
-					heightToAdd = 182;
 				}
 				else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.WhileBlock());
-					heightToAdd = 182;
 				}
 				else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.IfBlock());
-					heightToAdd = 182;
 				}
 				else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.StopBlock());
-					heightToAdd = 90;
 				}
 				ListView_SuspendDragAndDrop();
 				dropped = true;

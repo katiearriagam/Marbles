@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <Grid.ColumnDefinitions>
@@ -55,9 +55,101 @@
 				            />
                     </Grid>
                 </Button>
-                <Canvas Grid.Row="1" Margin="50 0 50 0" Background="#ecf0f1">
-                    
-                </Canvas>
+                <Canvas
+                    x:Name="MainCanvas"
+                    Grid.Row="1"
+                    Margin="50 0 50 0"
+                    Background="#ecf0f1"
+                    AllowDrop="True"
+                    Drop="MainCanvas_Drop"
+                    DragOver="MainCanvas_DragOver"
+                    />
+                <ContentDialog 
+                    x:Name="Modal"
+                    Grid.Row="1"
+                    PrimaryButtonText="Create"
+                    SecondaryButtonText="Close"
+                    PrimaryButtonClick="Modal_PrimaryButtonClick"
+                    >
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="1.75*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            x:Name="ModalImage"
+                            Grid.Column="0"
+                            Margin="5"
+                            Source="{Binding ImageSource}"
+                            Height="90"
+                            Width="90"
+                            />
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.33*" />
+                                <RowDefinition Height="0.33*" />
+                                <RowDefinition Height="0.33*" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.9*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="ID:"
+                                    FontSize="20"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    />
+                                <TextBox
+                                    x:Name="IDTextBox"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    />
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.9*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="Label:"
+                                    FontSize="20"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    />
+                                <TextBox
+                                    x:Name="LabelTextBox"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    />
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.9*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="Number:"
+                                    FontSize="20"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    />
+                                <TextBox
+                                    x:Name="NumberTextBox"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </ContentDialog>
                 <FontIcon
                     Grid.Row="2"
                     Glyph="&#xE74D;"
