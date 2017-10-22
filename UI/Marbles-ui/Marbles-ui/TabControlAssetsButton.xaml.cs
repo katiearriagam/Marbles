@@ -50,6 +50,12 @@ namespace Marbles
         {
             get { return GetValue(GroupProperty) as string; }
             set { SetValue(GroupProperty, value); }
+        }        
+
+        public TabControlAssetsButton()
+        {
+            this.InitializeComponent();
+            this.DataContext = this;
         }
 
         private void TabControlAssetsButton_DragStarting(UIElement sender, DragStartingEventArgs args)
@@ -58,12 +64,6 @@ namespace Marbles
             args.Data.Properties.Add("action", DragStartingId);
             args.Data.Properties.Add("xClicked", (int)(lastPositionClicked.X));
             args.Data.Properties.Add("yClicked", (int)(lastPositionClicked.Y));
-        }
-
-        public TabControlAssetsButton()
-        {
-            this.InitializeComponent();
-            this.DataContext = this;
         }
 
         private void MenuItem_PointerPressed(object sender, PointerRoutedEventArgs e)

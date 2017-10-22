@@ -15,8 +15,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Marbles
 {
     /// <summary>
@@ -34,13 +32,6 @@ namespace Marbles
             this.InitializeComponent();
         }
 
-        private void FontIcon_Drop(object sender, DragEventArgs e)
-        {
-            // Delete the asset dropped
-            Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
-            cv.Children.Remove(assetDragged);
-        }
-
         private async void MainCanvas_Drop(object sender, DragEventArgs e)
         {
             cv = sender as Canvas;
@@ -52,8 +43,13 @@ namespace Marbles
                 int xClicked = (int)e.DataView.Properties["xClicked"];
                 int yClicked = (int)e.DataView.Properties["yClicked"];
 
-                Canvas.SetLeft(assetDragged, e.GetPosition(relativeTo: cv).X - xClicked);
-                Canvas.SetTop(assetDragged, e.GetPosition(relativeTo: cv).Y - yClicked);
+                int newXPosition = (int)e.GetPosition(relativeTo: cv).X - xClicked;
+                int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
+
+                Canvas.SetLeft(assetDragged, newXPosition);
+                Canvas.SetTop(assetDragged, newYPosition);
+
+                assetDragged.SetPosition(newXPosition, newYPosition);
             }
             else
             {
@@ -61,8 +57,10 @@ namespace Marbles
                 int lastDropX = (int)e.GetPosition(relativeTo: cv).X - (int)e.DataView.Properties["xClicked"];
                 int lastDropY = (int)e.GetPosition(relativeTo: cv).Y - (int)e.DataView.Properties["yClicked"];
                 lastDropPosition = new Point(lastDropX, lastDropY);
+
                 assetToAddType = Utilities.actionToShapeType[e.DataView.Properties["action"] as string];
                 ModalImage.Source = Utilities.BitmapFromPath(Utilities.shapeToImagePath[assetToAddType]);
+
                 await Modal.ShowAsync();
             }
         }
@@ -84,12 +82,26 @@ namespace Marbles
                 args.Cancel = true;
                 return;
             }
+            
+            try
+            {
+                Convert.ToInt32(NumberTextBox.Text);
+            }
+            catch (Exception e)
+            {
+                // The input number was not valid
+                args.Cancel = true;
+                return;
+            }
 
             Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text));
             Canvas.SetLeft(assetToAdd, (int)lastDropPosition.X);
             Canvas.SetTop(assetToAdd, (int)lastDropPosition.Y);
+
+            assetToAdd.SetPosition((int)lastDropPosition.X, (int)lastDropPosition.Y);
+
             cv.Children.Add(assetToAdd);
-            
+
             IDTextBox.Text = "";
             LabelTextBox.Text = "";
             NumberTextBox.Text = "";
@@ -99,12 +111,20 @@ namespace Marbles
         {
             // Sender: Canvas
             Canvas canv = sender as Canvas;
+
+            // current drag position
             int xDrag = (int)e.GetPosition(relativeTo: canv).X;
             int yDrag = (int)e.GetPosition(relativeTo: canv).Y;
+
+            // dimensions of asset we're dragging
             int assetWidth = e.DataView.Properties.ContainsKey("assetDragged") ? (e.DataView.Properties["assetDragged"] as Asset).GetWidth() : Utilities.assetInitialWidth;
             int assetHeight = e.DataView.Properties.ContainsKey("assetDragged") ? (e.DataView.Properties["assetDragged"] as Asset).GetHeight() : Utilities.assetInitialHeight;
+
+            // x and y displacement in which we clicked on (picked up) the asset
             int xClicked = (int)(e.DataView.Properties["xClicked"]);
             int yClicked = (int)(e.DataView.Properties["yClicked"]);
+
+            // Do not accept operation if any part of the asset falls out of the canvas' bounds
             if (xDrag + assetWidth - xClicked > canv.ActualWidth || yDrag + assetHeight - yClicked > canv.ActualHeight
                 || xDrag - xClicked < 0 || yDrag - yClicked < 0)
             {
@@ -120,7 +140,14 @@ namespace Marbles
             e.DragUIOverride.IsCaptionVisible = false;
         }
 
-        private void FontIcon_DragOver(object sender, DragEventArgs e)
+        private void DeleteIcon_Drop(object sender, DragEventArgs e)
+        {
+            // Delete the asset dropped
+            Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
+            cv.Children.Remove(assetDragged);
+        }
+
+        private void DeleteIcon_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
             e.DragUIOverride.IsGlyphVisible = false;

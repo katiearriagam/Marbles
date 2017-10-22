@@ -171,8 +171,8 @@
                         FontSize="35"
                         FontWeight="Light"
                         AllowDrop="True"
-                        Drop="FontIcon_Drop"
-                        DragOver="FontIcon_DragOver"
+                        Drop="DeleteIcon_Drop"
+                        DragOver="DeleteIcon_DragOver"
                         />
                 </Grid>
             </Grid>
