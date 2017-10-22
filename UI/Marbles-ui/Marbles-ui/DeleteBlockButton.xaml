@@ -10,7 +10,9 @@
     d:DesignWidth="400">
 
     <Grid>
-        <Button Click="Button_Click">
+		<Button Name="deleteButton"
+				Click="Button_Click"
+				VerticalAlignment="Stretch">
             <FontIcon
 				HorizontalAlignment="Right"
 				Glyph="&#xE10A;"

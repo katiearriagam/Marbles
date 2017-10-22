@@ -28,9 +28,9 @@ PRODUCTIONS
 // The entry point is the name of the grammar
  
 Marbles             = PROGRAM.
-PROGRAM             = {CREATE_VAR | CREATE_ASSET | ASSIGNMENT ';'} {CREATE_FUNCTION} "empty" "instructions" '{' {INSTRUCTION | RETURN} '}' .
-CREATE_FUNCTION     = "function" TYPE_FUNC id '(' [TYPE_VAR id {',' TYPE_VAR id}] ')' '{' {CREATE_VAR} {INSTRUCTION} '}' .
-TYPE_FUNC           = "text" | "number" | "bool" | "empty" .
+PROGRAM             = {CREATE_ASSET} {CREATE_VAR} {CREATE_FUNCTION} "instructions" '{' {INSTRUCTION} '}' .
+CREATE_FUNCTION     = "function" TYPE_FUNC id '(' [TYPE_VAR id {',' TYPE_VAR id}] ')' '{' {CREATE_VAR} {INSTRUCTION | RETURN} '}' .
+TYPE_FUNC           = "text" | "number" | "bool".
 CREATE_VAR          = "var" TYPE_VAR id ';' .
 CREATE_ASSET        = "asset" id ';' .
 TYPE_VAR            = "text" | "number" | "bool" .
@@ -51,7 +51,7 @@ TERM                = FACTOR {('*' | '/') FACTOR} .
 FACTOR              = '(' EXP_R ')' | ['-'] (const_i | id ['.' ATTRIBUTE] | CALL_TO_FUNCTION | BOOL | const_s) .
 OP                  = '>' | '<' | "==" | "<=" | ">=" | "!=".
 BOOL                = true | false.
-ATTRIBUTE           = "color" | "size" | "value" | "text" | "length" | "type" | "position_x" | "position_y" | "rotation" | 						  "font_size" | "width" | "height".
+ATTRIBUTE           = "color" | "size" | "value" | "text" | "length" | "type" | "position_x" | "position_y" | "rotation" | "font_size" | "width" | "height".
 COLOR               = "blue" | "yellow" | "green" | "red" | "purple" | "orange" .
 RETURN              = "return" SUPER_EXP .
  
