@@ -7,13 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="400"
+    CanDrag="True"
+    DragStarting="UserControl_DragStarting"
+    PointerPressed="UserControl_PointerPressed"
+    x:Name="AssetUserControl"
+   >
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.2*" />
-            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.4*" />
         </Grid.RowDefinitions>
         <Image
             x:Name="AssetImage"
@@ -22,47 +26,53 @@
             Height="100"
             Width="100"
             />
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
+        <Grid Grid.Row="1" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
                 Grid.Column="0"
                 Text="Label:"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="20"
+                FontSize="10"
                 />
-            <TextBlock
+                <TextBlock
                 x:Name="AssetLabel"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                FontSize="20"
+                FontSize="10"
                 Text="{Binding Label}"
                 />
-        </Grid>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
                 Grid.Column="0"
                 Text="Number:"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="20"
+                FontSize="10"
                 />
-            <TextBlock
+                <TextBlock
                 x:Name="AssetNumber"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                FontSize="20"
+                FontSize="10"
                 Text="{Binding Number}"
                 />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

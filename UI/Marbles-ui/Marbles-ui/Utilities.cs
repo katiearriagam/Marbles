@@ -9,6 +9,9 @@ namespace Marbles
 {
     public static class Utilities
     {
+        public static int assetInitialHeight = 100;
+        public static int assetInitialWidth = 100;
+
         public enum ShapeTypes
         {
             Circle,
@@ -16,12 +19,26 @@ namespace Marbles
             Square
         }
 
+        public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();
+        public static Dictionary<string, ShapeTypes> actionToShapeType = new Dictionary<string, ShapeTypes>();
+
         public static BitmapImage BitmapFromPath(string path)
         {
             path = "ms-appx:" + path; // adapt to correct Uri format
             Uri imageUri = new Uri(path, UriKind.Absolute);
             BitmapImage imageBitmap = new BitmapImage(imageUri);
             return imageBitmap;
+        }
+
+        static Utilities()
+        {
+            shapeToImagePath.Add(ShapeTypes.Circle,   "/Assets/circle.png");
+            shapeToImagePath.Add(ShapeTypes.Triangle, "/Assets/triangle.png");
+            shapeToImagePath.Add(ShapeTypes.Square,   "/Assets/square.png");
+
+            actionToShapeType.Add("CircleInstantiator", ShapeTypes.Circle);
+            actionToShapeType.Add("TriangleInstantiator", ShapeTypes.Triangle);
+            actionToShapeType.Add("SquareInstantiator", ShapeTypes.Square);
         }
     }
 }

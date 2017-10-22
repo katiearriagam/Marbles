@@ -9,7 +9,9 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     CanDrag="True"
-	DragStarting="TabControlAssetsButton_DragStarting">
+	DragStarting="TabControlAssetsButton_DragStarting"
+    x:Name="MenuItem"
+    PointerPressed="MenuItem_PointerPressed">
 
     <Grid Width="100" Height="100" Padding="10" HorizontalAlignment="Left">
         <Image Source="{Binding ImageSource}" />

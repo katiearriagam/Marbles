@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -17,6 +18,8 @@ namespace Marbles
 {
     public sealed partial class TabControlAssetsButton : UserControl
     {
+        private Point lastPositionClicked;
+
         public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register("ImageSource", typeof(string), typeof(TabControlAssetsButton), null);
 
         public string ImageSource
@@ -52,13 +55,20 @@ namespace Marbles
         private void TabControlAssetsButton_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
             args.Data.Properties.Add(Group, sender);
-            args.Data.Properties.Add(DragStartingId, sender);
+            args.Data.Properties.Add("action", DragStartingId);
+            args.Data.Properties.Add("xClicked", (int)(lastPositionClicked.X));
+            args.Data.Properties.Add("yClicked", (int)(lastPositionClicked.Y));
         }
 
         public TabControlAssetsButton()
         {
             this.InitializeComponent();
             this.DataContext = this;
+        }
+
+        private void MenuItem_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            lastPositionClicked = e.GetCurrentPoint(relativeTo: MenuItem).Position;
         }
     }
 }

@@ -26,6 +26,8 @@ namespace Marbles
         private int number;
         private int rotation;
 
+        private Point lastPositionClicked;
+
         public Asset(string id, string imageSource, string label, int x, int y, int number)
         {
             this.InitializeComponent();
@@ -47,8 +49,8 @@ namespace Marbles
 
             rotation = 0;
 
-            width = 100; // default value
-            height = 100; // default value
+            width = Utilities.assetInitialWidth;
+            height = Utilities.assetInitialHeight;
         }
 
         public string ImageSource
@@ -64,6 +66,21 @@ namespace Marbles
         public string Number
         {
             get { return this.number.ToString(); }
+        }
+
+        public string GetID()
+        {
+            return id;
+        }
+
+        public int GetWidth()
+        {
+            return width;
+        }
+
+        public int GetHeight()
+        {
+            return height;
         }
 
         public void SetPosition(int x, int y)
@@ -117,6 +134,22 @@ namespace Marbles
         {
             this.label = label;
             AssetLabel.Text = label;
+        }
+
+        private void UserControl_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            // sender: Marbles.Asset
+            var asset = sender as Marbles.Asset;
+            args.Data.Properties.Add("assetDragged", asset);
+            args.Data.Properties.Add("xClicked", (int)(lastPositionClicked.X));
+            args.Data.Properties.Add("yClicked", (int)(lastPositionClicked.Y));
+        }
+
+
+        private void UserControl_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            // sender: Marbles.Asset
+            lastPositionClicked = e.GetCurrentPoint(relativeTo: AssetUserControl).Position;
         }
     }
 }

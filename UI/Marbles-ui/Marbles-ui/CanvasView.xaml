@@ -55,15 +55,23 @@
 				            />
                     </Grid>
                 </Button>
-                <Canvas
-                    x:Name="MainCanvas"
+                <Border
                     Grid.Row="1"
-                    Margin="50 0 50 0"
+                    BorderThickness="1"
+                    Padding="15"
+                    BorderBrush="#ecf0f1"
                     Background="#ecf0f1"
-                    AllowDrop="True"
-                    Drop="MainCanvas_Drop"
-                    DragOver="MainCanvas_DragOver"
-                    />
+                    Margin="50 0 50 0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+                    <Canvas
+                        x:Name="MainCanvas"
+                        Background="#ecf0f1"
+                        AllowDrop="True"
+                        Drop="MainCanvas_Drop"
+                        DragOver="MainCanvas_DragOver"
+                        />
+                </Border>
                 <ContentDialog 
                     x:Name="Modal"
                     Grid.Row="1"
@@ -150,15 +158,23 @@
                         </Grid>
                     </Grid>
                 </ContentDialog>
-                <FontIcon
-                    Grid.Row="2"
-                    Glyph="&#xE74D;"
-                    Foreground="Gray"
-                    FontSize="35"
-                    FontWeight="Light"
-                    AllowDrop="True"
-                    Drop="FontIcon_Drop"
-                    />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.1*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <FontIcon
+                        Grid.Column="1"
+                        Glyph="&#xE74D;"
+                        Foreground="Gray"
+                        FontSize="35"
+                        FontWeight="Light"
+                        AllowDrop="True"
+                        Drop="FontIcon_Drop"
+                        DragOver="FontIcon_DragOver"
+                        />
+                </Grid>
             </Grid>
             <Grid Grid.Column="1">
                 <local:TabControlAssets></local:TabControlAssets>
