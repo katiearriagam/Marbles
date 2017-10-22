@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,13 +23,14 @@ namespace Marbles
 		public AssetList()
 		{
 			this.InitializeComponent();
+			PrintCode();
 		}
 
 		public void PrintCode()
 		{
-			foreach (ListViewItem e in AssetListView.Items)
+			foreach (CreateAsset item in AssetListView.Items)
 			{
-
+				item.PrintCode();
 			}
 		}
 	}
