@@ -10,7 +10,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Name="Container" Background="#8e44ad" Padding="10" Width="Auto" Margin="10">
+	<Grid Name="Container" Background="#881798" Padding="10" Width="Auto" Margin="0,5">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="0.10*" />
 			<RowDefinition Height="10" />
@@ -24,7 +24,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0.1*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
 			<TextBlock Grid.Row="0" Grid.Column="0" 

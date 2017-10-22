@@ -14,7 +14,22 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="0.33*"/>
 			</Grid.ColumnDefinitions>
-			<local:InstructionListView Name="MainInstructionListView" Grid.Column="0"></local:InstructionListView>
+			<ListView x:Name="MainListView" Grid.Column="0">
+				<ListView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Background="Transparent" Orientation="Vertical" />
+					</ItemsPanelTemplate>
+				</ListView.ItemsPanel>
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+					</Style>
+				</ListView.ItemContainerStyle>
+				<local:AssetList x:Name="AssetListViewContainer" VerticalAlignment="Stretch"></local:AssetList>
+				<local:VariableList x:Name="VariableListViewContainer" VerticalAlignment="Stretch"></local:VariableList>
+				<local:FunctionList x:Name="FunctionListViewContainer" VerticalAlignment="Stretch"></local:FunctionList>
+				<local:InstructionListViewContainer x:Name="InstructionListViewContainer" VerticalAlignment="Stretch"></local:InstructionListViewContainer>
+			</ListView>
 			<local:TabControlCode Grid.Column="1"></local:TabControlCode>
 		</Grid>
 	</Grid>

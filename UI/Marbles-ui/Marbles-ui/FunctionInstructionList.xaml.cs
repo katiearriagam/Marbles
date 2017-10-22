@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -15,16 +14,18 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+
 namespace Marbles
 {
-    public sealed partial class InstructionListView : UserControl
-    {
+	public sealed partial class FunctionInstructionList : UserControl
+	{
 		ScrollViewer scrollViewer;
 		public static bool dropped;
 
-		public InstructionListView()
-        {
-            this.InitializeComponent();
+		public FunctionInstructionList()
+		{
+			this.InitializeComponent();
 			dropped = false;
 			SizeChanged += MainPage_SizeChanged;
 		}
@@ -85,38 +86,13 @@ namespace Marbles
 					count++;
 				}
 
-				if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
+				if (e.DataView.Properties.ContainsKey("CreateFunction"))
 				{
-					lv.Items.Insert(index, new Marbles.AssignBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.DoBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.ForBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.WhileBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.IfBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.StopBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("ReturnStatement"))
-				{
-					lv.Items.Insert(index, new Marbles.ReturnBlock());
+					lv.Items.Insert(index, new Marbles.CreateFunction());
 				}
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
-			this.TargetListView.CanReorderItems = true;
 		}
 
 		private void TargetListView_DragLeave(object sender, DragEventArgs e)
@@ -128,7 +104,7 @@ namespace Marbles
 			dropped = false;
 			ListView_ResumeDragAndDrop();
 			e.AcceptedOperation = DataPackageOperation.Copy;
-			if (e.DataView.Properties.ContainsKey("Instruction"))
+			if (e.DataView.Properties.ContainsKey("CreateFunction"))
 			{
 				e.DragUIOverride.Caption = "";
 				e.DragUIOverride.IsCaptionVisible = false;
@@ -144,10 +120,6 @@ namespace Marbles
 				this.ListView_SuspendDragAndDrop();
 			}
 		}
-
-		public ListView GetTargetListView()
-		{
-			return this.TargetListView;
-		}
 	}
 }
+

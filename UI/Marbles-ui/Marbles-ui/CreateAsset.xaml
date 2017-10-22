@@ -1,0 +1,55 @@
+﻿<UserControl
+    x:Class="Marbles.CreateAsset"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+	<Grid Background="#69797E" Padding="10" Width="Auto" Margin="0,5">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Grid Grid.Column="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="40" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0" 
+						   Foreground="White" 
+						   FontSize="20" 
+						   Margin="0,10,10,10"
+						   IsTextSelectionEnabled="False"
+						   FontWeight="Light"
+						   FontFamily="Segoe UI Light"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left">
+                       new asset
+				</TextBlock>
+
+				<TextBox Grid.Column="1"
+						Foreground="Gray"
+						FontFamily="Segoe UI Light"
+						FontWeight="Light"
+						HorizontalAlignment="Stretch"
+						HorizontalContentAlignment="Center"
+						VerticalAlignment="Center"
+						InputScope="Text"
+						TextAlignment="Center"
+						PlaceholderText="AssetName"
+						Margin="5,10,10,10"
+						Width="Auto"
+						IsEnabled="False"
+						Text="MyAssetId">
+				</TextBox>
+			</Grid>
+		</Grid>
+	</Grid>
+</UserControl>

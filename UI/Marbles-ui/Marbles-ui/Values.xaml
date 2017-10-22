@@ -10,7 +10,7 @@
     d:DesignWidth="180"
 	AllowDrop="True"
 	Drop="Values_OnDrop"
-	DragEnter="Values_OnDragEnter"
+	DragOver="Values_OnDragOver"
 	DragLeave="Values_OnDragLeave"
 	BorderBrush="Gray">
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -15,16 +14,18 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+
 namespace Marbles
 {
-    public sealed partial class InstructionListView : UserControl
-    {
+	public sealed partial class VariableList : UserControl
+	{
 		ScrollViewer scrollViewer;
 		public static bool dropped;
 
-		public InstructionListView()
-        {
-            this.InitializeComponent();
+		public VariableList()
+		{
+			this.InitializeComponent();
 			dropped = false;
 			SizeChanged += MainPage_SizeChanged;
 		}
@@ -32,7 +33,7 @@ namespace Marbles
 		void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			scrollViewer = VisualTreeHelper.GetChild(
-			  VisualTreeHelper.GetChild(TargetListView, 0), 0) as ScrollViewer;
+			  VisualTreeHelper.GetChild(VariableListView, 0), 0) as ScrollViewer;
 
 			// We can unsubscribe after we are done - not gonna be called any more
 			SizeChanged -= MainPage_SizeChanged;
@@ -41,16 +42,16 @@ namespace Marbles
 		public void ListView_SuspendDragAndDrop()
 		{
 			this.CanDrag = false;
-			this.TargetListView.CanDragItems = true;
-			this.TargetListView.CanReorderItems = false;
+			this.VariableListView.CanDragItems = true;
+			this.VariableListView.CanReorderItems = false;
 			this.AllowDrop = false;
 		}
 
 		public void ListView_ResumeDragAndDrop()
 		{
 			this.CanDrag = false;
-			this.TargetListView.CanDragItems = true;
-			this.TargetListView.CanReorderItems = true;
+			this.VariableListView.CanDragItems = true;
+			this.VariableListView.CanReorderItems = true;
 			this.AllowDrop = true;
 		}
 
@@ -85,38 +86,14 @@ namespace Marbles
 					count++;
 				}
 
-				if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
+				if (e.DataView.Properties.ContainsKey("CreateVariable"))
 				{
-					lv.Items.Insert(index, new Marbles.AssignBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.DoBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.ForBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.WhileBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.IfBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
-				{
-					lv.Items.Insert(index, new Marbles.StopBlock());
-				}
-				else if (e.DataView.Properties.ContainsKey("ReturnStatement"))
-				{
-					lv.Items.Insert(index, new Marbles.ReturnBlock());
+					lv.Items.Insert(index, new Marbles.CreateVariable() );
 				}
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
-			this.TargetListView.CanReorderItems = true;
+			this.VariableListView.CanReorderItems = true;
 		}
 
 		private void TargetListView_DragLeave(object sender, DragEventArgs e)
@@ -128,7 +105,7 @@ namespace Marbles
 			dropped = false;
 			ListView_ResumeDragAndDrop();
 			e.AcceptedOperation = DataPackageOperation.Copy;
-			if (e.DataView.Properties.ContainsKey("Instruction"))
+			if (e.DataView.Properties.ContainsKey("VariableTemplate"))
 			{
 				e.DragUIOverride.Caption = "";
 				e.DragUIOverride.IsCaptionVisible = false;
@@ -143,11 +120,6 @@ namespace Marbles
 				e.DragUIOverride.IsContentVisible = true;
 				this.ListView_SuspendDragAndDrop();
 			}
-		}
-
-		public ListView GetTargetListView()
-		{
-			return this.TargetListView;
 		}
 	}
 }
