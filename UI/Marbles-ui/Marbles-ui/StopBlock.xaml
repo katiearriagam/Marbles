@@ -9,11 +9,11 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Background="#c0392b" Padding="10" Width="Auto" Margin="10">
+	<Grid Background="#D13438" Padding="10" Width="Auto" Margin="0,5">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="0.1*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock 
 						Foreground="White" 

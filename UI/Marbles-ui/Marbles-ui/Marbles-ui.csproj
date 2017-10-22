@@ -104,6 +104,9 @@
     <Compile Include="AssetFunction.xaml.cs">
       <DependentUpon>AssetFunction.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AssetList.xaml.cs">
+      <DependentUpon>AssetList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AssignBlock.xaml.cs">
       <DependentUpon>AssignBlock.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,15 @@
     <Compile Include="ConstantText.xaml.cs">
       <DependentUpon>ConstantText.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CreateAsset.xaml.cs">
+      <DependentUpon>CreateAsset.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CreateFunction.xaml.cs">
+      <DependentUpon>CreateFunction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CreateVariable.xaml.cs">
+      <DependentUpon>CreateVariable.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DeleteBlockButton.xaml.cs">
       <DependentUpon>DeleteBlockButton.xaml</DependentUpon>
     </Compile>
@@ -134,11 +146,20 @@
     <Compile Include="FunctionCall.xaml.cs">
       <DependentUpon>FunctionCall.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FunctionInstructionList.xaml.cs">
+      <DependentUpon>FunctionInstructionList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionList.xaml.cs">
+      <DependentUpon>FunctionList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IfBlock.xaml.cs">
       <DependentUpon>IfBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="InstructionListView.xaml.cs">
       <DependentUpon>InstructionListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstructionListViewContainer.xaml.cs">
+      <DependentUpon>InstructionListViewContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -147,6 +168,9 @@
       <DependentUpon>MathExpression.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReturnBlock.xaml.cs">
+      <DependentUpon>ReturnBlock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StopBlock.xaml.cs">
       <DependentUpon>StopBlock.xaml</DependentUpon>
     </Compile>
@@ -174,6 +198,9 @@
     </Compile>
     <Compile Include="VariableCall.xaml.cs">
       <DependentUpon>VariableCall.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VariableList.xaml.cs">
+      <DependentUpon>VariableList.xaml</DependentUpon>
     </Compile>
     <Compile Include="WhileBlock.xaml.cs">
       <DependentUpon>WhileBlock.xaml</DependentUpon>
@@ -215,6 +242,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="AssetList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AssignBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -239,6 +270,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CreateAsset.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateFunction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateVariable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DeleteBlockButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -255,6 +298,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FunctionInstructionList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FunctionList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="IfBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -263,11 +314,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="InstructionListViewContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MathExpression.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReturnBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -304,6 +363,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="VariableCall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VariableList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

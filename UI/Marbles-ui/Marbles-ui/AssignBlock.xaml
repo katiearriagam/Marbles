@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#27ae60" Padding="10" Width="Auto" Margin="10">
+	<Grid Background="#10893E" Padding="10" Width="Auto" Margin="0,5">
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" />
@@ -21,7 +21,7 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
 				<TextBlock Grid.Column="0" 

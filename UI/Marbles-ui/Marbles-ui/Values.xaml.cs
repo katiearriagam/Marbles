@@ -169,13 +169,23 @@ namespace Marbles
 			}
 		}
 
-		private void Values_OnDragEnter(object sender, DragEventArgs e)
+		private void Values_OnDragOver(object sender, DragEventArgs e)
 		{
+			e.AcceptedOperation = DataPackageOperation.Copy;
+
 			if (e.DataView.Properties.ContainsKey("ValueTemplate"))
 			{
 				// Change the background of the target
 				e.DragUIOverride.Caption = "Drop value here.";
+				e.DragUIOverride.IsGlyphVisible = false;
 				e.DragUIOverride.IsCaptionVisible = true;
+			}
+			else
+			{
+				e.DragUIOverride.Caption = "";
+				e.DragUIOverride.IsCaptionVisible = false;
+				e.DragUIOverride.IsGlyphVisible = false;
+				e.DragUIOverride.IsContentVisible = false;
 			}
 		}
 
