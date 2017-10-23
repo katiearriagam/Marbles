@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Marbles.MainPage"
+    x:Class="Marbles.CodeView"
 	x:Name="CodeViewPage"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
