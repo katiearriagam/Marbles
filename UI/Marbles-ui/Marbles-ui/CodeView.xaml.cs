@@ -32,7 +32,9 @@ namespace Marbles
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
+            Debug.WriteLine("instructions {");
             InstructionListViewContainer.PrintCode();
+            Debug.WriteLine("}\n// End program");
         }
     }
 }

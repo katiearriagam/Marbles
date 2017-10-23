@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,7 +28,38 @@ namespace Marbles
 
 		private void AddParameter(object sender, RoutedEventArgs e)
 		{
-			Parameters.Items.Add(new TextBox());
+            TextBox parameter = new TextBox()
+            {
+                FontFamily = new FontFamily("Segoe UI Light"),
+                FontWeight = FontWeights.Light,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                PlaceholderText = "Parameter Here",
+                Width = double.NaN
+            };
+
+            Parameters.Items.Add(parameter);
 		}
+
+        public void PrintCode()
+        {
+            Debug.Write(FunctionNameTextBox.Text + "(");
+            bool firstParam = true;
+            foreach (TextBox tb in Parameters.Items)
+            {
+                if (firstParam)
+                {
+                    firstParam = false;
+                    Debug.Write(tb.Text);
+                }
+                else
+                {
+                    Debug.Write(", " + tb.Text);
+                }
+            }
+            Debug.Write(")");
+        }
 	}
 }

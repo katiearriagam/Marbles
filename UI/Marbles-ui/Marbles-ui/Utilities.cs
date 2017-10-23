@@ -18,6 +18,33 @@ namespace Marbles
             Triangle,
             Square
         }
+        
+        public enum BlockTypes
+        {
+            AssignBlock,
+            CreateAsset,
+            CreateFunction,
+            CreateVariable,
+            DoBlock,
+            ForBlock,
+            IfBlock,
+            ReturnBlock,
+            StopBlock,
+            WhileBlock
+        }
+
+        public enum ValueTypes
+        {
+            VariableCall,
+            FunctionCall,
+            NumberConstant,
+            TextConstant,
+            BooleanConstant,
+            MathExpression,
+            BooleanExpression,
+            AssetProperty,
+            AssetFunction
+        }
 
         public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();
         public static Dictionary<string, ShapeTypes> actionToShapeType = new Dictionary<string, ShapeTypes>();

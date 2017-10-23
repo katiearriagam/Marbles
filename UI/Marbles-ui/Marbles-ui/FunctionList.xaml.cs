@@ -27,7 +27,7 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write("\t"); FunctionInstructionListTarget.PrintCode();
+            FunctionInstructionListTarget.PrintCode();
         }
     }
 }

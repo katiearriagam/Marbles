@@ -11,6 +11,7 @@
 
 	<Grid>
 		<TextBox
+            x:Name="VariableCallTextBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"

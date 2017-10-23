@@ -11,6 +11,7 @@
 
 	<Grid>
 		<TextBox
+            x:Name="BooleanExpressionTextBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"

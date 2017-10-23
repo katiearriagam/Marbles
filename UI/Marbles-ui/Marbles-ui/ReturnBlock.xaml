@@ -28,7 +28,7 @@
 						 HorizontalAlignment="Left">
                        return
 			</TextBlock>
-			<local:Values Grid.Column="1" Name="ValuesInput"></local:Values>
+			<local:Values Grid.Column="1" x:Name="ValuesInput"></local:Values>
 			<local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right"/>
 		</Grid>
 	</Grid>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,5 +24,10 @@ namespace Marbles
 		{
 			this.InitializeComponent();
 		}
+
+        public void PrintCode()
+        {
+            Debug.Write(((ComboBoxItem)(BooleanConstantComboBox.SelectedItem)).Content.ToString());
+        }
 	}
 }

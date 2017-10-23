@@ -20,10 +20,12 @@ namespace Marbles
 {
     public sealed partial class InstructionListViewContainer : UserControl
     {
+        private InstructionListView instructions;
+
         public InstructionListViewContainer()
         {
             this.InitializeComponent();
-			var instructions = new Marbles.InstructionListView();
+			instructions = new Marbles.InstructionListView();
 			var grid = Container;
 			grid.Children.Add(instructions);
 			Grid.SetRow(instructions, 2);
@@ -31,6 +33,7 @@ namespace Marbles
 
         public void PrintCode()
         {
+            instructions.PrintCode();
         }
     }
 }

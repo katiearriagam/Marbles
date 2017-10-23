@@ -17,6 +17,7 @@
 		</Grid.ColumnDefinitions>
 		<TextBox
 			Grid.Column="0"
+            x:Name="AssetNameTextBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
@@ -41,6 +42,7 @@
 		</TextBlock>
 		<ComboBox
 			Grid.Column="2"
+            x:Name="AssetAttributeComboBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
