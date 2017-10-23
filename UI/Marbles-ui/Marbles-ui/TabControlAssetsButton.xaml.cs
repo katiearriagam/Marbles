@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -64,7 +65,7 @@ namespace Marbles
             args.Data.Properties.Add("action", DragStartingId);
             args.Data.Properties.Add("xClicked", (int)(lastPositionClicked.X));
             args.Data.Properties.Add("yClicked", (int)(lastPositionClicked.Y));
-        }
+		}
 
         private void MenuItem_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
