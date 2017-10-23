@@ -28,7 +28,7 @@ namespace Marbles
 
 		public void PrintCode()
 		{
-			foreach (CreateAsset item in AssetListView.Items)
+            foreach (CreateAsset item in AssetListView.Items)
 			{
 				item.PrintCode();
 			}

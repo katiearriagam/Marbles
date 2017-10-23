@@ -27,7 +27,7 @@ namespace Marbles
 
 		public void PrintCode()
 		{
-			Debug.WriteLine("create " + AssetId.Text.ToString());
+			Debug.WriteLine("asset " + AssetId.Text.ToString() + ";");
 		}
 	}
 }

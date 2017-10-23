@@ -26,5 +26,13 @@ namespace Marbles
         {
             this.InitializeComponent();
 		}
-	}
+
+        private void CompileButton_Click(object sender, RoutedEventArgs e)
+        {
+            AssetListViewContainer.PrintCode();
+            VariableListViewContainer.PrintCode();
+            FunctionListViewContainer.PrintCode();
+            InstructionListViewContainer.PrintCode();
+        }
+    }
 }

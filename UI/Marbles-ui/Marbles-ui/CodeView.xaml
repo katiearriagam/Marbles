@@ -11,11 +11,17 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 		<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="0.33*"/>
-			</Grid.ColumnDefinitions>
-			<ListView x:Name="MainListView" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.1*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CompileButton"
+                    Grid.Column="2"
+                    FontSize="20"
+                    VerticalAlignment="Top"
+                    Click="CompileButton_Click">COMPILE</Button>
+            <ListView x:Name="MainListView" Grid.Column="0">
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
 						<StackPanel Background="Transparent" Orientation="Vertical" />
@@ -26,11 +32,11 @@
 						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 					</Style>
 				</ListView.ItemContainerStyle>
-				<local:AssetList x:Name="AssetListViewContainer" VerticalAlignment="Stretch"></local:AssetList>
-				<local:VariableList x:Name="VariableListViewContainer" VerticalAlignment="Stretch"></local:VariableList>
-				<local:FunctionList x:Name="FunctionListViewContainer" VerticalAlignment="Stretch"></local:FunctionList>
-				<local:InstructionListViewContainer x:Name="InstructionListViewContainer" VerticalAlignment="Stretch"></local:InstructionListViewContainer>
-			</ListView>
+                <local:AssetList x:Name="AssetListViewContainer" VerticalAlignment="Stretch" />
+                <local:VariableList x:Name="VariableListViewContainer" VerticalAlignment="Stretch" />
+                <local:FunctionList x:Name="FunctionListViewContainer" VerticalAlignment="Stretch" />
+                <local:InstructionListViewContainer x:Name="InstructionListViewContainer" VerticalAlignment="Stretch" />
+            </ListView>
 			<local:TabControlCode Grid.Column="1"></local:TabControlCode>
 		</Grid>
 	</Grid>
