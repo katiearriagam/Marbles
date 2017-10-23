@@ -39,7 +39,7 @@ INSTRUCTION         = ((STOP | DO | ASSIGNMENT) ';' |  (FOR | WHILE | IFF)) .
 STOP                = "stop".
 DO                  = "do" id '.' ACTION .
 ACTION              = ((("move_x" '(' | "move_y" '(' | "turn" '(' | "set_position" '(' EXP ',' ) EXP ')' ) | "spin").
-FOR                 = "for" '(' CREATE_VAR ASSIGNMENT ';' id '<' EXP ';' ASSIGNMENT ')' '{' {INSTRUCTION} '}' .
+FOR                 = "for" '(' EXP ')' "loops" '{' {INSTRUCTION} '}' .
 WHILE               = "while" '(' SUPER_EXP ')' '{' {INSTRUCTION} '}' .
 IFF                 = "if" '(' SUPER_EXP ')' '{' {INSTRUCTION} '}' .
 ASSIGNMENT          = "set" (id ['.' ATTRIBUTE]) '=' (SUPER_EXP | COLOR) .
