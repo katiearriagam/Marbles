@@ -89,9 +89,12 @@ namespace Marbles
             }
             catch (Exception e)
             {
-                // The input number was not valid
-                args.Cancel = true;
-                return;
+				if (NumberTextBox.Text.Length != 0)
+				{
+					// The input number was not valid
+					args.Cancel = true;
+					return;
+				}
             }
 
             Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text));

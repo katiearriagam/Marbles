@@ -34,7 +34,8 @@
                        new asset
 				</TextBlock>
 
-				<TextBox Grid.Column="1"
+				<TextBox x:Name="AssetId"
+						Grid.Column="1"
 						Foreground="Gray"
 						FontFamily="Segoe UI Light"
 						FontWeight="Light"

@@ -30,6 +30,14 @@ namespace Marbles
 			SizeChanged += MainPage_SizeChanged;
 		}
 
+		public void PrintCode()
+		{
+			foreach (CreateVariable item in VariableListView.Items)
+			{
+				item.PrintCode();
+			}
+		}
+
 		void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			scrollViewer = VisualTreeHelper.GetChild(

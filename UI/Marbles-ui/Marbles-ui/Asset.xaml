@@ -14,65 +14,87 @@
     x:Name="AssetUserControl"
    >
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="0.4*" />
-        </Grid.RowDefinitions>
-        <Image
-            x:Name="AssetImage"
-            Grid.Row="0"
-            Source="{Binding ImageSource}"
-            Height="100"
-            Width="100"
+	<Viewbox x:Name="MyViewbox">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="0.4*" />
+			</Grid.RowDefinitions>
+			<Image
+				x:Name="AssetImage"
+				Grid.Row="0"
+				Source="{Binding ImageSource}"
+				Height="90"
+				Width="90"
+				VerticalAlignment="Center" 
+				HorizontalAlignment="Center"
             />
-        <Grid Grid.Row="1" HorizontalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
+			<Grid Grid.Row="1" HorizontalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<TextBlock
                 Grid.Column="0"
                 Text="Label:"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="10"
+                FontSize="13"
                 />
-                <TextBlock
-                x:Name="AssetLabel"
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Text="{Binding Label}"
-                />
-            </Grid>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
+					<ScrollViewer
+					Grid.Column="1"
+					Height="20" 
+					MaxWidth="80" 
+					MaxHeight="20"
+					HorizontalScrollBarVisibility="Disabled" 
+					VerticalScrollBarVisibility="Auto">
+						<TextBlock
+						x:Name="AssetLabel"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						FontSize="13"
+						MaxWidth="100"
+						TextWrapping="Wrap"
+						Text="{Binding Label}"
+					/>
+					</ScrollViewer>
+				</Grid>
+				<Grid Grid.Row="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<TextBlock
                 Grid.Column="0"
                 Text="Number:"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="10"
+                FontSize="13"
                 />
-                <TextBlock
-                x:Name="AssetNumber"
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Text="{Binding Number}"
-                />
-            </Grid>
-        </Grid>
-    </Grid>
+					<ScrollViewer
+					Grid.Column="1"
+					Height="20" MaxWidth="80"
+					MaxHeight="20"
+					HorizontalScrollBarVisibility="Disabled" 
+					VerticalScrollBarVisibility="Auto">
+						<TextBlock
+						x:Name="AssetNumber"
+						Grid.Column="1"
+						TextWrapping="Wrap"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						FontSize="13"
+						MaxWidth="100"
+						Text="{Binding Number}"
+					/>
+					</ScrollViewer>
+				</Grid>
+			</Grid>
+		</Grid>
+	</Viewbox>
 </UserControl>

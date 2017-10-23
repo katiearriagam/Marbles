@@ -13,7 +13,12 @@
     x:Name="MenuItem"
     PointerPressed="MenuItem_PointerPressed">
 
-    <Grid Width="100" Height="100" Padding="10" HorizontalAlignment="Left">
-        <Image Source="{Binding ImageSource}" />
-    </Grid>
+	<Grid x:Name="AssetBackground"
+			Width="90" 
+			Height="90" 
+			Padding="10" 
+			HorizontalAlignment="Left"
+			Margin="10">
+		<Image Source="{Binding ImageSource}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+	</Grid>
 </UserControl>

@@ -34,7 +34,8 @@
 						   HorizontalAlignment="Left">
                        new variable
 				</TextBlock>
-				<ComboBox Grid.Column="1"
+				<ComboBox x:Name="VariableType"
+					Grid.Column="1"
 					FontFamily="Segoe UI Light"
 					FontWeight="Light"
 					HorizontalAlignment="Stretch"
@@ -46,7 +47,8 @@
 					<ComboBoxItem>text</ComboBoxItem>
 					<ComboBoxItem>boolean</ComboBoxItem>
 				</ComboBox>
-				<TextBox Grid.Column="2"
+				<TextBox x:Name="VariableName"
+						Grid.Column="2"
 						FontFamily="Segoe UI Light"
 						FontWeight="Light"
 						HorizontalAlignment="Stretch"
