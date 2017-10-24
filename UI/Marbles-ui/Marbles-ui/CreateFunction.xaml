@@ -5,6 +5,7 @@
     xmlns:local="using:Marbles"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local1="using:System.Reflection.Metadata"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -43,7 +44,8 @@
                        function
 			</TextBlock>
 
-			<ComboBox Grid.Column="1"
+			<ComboBox x:Name="functionType"
+                    Grid.Column="1"
 					SelectedIndex="0"
 					FontFamily="Segoe UI Light"
 					FontWeight="Light"
@@ -56,7 +58,8 @@
 				<ComboBoxItem>boolean</ComboBoxItem>
 			</ComboBox>
 
-			<TextBox Grid.Column="2" 
+			<TextBox x:Name="functionID"
+                    Grid.Column="2" 
 					FontFamily="Segoe UI Light"
 					FontWeight="Light"
 					HorizontalAlignment="Stretch"
@@ -92,26 +95,28 @@
 					</ItemsPanelTemplate>
 				</ListView.ItemsPanel>
 				<ListView.ItemTemplate>
-					<DataTemplate>
+                    <DataTemplate>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition/>
 								<ColumnDefinition/>
 							</Grid.ColumnDefinitions>
-							<ComboBox Grid.Column="0"
-							SelectedIndex="0"
-							FontFamily="Segoe UI Light"
-							FontWeight="Light"
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Center"
-							Margin="0,0,5,0"
-							HorizontalContentAlignment="Center"
-							Width="Auto">
+							<ComboBox x:Name="ParameterType"
+                                Grid.Column="0"
+							    SelectedIndex="0"
+							    FontFamily="Segoe UI Light"
+							    FontWeight="Light"
+							    HorizontalAlignment="Stretch"
+							    VerticalAlignment="Center"
+							    Margin="0,0,5,0"
+							    HorizontalContentAlignment="Center"
+							    Width="Auto">
 								<ComboBoxItem>number</ComboBoxItem>
 								<ComboBoxItem>text</ComboBoxItem>
 								<ComboBoxItem>boolean</ComboBoxItem>
 							</ComboBox>
 							<TextBox
+                                x:Name="ParameterName"
 								Grid.Column="1"
 								FontFamily="Segoe UI Light"
 								FontWeight="Light"
