@@ -14,7 +14,9 @@ namespace Marbles
         public static int assetInitialWidth = 100;
         public static int linesOfCodeCount = 0;
         public static ArrayList linesOfCode = new ArrayList();
-        public enum ShapeTypes
+		public static ArrayList assetsInCanvas = new ArrayList();
+
+		public enum ShapeTypes
         {
             Circle,
             Triangle,

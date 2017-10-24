@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -21,11 +22,17 @@ namespace Marbles
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class CodeView : Page
     {
-		public MainPage()
+		public CodeView()
         {
             this.InitializeComponent();
+			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+		}
+
+		protected override void OnNavigatedTo(NavigationEventArgs e)
+		{
+			AssetListViewContainer.UpdateAssets();
 		}
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
@@ -34,6 +41,7 @@ namespace Marbles
             Utilities.linesOfCode = new ArrayList();
 
             UserControl main = new UserControl();
+
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
@@ -46,19 +54,26 @@ namespace Marbles
             Utilities.linesOfCode.Add(new CodeLine("}", main));
             Utilities.linesOfCodeCount++;
 
+            WriteCodeToFile();
+        }
+
+        private void WriteCodeToFile()
+        {
             List<string> linesToOutput = new List<string>();
-            foreach(CodeLine line in Utilities.linesOfCode)
+            foreach (CodeLine line in Utilities.linesOfCode)
             {
                 linesToOutput.Add(line.content);
-                Debug.WriteLine(line.content);
             }
-            string directoryName = "MarblesTemp";
-            string directoryPath = Path.Combine(Path.GetTempPath(), directoryName);
+
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            
+            string directoryPath = Path.Combine(localFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
-            string filePath= Path.Combine(directoryPath, "OutputCode.txt");
+            string filePath = Path.Combine(directoryPath, "OutputCode.txt");
+
+            // if a file already exists, erase its contents to start a new one
             if (File.Exists(filePath))
             {
-                // erase the contents if it already exists
                 File.WriteAllText(filePath, string.Empty);
             }
             File.WriteAllLines(filePath, linesToOutput);

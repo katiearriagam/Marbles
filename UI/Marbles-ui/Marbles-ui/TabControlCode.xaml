@@ -40,7 +40,7 @@
 	
     <Grid>
 		<ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-			<Pivot>
+			<Pivot Title="Code Blocks">
 				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
 					<PivotItem.Header>
 						<local:TabHeader Label="Instructions" Glyph="&#xE7BC;" />

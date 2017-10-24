@@ -20,9 +20,12 @@ namespace Marbles
 {
 	public sealed partial class AssignBlock : UserControl
 	{
+		public ulong id;
+
 		public AssignBlock()
 		{
 			this.InitializeComponent();
+			id = Helper.IdCounter++;
 		}
 
         public void PrintCode()

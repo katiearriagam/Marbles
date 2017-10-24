@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#69797E" Padding="10" Width="Auto" Margin="0,5">
+	<Grid Background="#767676" Padding="10" Width="Auto" Margin="0,5">
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" />
@@ -36,7 +36,7 @@
 
 				<TextBox x:Name="AssetId"
 						Grid.Column="1"
-						Foreground="Gray"
+						Background="LightGray"
 						FontFamily="Segoe UI Light"
 						FontWeight="Light"
 						HorizontalAlignment="Stretch"
@@ -47,8 +47,7 @@
 						PlaceholderText="AssetName"
 						Margin="5,10,10,10"
 						Width="Auto"
-						IsEnabled="False"
-						Text="MyAssetId">
+						IsEnabled="false">
 				</TextBox>
 			</Grid>
 		</Grid>

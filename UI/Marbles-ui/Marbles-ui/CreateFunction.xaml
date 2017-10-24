@@ -141,7 +141,7 @@
 					<Grid Height="5" />
 				</ListView.Header>
 				<ListView.Footer>
-					<Grid Height="50" />
+					<Grid Height="5" />
 				</ListView.Footer>
 				<local:VariableList x:Name="VariableListViewContainer" VerticalAlignment="Stretch"></local:VariableList>
 				<local:InstructionListViewContainer x:Name="InstructionListViewContainer" VerticalAlignment="Stretch"></local:InstructionListViewContainer>
