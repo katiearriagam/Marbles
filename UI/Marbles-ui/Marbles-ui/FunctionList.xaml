@@ -28,7 +28,7 @@
 			Create functions here
 		</TextBlock>
 		<Grid Grid.Row="2" Background="White">
-			<local:FunctionInstructionList x:Name="InstructionListViewContainer" VerticalAlignment="Stretch"></local:FunctionInstructionList>
+			<local:FunctionInstructionList x:Name="FunctionInstructionListTarget" VerticalAlignment="Stretch"></local:FunctionInstructionList>
 		</Grid>
 	</Grid>
 </UserControl>

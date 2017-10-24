@@ -119,10 +119,6 @@ namespace Marbles
 			this.TargetListView.CanReorderItems = true;
 		}
 
-		private void TargetListView_DragLeave(object sender, DragEventArgs e)
-		{
-		}
-
 		private void TargetListView_DragOver(object sender, DragEventArgs e)
 		{
 			dropped = false;
@@ -149,5 +145,10 @@ namespace Marbles
 		{
 			return this.TargetListView;
 		}
+
+        public void PrintCode()
+        {
+
+        }
 	}
 }

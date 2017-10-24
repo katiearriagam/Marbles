@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,20 +24,12 @@ namespace Marbles
 		ScrollViewer scrollViewer;
 		public static bool dropped;
 
-		public VariableList()
-		{
-			this.InitializeComponent();
-			dropped = false;
-			SizeChanged += MainPage_SizeChanged;
-		}
-
-		public void PrintCode()
-		{
-			foreach (CreateVariable item in VariableListView.Items)
-			{
-				item.PrintCode();
-			}
-		}
+        public VariableList()
+        {
+            this.InitializeComponent();
+            dropped = false;
+            SizeChanged += MainPage_SizeChanged;
+        }
 
 		void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
@@ -104,10 +97,6 @@ namespace Marbles
 			this.VariableListView.CanReorderItems = true;
 		}
 
-		private void TargetListView_DragLeave(object sender, DragEventArgs e)
-		{
-		}
-
 		private void TargetListView_DragOver(object sender, DragEventArgs e)
 		{
 			dropped = false;
@@ -129,5 +118,13 @@ namespace Marbles
 				this.ListView_SuspendDragAndDrop();
 			}
 		}
-	}
+
+        public void PrintCode()
+        {
+            foreach (CreateVariable item in VariableListView.Items)
+            {
+                item.PrintCode();
+            }
+        }
+    }
 }

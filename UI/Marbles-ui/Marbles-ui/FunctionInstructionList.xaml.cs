@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -95,10 +96,6 @@ namespace Marbles
 			}
 		}
 
-		private void TargetListView_DragLeave(object sender, DragEventArgs e)
-		{
-		}
-
 		private void TargetListView_DragOver(object sender, DragEventArgs e)
 		{
 			dropped = false;
@@ -120,6 +117,17 @@ namespace Marbles
 				this.ListView_SuspendDragAndDrop();
 			}
 		}
+
+        public void PrintCode()
+        {
+            foreach (UserControl item in TargetListView.Items)
+            {
+                if (item.GetType() == typeof(Marbles.CreateFunction))
+                {
+                    Debug.Write("\t"); (item as Marbles.CreateFunction).PrintCode();
+                }
+            }
+        }
 	}
 }
 

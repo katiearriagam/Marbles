@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,7 +27,21 @@ namespace Marbles
 
 		private void AddParameter(object sender, RoutedEventArgs e)
 		{
-			Parameters.Items.Add(new TextBox());
+            
+            Parameters.Items.Add(Parameters.Template);
 		}
-	}
+
+        public void PrintCode()
+        {
+            Debug.Write("function " + ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString() + " " + functionID.Text + "(");
+
+            foreach (var item in Parameters.Items)
+            {
+                // imprimir parametros
+            }
+            Debug.WriteLine(") {");
+            // --> print las instrucciones dentro de la funcion aqui <-- //
+            Debug.WriteLine("\t}");
+        }
+    }
 }

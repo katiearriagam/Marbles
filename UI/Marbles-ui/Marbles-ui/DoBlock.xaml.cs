@@ -23,10 +23,5 @@ namespace Marbles
         {
             this.InitializeComponent();
         }
-
-		private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
-		{
-			FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-		}
 	}
 }
