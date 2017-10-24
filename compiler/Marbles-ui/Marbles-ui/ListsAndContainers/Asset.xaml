@@ -1,0 +1,98 @@
+﻿<UserControl
+    x:Class="Marbles.Asset"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    CanDrag="True"
+    DragStarting="UserControl_DragStarting"
+    PointerPressed="UserControl_PointerPressed"
+    x:Name="AssetUserControl"
+   >
+
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="0.4*" />
+			</Grid.RowDefinitions>
+			<Image
+					x:Name="AssetImage"
+					Grid.Row="0"
+					Source="{Binding ImageSource}"
+					Height="90"
+					Width="90"
+					VerticalAlignment="Center" 
+					HorizontalAlignment="Center"
+				/>
+				<Grid Grid.Row="1" HorizontalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<TextBlock
+                Grid.Column="0"
+                Text="Label:"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="13"
+                />
+					<ScrollViewer
+					Grid.Column="1"
+					Height="20" 
+					MaxWidth="80" 
+					MaxHeight="20"
+					HorizontalScrollBarVisibility="Disabled" 
+					VerticalScrollBarVisibility="Auto">
+						<TextBlock
+						x:Name="AssetLabel"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						FontSize="13"
+						MaxWidth="100"
+						TextWrapping="Wrap"
+						Text="{Binding Label}"
+					/>
+					</ScrollViewer>
+				</Grid>
+				<Grid Grid.Row="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<TextBlock
+                Grid.Column="0"
+                Text="Number:"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="13"
+                />
+					<ScrollViewer
+					Grid.Column="1"
+					Height="20" MaxWidth="80"
+					MaxHeight="20"
+					HorizontalScrollBarVisibility="Disabled" 
+					VerticalScrollBarVisibility="Auto">
+						<TextBlock
+						x:Name="AssetNumber"
+						Grid.Column="1"
+						TextWrapping="Wrap"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Center"
+						FontSize="13"
+						MaxWidth="100"
+						Text="{Binding Number}"
+					/>
+					</ScrollViewer>
+				</Grid>
+			</Grid>
+		</Grid>
+</UserControl>

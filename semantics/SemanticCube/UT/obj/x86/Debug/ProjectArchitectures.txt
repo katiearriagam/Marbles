@@ -1,2 +1,0 @@
-C:\Users\katie\source\repos\SemanticCube\SemanticCube\SemanticCube.csproj;x86
-C:\Users\katie\source\repos\SemanticCube\UT\UT.csproj;x86
