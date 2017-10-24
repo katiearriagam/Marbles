@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,5 +26,15 @@ namespace Marbles
 		{
 			this.InitializeComponent();
 		}
+
+        public void PrintCode()
+        {
+            Utilities.linesOfCode.Add(new CodeLine("set ", this));
+            Utilities.linesOfCodeCount++;
+            ValuesInputThis.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " = ";
+            ValuesInputTo.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ";";
+        }
 	}
 }

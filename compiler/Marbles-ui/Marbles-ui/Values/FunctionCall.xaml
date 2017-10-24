@@ -20,6 +20,7 @@
 		</Grid.ColumnDefinitions>
 		<TextBox
 			Grid.Column="0"
+            x:Name="FunctionNameTextBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
@@ -48,27 +49,12 @@
 				ScrollViewer.HorizontalScrollMode="Enabled"                  
 				ScrollViewer.VerticalScrollMode="Disabled"
 				ItemsSource="{Binding Collection}">
-			<ListView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<StackPanel Orientation="Horizontal"></StackPanel>
-				</ItemsPanelTemplate>
-			</ListView.ItemsPanel>
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<TextBox
-						FontFamily="Segoe UI Light"
-						FontWeight="Light"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
-						InputScope="Text"
-						TextAlignment="Center"
-						PlaceholderText="ParameterHere"
-						HorizontalContentAlignment="Center"
-						Width="Auto">
-					</TextBox>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"></StackPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
 		<Button Grid.Column="3"
 				Click="AddParameter">
 			<FontIcon

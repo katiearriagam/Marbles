@@ -11,6 +11,7 @@
 
 	<Grid>
 		<ComboBox
+            x:Name="BooleanConstantComboBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"

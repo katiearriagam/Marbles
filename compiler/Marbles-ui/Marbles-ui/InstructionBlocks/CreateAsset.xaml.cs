@@ -33,7 +33,9 @@ namespace Marbles
 
 		public void PrintCode()
 		{
-			Debug.WriteLine("asset " + AssetId.Text.ToString() + ";");
-		}
+            Utilities.linesOfCode.Add(new CodeLine("asset " + AssetId.Text.ToString() + ";", this));
+            Utilities.linesOfCodeCount++;
+
+        }
 	}
 }

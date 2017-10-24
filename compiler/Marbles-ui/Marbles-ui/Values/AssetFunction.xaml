@@ -20,6 +20,7 @@
 		</Grid.ColumnDefinitions>
 		<TextBox
 			Grid.Column="0"
+            x:Name="AssetID"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
@@ -43,6 +44,7 @@
 		</TextBlock>
 		<ComboBox
 			Grid.Column="2"
+            x:Name="AssetAction"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
@@ -69,34 +71,19 @@
 			FontSize="20">
 			(
 		</TextBlock>
-		<ListView Name="Parameters"
+		<ListView x:Name="Parameters"
 				Grid.Column="4"
 				ScrollViewer.VerticalScrollBarVisibility="Disabled" 
 				ScrollViewer.HorizontalScrollBarVisibility="Auto"
 				ScrollViewer.HorizontalScrollMode="Enabled"                  
 				ScrollViewer.VerticalScrollMode="Disabled"
 				ItemsSource="{Binding Collection}">
-			<ListView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<StackPanel Orientation="Horizontal"></StackPanel>
-				</ItemsPanelTemplate>
-			</ListView.ItemsPanel>
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<TextBox
-						FontFamily="Segoe UI Light"
-						FontWeight="Light"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Center"
-						InputScope="Text"
-						TextAlignment="Center"
-						PlaceholderText="ParameterHere"
-						HorizontalContentAlignment="Center"
-						Width="Auto">
-					</TextBox>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"></StackPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
 		<TextBlock
 			Grid.Column="5"
 			FontFamily="Segoe UI Light"

@@ -148,7 +148,49 @@ namespace Marbles
 
         public void PrintCode()
         {
-
+            foreach (UserControl instruction in TargetListView.Items)
+            {
+                if (instruction.GetType() == typeof(DoBlock))
+                {
+                    ((DoBlock)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(AssignBlock))
+                {
+                    ((AssignBlock)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(CreateAsset))
+                {
+                    ((CreateAsset)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(CreateFunction))
+                {
+                    ((CreateFunction)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(CreateVariable))
+                {
+                    ((CreateVariable)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(ForBlock))
+                {
+                    ((ForBlock)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(IfBlock))
+                {
+                    ((IfBlock)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(ReturnBlock))
+                {
+                    ((ReturnBlock)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(StopBlock))
+                {
+                    ((StopBlock)instruction).PrintCode();
+                }
+                else if (instruction.GetType() == typeof(WhileBlock))
+                {
+                    ((WhileBlock)instruction).PrintCode();
+                }
+            }
         }
 	}
 }

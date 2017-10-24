@@ -29,6 +29,7 @@
 		</TextBlock>
 		<TextBox
 			Grid.Column="1"
+            x:Name="ConstantTextTextBox"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"

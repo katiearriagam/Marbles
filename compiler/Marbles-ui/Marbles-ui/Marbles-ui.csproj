@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CodeLine.cs" />
     <Compile Include="ListsAndContainers\Asset.xaml.cs">
       <DependentUpon>Asset.xaml</DependentUpon>
     </Compile>
@@ -219,7 +220,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Marbles-ui_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\circle.png" />

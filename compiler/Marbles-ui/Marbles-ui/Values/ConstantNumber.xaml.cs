@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,6 +24,11 @@ namespace Marbles
         public ConstantNumber()
         {
             this.InitializeComponent();
+        }
+
+        public void PrintCode()
+        {
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ConstantNumberTextBox.Text;
         }
 	}
 }

@@ -27,7 +27,8 @@ namespace Marbles
 
 		public void PrintCode()
 		{
-			Debug.WriteLine("var " + ((ComboBoxItem)(VariableType.SelectedItem)).Content.ToString() + " " + VariableName.Text.ToString() + ";");
-		}
+            Utilities.linesOfCode.Add(new CodeLine("var " + ((ComboBoxItem)(VariableType.SelectedItem)).Content.ToString() + " " + VariableName.Text.ToString() + ";", this));
+            Utilities.linesOfCodeCount++;
+        }
 	}
 }

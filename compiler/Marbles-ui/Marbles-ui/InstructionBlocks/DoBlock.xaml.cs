@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,6 +23,14 @@ namespace Marbles
         public DoBlock()
         {
             this.InitializeComponent();
+        }
+
+        public void PrintCode()
+        {
+            Utilities.linesOfCode.Add(new CodeLine("do ", this));
+            Utilities.linesOfCodeCount++;
+            ValuesInput.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ";";
         }
 	}
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,9 +28,26 @@ namespace Marbles
 
 		private void MethodChosenChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var list = sender as ComboBox;
-			var parameter = new TextBox();
-			if (list != null && Parameters != null)
+            var list = sender as ComboBox;
+            TextBox parameter = new TextBox()
+            {
+                FontFamily = new FontFamily("Segoe UI Light"),
+                FontWeight = FontWeights.Light,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                PlaceholderText = "Parameter Here",
+                Width = double.NaN,
+                InputScope = new InputScope
+                {
+                    Names =
+                    {
+                        new InputScopeName(InputScopeNameValue.Text)
+                    }
+                }
+            };
+            if (list != null && Parameters != null)
 			{
 				Parameters.Items.Clear();
 				switch (list.SelectedIndex)
@@ -48,9 +67,26 @@ namespace Marbles
 						Parameters.Items.Add(parameter);
 						break;
 					case 4:
-						parameter.PlaceholderText = "X";
-						var parameterY = new TextBox();
-						parameterY.PlaceholderText = "Y"; ;
+                        parameter.PlaceholderText = "X";
+                        TextBox parameterY = new TextBox()
+                        {
+                            FontFamily = new FontFamily("Segoe UI Light"),
+                            FontWeight = FontWeights.Light,
+                            HorizontalContentAlignment = HorizontalAlignment.Center,
+                            HorizontalAlignment = HorizontalAlignment.Stretch,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            TextAlignment = TextAlignment.Center,
+                            PlaceholderText = "Y",
+                            Width = double.NaN,
+                            InputScope = new InputScope
+                            {
+                                Names =
+                                {
+                                    new InputScopeName(InputScopeNameValue.Text)
+                                }
+                            }
+                        };
+
 						Parameters.Items.Add(parameter);
 						Parameters.Items.Add(parameterY);
 						break;
@@ -59,5 +95,26 @@ namespace Marbles
 				}
 			}
 		}
+
+        public void PrintCode()
+        {
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += AssetID.Text + "." + ((ComboBoxItem)(AssetAction.SelectedItem)).Content.ToString() + "(";
+
+            bool firstParam = true;
+            foreach (TextBox parameter in Parameters.Items)
+            {
+                if (firstParam)
+                {
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += parameter.Text;
+                    firstParam = false;
+                }
+                else
+                {
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", " + parameter.Text;
+                }
+            }
+
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ")";
+        }
 	}
 }

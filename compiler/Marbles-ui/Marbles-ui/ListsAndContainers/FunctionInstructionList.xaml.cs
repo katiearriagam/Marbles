@@ -120,12 +120,9 @@ namespace Marbles
 
         public void PrintCode()
         {
-            foreach (UserControl item in TargetListView.Items)
+            foreach (CreateFunction function in TargetListView.Items)
             {
-                if (item.GetType() == typeof(Marbles.CreateFunction))
-                {
-                    Debug.Write("\t"); (item as Marbles.CreateFunction).PrintCode();
-                }
+                function.PrintCode();
             }
         }
 	}

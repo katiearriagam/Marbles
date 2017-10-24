@@ -12,6 +12,8 @@ namespace Marbles
     {
         public static int assetInitialHeight = 100;
         public static int assetInitialWidth = 100;
+        public static int linesOfCodeCount = 0;
+        public static ArrayList linesOfCode = new ArrayList();
 		public static ArrayList assetsInCanvas = new ArrayList();
 
 		public enum ShapeTypes
@@ -19,6 +21,33 @@ namespace Marbles
             Circle,
             Triangle,
             Square
+        }
+        
+        public enum BlockTypes
+        {
+            AssignBlock,
+            CreateAsset,
+            CreateFunction,
+            CreateVariable,
+            DoBlock,
+            ForBlock,
+            IfBlock,
+            ReturnBlock,
+            StopBlock,
+            WhileBlock
+        }
+
+        public enum ValueTypes
+        {
+            VariableCall,
+            FunctionCall,
+            NumberConstant,
+            TextConstant,
+            BooleanConstant,
+            MathExpression,
+            BooleanExpression,
+            AssetProperty,
+            AssetFunction
         }
 
         public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();

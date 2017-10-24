@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,6 +23,12 @@ namespace Marbles
         public StopBlock()
         {
             this.InitializeComponent();
+        }
+
+        public void PrintCode()
+        {
+            Utilities.linesOfCode.Add(new CodeLine("stop;", this));
+            Utilities.linesOfCodeCount++;
         }
     }
 }

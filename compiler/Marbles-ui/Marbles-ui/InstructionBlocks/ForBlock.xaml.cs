@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -19,13 +20,26 @@ namespace Marbles
 {
 	public sealed partial class ForBlock : UserControl
 	{
+        private Marbles.InstructionListView instructions;
+
 		public ForBlock()
 		{
 			this.InitializeComponent();
-			var instructions = new Marbles.InstructionListView();
+			instructions = new Marbles.InstructionListView();
 			var grid = Container;
 			grid.Children.Add(instructions);
 			Grid.SetRow(instructions, 2);
 		}
+
+        public void PrintCode()
+        {
+            Utilities.linesOfCode.Add(new CodeLine("for (", this));
+            Utilities.linesOfCodeCount++;
+            ValuesInput.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ") loops {";
+            instructions.PrintCode();
+            Utilities.linesOfCode.Add(new CodeLine("}", this));
+            Utilities.linesOfCodeCount++;
+        }
 	}
 }

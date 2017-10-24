@@ -23,7 +23,6 @@ namespace Marbles
 		public AssetList()
 		{
 			this.InitializeComponent();
-			PrintCode();
 		}
 
 		public void UpdateAssets()
