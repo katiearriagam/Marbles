@@ -11,8 +11,8 @@
     <AssemblyName>Marbles-ui</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -152,6 +152,7 @@
     <Compile Include="FunctionList.xaml.cs">
       <DependentUpon>FunctionList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper.cs" />
     <Compile Include="IfBlock.xaml.cs">
       <DependentUpon>IfBlock.xaml</DependentUpon>
     </Compile>
@@ -166,6 +167,9 @@
     </Compile>
     <Compile Include="MathExpression.xaml.cs">
       <DependentUpon>MathExpression.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NavBar.xaml.cs">
+      <DependentUpon>NavBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnBlock.xaml.cs">
@@ -323,6 +327,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MathExpression.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NavBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

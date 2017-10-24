@@ -25,6 +25,12 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
+		public CreateAsset(string assetId)
+		{
+			this.InitializeComponent();
+			AssetId.Text = assetId;
+		}
+
 		public void PrintCode()
 		{
 			Debug.WriteLine("asset " + AssetId.Text.ToString() + ";");

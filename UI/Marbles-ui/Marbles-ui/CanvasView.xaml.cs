@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,11 +27,12 @@ namespace Marbles
         private Point lastDropPosition;
         private Utilities.ShapeTypes assetToAddType;
         private Canvas cv;
-
+		
         public CanvasView()
         {
             this.InitializeComponent();
-        }
+			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+		}
 
         private async void MainCanvas_Drop(object sender, DragEventArgs e)
         {
@@ -104,6 +106,7 @@ namespace Marbles
             assetToAdd.SetPosition((int)lastDropPosition.X, (int)lastDropPosition.Y);
 
             cv.Children.Add(assetToAdd);
+			Utilities.assetsInCanvas.Add(assetToAdd);
 
             IDTextBox.Text = "";
             LabelTextBox.Text = "";
@@ -148,6 +151,7 @@ namespace Marbles
             // Delete the asset dropped
             Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
             cv.Children.Remove(assetDragged);
+			Utilities.assetsInCanvas.Remove(assetDragged);
         }
 
         private void DeleteIcon_DragOver(object sender, DragEventArgs e)
