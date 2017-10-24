@@ -45,13 +45,15 @@ namespace Marbles
 			switch (args.InvokedItem)
 				{
 					case "Canvas":
+						sender.Header = "Canvas";
 						ContentFrame.Navigate(typeof(CanvasView));
 						break;
 
 					case "Code":
+						sender.Header = "Code";
 						ContentFrame.Navigate(typeof(CodeView));
 						break;
-				}
+			}
 
 		}
 
@@ -62,13 +64,15 @@ namespace Marbles
 				switch (item.Tag)
 				{
 					case "Canvas":
+						sender.Header = "Canvas";
 						ContentFrame.Navigate(typeof(CanvasView));
 						break;
 
 					case "Code":
+						sender.Header = "Code";
 						ContentFrame.Navigate(typeof(CodeView));
 						break;
-				}
+			}
 		}
 	}
 }

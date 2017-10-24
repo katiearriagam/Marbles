@@ -25,6 +25,12 @@ namespace Marbles
 		public CodeView()
         {
             this.InitializeComponent();
+			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+		}
+
+		protected override void OnNavigatedTo(NavigationEventArgs e)
+		{
+			AssetListViewContainer.UpdateAssets();
 		}
 	}
 }

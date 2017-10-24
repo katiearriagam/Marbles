@@ -10,20 +10,33 @@
 	<NavigationView x:Name="NavView"
                     ItemInvoked="NavView_ItemInvoked"
                     SelectionChanged="NavView_SelectionChanged"
-                    Loaded="NavView_Loaded">
+                    Loaded="NavView_Loaded"
+					Header="headerString"
+					IsSettingsVisible="False">
+		
 		<NavigationView.MenuItems>
-			<NavigationViewItem Icon="AllApps" Content="Canvas" Tag="Canvas"/>
-			<NavigationViewItem Icon="AllApps" Content="Code" Tag="Code"/>
+			<NavigationViewItem Content="Canvas" Tag="Canvas">
+				<NavigationViewItem.Icon>
+					<FontIcon Glyph="&#xEB9F;"/>
+				</NavigationViewItem.Icon>
+			</NavigationViewItem>
+			<NavigationViewItem Content="Code" Tag="Code">
+				<NavigationViewItem.Icon>
+					<FontIcon Glyph="&#xE99A;"/>
+				</NavigationViewItem.Icon>
+			</NavigationViewItem>
 		</NavigationView.MenuItems>
 
 		<NavigationView.HeaderTemplate>
-			<DataTemplate>
-				<TextBlock Style="{StaticResource TitleTextBlockStyle}"
-                           FontSize="28"
-						   Margin="24,4,0,0"
-                           VerticalAlignment="Center"
-                           Text="Marbles"
-						   Height="Auto"/>
+			<DataTemplate x:DataType="x:String">
+				<TextBlock
+					Style="{StaticResource TitleTextBlockStyle}"
+                    FontSize="45"
+					Margin="24,8,0,0"
+                    VerticalAlignment="Center"
+					HorizontalAlignment="Stretch"
+                    Text="{x:Bind}"
+					Height="Auto"/>
 			</DataTemplate>
 		</NavigationView.HeaderTemplate>
 
