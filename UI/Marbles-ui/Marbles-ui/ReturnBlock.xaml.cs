@@ -27,7 +27,10 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write("return "); ValuesInput.PrintCode(); Debug.WriteLine(";");
+            Utilities.linesOfCode.Add(new CodeLine("return ", this));
+            Utilities.linesOfCodeCount++;
+            ValuesInput.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ";";
         }
 	}
 }

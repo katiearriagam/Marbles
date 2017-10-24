@@ -87,8 +87,8 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write("function " + ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString() + " " + functionID.Text + "(");
-
+            Utilities.linesOfCode.Add(new CodeLine("function " + ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString() + " " + functionID.Text + "(", this));
+            Utilities.linesOfCodeCount++;
             bool firstParam = true;
             foreach (var item in Parameters.Items)
             {
@@ -100,20 +100,22 @@ namespace Marbles
                     }
                     else
                     {
-                        Debug.Write(", ");
+                        ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", ";
                     }
 
-                    Debug.Write(((ComboBoxItem)(((ComboBox)item).SelectedItem)).Content.ToString() + " ");
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ((ComboBoxItem)(((ComboBox)item).SelectedItem)).Content.ToString() + " ";
                 }
                 else
                 {
-                    Debug.Write(((TextBox)item).Text);
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ((TextBox)item).Text;
                 }
             }
-            Debug.WriteLine(") {");
+
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ") {";
             VariableListViewContainer.PrintCode();
             InstructionListViewContainer.PrintCode();
-            Debug.WriteLine("}");
+            Utilities.linesOfCode.Add(new CodeLine("}", this));
+            Utilities.linesOfCodeCount++;
         }
     }
 }

@@ -33,9 +33,13 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write("while ("); ValuesInput.PrintCode(); Debug.WriteLine(") {");
+            Utilities.linesOfCode.Add(new CodeLine("while (", this));
+            Utilities.linesOfCodeCount++;
+            ValuesInput.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ") {";
             instructions.PrintCode();
-            Debug.WriteLine("}");
+            Utilities.linesOfCode.Add(new CodeLine("}", this));
+            Utilities.linesOfCodeCount++;
         }
     }
 }

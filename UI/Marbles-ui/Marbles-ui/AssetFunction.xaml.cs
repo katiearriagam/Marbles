@@ -98,22 +98,23 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write(AssetID.Text + "." + ((ComboBoxItem)(AssetAction.SelectedItem)).Content.ToString() + "(");
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += AssetID.Text + "." + ((ComboBoxItem)(AssetAction.SelectedItem)).Content.ToString() + "(";
+
             bool firstParam = true;
             foreach (TextBox parameter in Parameters.Items)
             {
                 if (firstParam)
                 {
-                    Debug.Write(parameter.Text);
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += parameter.Text;
                     firstParam = false;
                 }
                 else
                 {
-                    Debug.Write(", " + parameter.Text);
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", " + parameter.Text;
                 }
             }
 
-            Debug.Write(")");
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ")";
         }
 	}
 }

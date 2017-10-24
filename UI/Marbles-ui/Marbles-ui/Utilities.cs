@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,8 @@ namespace Marbles
     {
         public static int assetInitialHeight = 100;
         public static int assetInitialWidth = 100;
-
+        public static int linesOfCodeCount = 0;
+        public static ArrayList linesOfCode = new ArrayList();
         public enum ShapeTypes
         {
             Circle,

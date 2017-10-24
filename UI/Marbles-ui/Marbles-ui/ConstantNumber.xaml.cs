@@ -28,7 +28,7 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write(ConstantNumberTextBox.Text);
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ConstantNumberTextBox.Text;
         }
 	}
 }

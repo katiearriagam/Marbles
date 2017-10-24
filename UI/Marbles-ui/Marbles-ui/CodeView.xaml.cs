@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -29,12 +30,38 @@ namespace Marbles
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
+            Utilities.linesOfCodeCount = 0;
+            Utilities.linesOfCode = new ArrayList();
+
+            UserControl main = new UserControl();
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
-            Debug.WriteLine("instructions {");
+
+            Utilities.linesOfCode.Add(new CodeLine("instructions {", main));
+            Utilities.linesOfCodeCount++;
+
             InstructionListViewContainer.PrintCode();
-            Debug.WriteLine("}\n// End program");
+
+            Utilities.linesOfCode.Add(new CodeLine("}", main));
+            Utilities.linesOfCodeCount++;
+
+            List<string> linesToOutput = new List<string>();
+            foreach(CodeLine line in Utilities.linesOfCode)
+            {
+                linesToOutput.Add(line.content);
+                Debug.WriteLine(line.content);
+            }
+            string directoryName = "MarblesTemp";
+            string directoryPath = Path.Combine(Path.GetTempPath(), directoryName);
+            Directory.CreateDirectory(directoryPath);
+            string filePath= Path.Combine(directoryPath, "OutputCode.txt");
+            if (File.Exists(filePath))
+            {
+                // erase the contents if it already exists
+                File.WriteAllText(filePath, string.Empty);
+            }
+            File.WriteAllLines(filePath, linesToOutput);
         }
     }
 }

@@ -116,6 +116,7 @@
     <Compile Include="CanvasView.xaml.cs">
       <DependentUpon>CanvasView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CodeLine.cs" />
     <Compile Include="ConstantBoolean.xaml.cs">
       <DependentUpon>ConstantBoolean.xaml</DependentUpon>
     </Compile>

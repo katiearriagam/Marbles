@@ -27,7 +27,7 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write(VariableCallTextBox.Text);
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += VariableCallTextBox.Text;
         }
 	}
 }

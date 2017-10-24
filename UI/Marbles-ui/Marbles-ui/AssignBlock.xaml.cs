@@ -27,7 +27,12 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write("set "); ValuesInputThis.PrintCode(); Debug.Write(" = "); ValuesInputTo.PrintCode(); Debug.WriteLine(";");
+            Utilities.linesOfCode.Add(new CodeLine("set ", this));
+            Utilities.linesOfCodeCount++;
+            ValuesInputThis.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " = ";
+            ValuesInputTo.PrintCode();
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ";";
         }
 	}
 }

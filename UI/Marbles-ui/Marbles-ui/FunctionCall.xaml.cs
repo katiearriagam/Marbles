@@ -45,21 +45,21 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Debug.Write(FunctionNameTextBox.Text + "(");
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += FunctionNameTextBox.Text + "(";
             bool firstParam = true;
             foreach (TextBox tb in Parameters.Items)
             {
                 if (firstParam)
                 {
                     firstParam = false;
-                    Debug.Write(tb.Text);
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += tb.Text;
                 }
                 else
                 {
-                    Debug.Write(", " + tb.Text);
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", " + tb.Text;
                 }
             }
-            Debug.Write(")");
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ")";
         }
 	}
 }
