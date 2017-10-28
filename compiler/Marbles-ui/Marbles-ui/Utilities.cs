@@ -39,6 +39,7 @@ namespace Marbles
 
         public enum ValueTypes
         {
+			Undefined,
             VariableCall,
             FunctionCall,
             NumberConstant,

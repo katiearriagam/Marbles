@@ -20,8 +20,8 @@ namespace Marbles
 {
     public sealed partial class Values : UserControl
     {
-        private Utilities.ValueTypes selectedValueType;
-        private object selectedValue;
+        private Utilities.ValueTypes selectedValueType = Utilities.ValueTypes.Undefined;
+        private object selectedValue = null;
 
 		public Values()
         {
