@@ -74,10 +74,10 @@
 							</Grid>
 						</Button>
 					</Grid>
-					
-					<Viewbox Grid.Row="2"
-						x:Name="MyViewbox"
-						Stretch="Fill">
+					<Border x:Name="MyBorder" Grid.Row="2" Background="#2D7D9A">
+						<Viewbox
+							x:Name="MyViewbox"
+							Stretch="Uniform">
 						<Border
 							Grid.Row="1"
 							BorderThickness="1"
@@ -88,12 +88,13 @@
 								x:Name="MainCanvas"
 								Background="#ecf0f1"
 								AllowDrop="True"
-								Height="{Binding Path=ActualHeight,ElementName=MyViewbox}"
-								Width="{Binding Path=ActualWidth,ElementName=MyViewbox}"
+								Height="{Binding Path=ActualHeight,ElementName=MyBorder}"
+								Width="{Binding Path=ActualWidth,ElementName=MyBorder}"
 								Drop="MainCanvas_Drop"
 								DragOver="MainCanvas_DragOver"/>
 						</Border>
 					</Viewbox>
+					</Border>
 					<ContentDialog 
 						x:Name="Modal"
 						Grid.Row="2"
@@ -187,7 +188,8 @@
 							<ColumnDefinition Width="0.1*" />
 							<ColumnDefinition Width="*" />
 						</Grid.ColumnDefinitions>
-						<Viewbox Grid.Column="1">
+						<Viewbox Grid.Column="1"
+								 Stretch="Uniform">
 							<FontIcon
 								Glyph="&#xE74D;"
 								Foreground="Gray"
