@@ -102,6 +102,7 @@
     <Compile Include="ListsAndContainers\Asset.xaml.cs">
       <DependentUpon>Asset.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Quadruple.cs" />
     <Compile Include="Values\AssetAttribute.xaml.cs">
       <DependentUpon>AssetAttribute.xaml</DependentUpon>
     </Compile>

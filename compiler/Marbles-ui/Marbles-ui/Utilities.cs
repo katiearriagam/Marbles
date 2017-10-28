@@ -16,6 +16,30 @@ namespace Marbles
         public static ArrayList linesOfCode = new ArrayList();
 		public static ArrayList assetsInCanvas = new ArrayList();
 
+        public enum DataTypes
+        {
+            dtInt = 0,
+            dtString = 1,
+            dtBoolean = 2
+        }
+
+        public enum Operators
+        {
+            plus = 0,
+            minus = 1,
+            multiply = 2,
+            divide = 3,
+            greaterThan = 4,
+            lessThan = 5,
+            greaterThanOrEqualTo = 6,
+            lessThanOrEqualTo = 7,
+            equalEqual = 8,
+            notEqual = 9,
+            equals = 10,
+            and = 11,
+            or = 12,
+        }
+
 		public enum ShapeTypes
         {
             Circle,
