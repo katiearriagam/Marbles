@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Marbles.Analysis;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,8 +40,10 @@ namespace Marbles
         {
             Utilities.linesOfCodeCount = 0;
             Utilities.linesOfCode = new ArrayList();
-
-            UserControl main = new UserControl();
+			ErrorPrinter.errorCount = 0;
+			ErrorPrinter.errorList = new Dictionary<int, List<string>>();
+			ErrorPrinter.warningList = new Dictionary<int, List<string>>();
+			UserControl main = new UserControl();
 
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
@@ -53,11 +56,12 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main));
             Utilities.linesOfCodeCount++;
-
-            WriteCodeToFile();
+			string filePath;
+            WriteCodeToFile(out filePath);
+			AnalyzeCode(filePath);
         }
 
-        private void WriteCodeToFile()
+        private void WriteCodeToFile(out string filePath)
         {
             List<string> linesToOutput = new List<string>();
             foreach (CodeLine line in Utilities.linesOfCode)
@@ -69,7 +73,7 @@ namespace Marbles
             
             string directoryPath = Path.Combine(localFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
-            string filePath = Path.Combine(directoryPath, "OutputCode.txt");
+            filePath = Path.Combine(directoryPath, "OutputCode.txt");
 
             // if a file already exists, erase its contents to start a new one
             if (File.Exists(filePath))
@@ -78,5 +82,28 @@ namespace Marbles
             }
             File.WriteAllLines(filePath, linesToOutput);
         }
+
+		private void AnalyzeCode(string filePath)
+		{
+			Scanner scanner = new Scanner(filePath);
+			Parser parser = new Parser(scanner);
+			parser.Parse();
+			Debug.WriteLine("=================" + parser.errors.count + "=============");
+			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
+			foreach (int warningLine in ErrorPrinter.GetWarningLines())
+			{
+				foreach (string warning in ErrorPrinter.GetWarningsAtLine(warningLine))
+				{
+					Debug.WriteLine("Warning in line " + warningLine + ": " + warning);
+				}
+			}
+			foreach (int errorLine in ErrorPrinter.GetErrorLines())
+			{
+				foreach (string error in ErrorPrinter.GetErrorsAtLine(errorLine))
+				{
+					Debug.WriteLine("Error in line " + errorLine + ": " + error);
+				}
+			}
+		}
     }
 }

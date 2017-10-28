@@ -9,12 +9,14 @@ namespace Marbles
 	/// <summary>
 	/// Class that stores all the relevant data for a function.
 	/// </summary>
-    public class Function
-    {
+	public class Function
+	{
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
+		private int memoryAddress;
 		private Dictionary<string, Variable> parameters;
 		private Dictionary<string, Variable> localVariables;
+		private List<Variable> temporaryVariables;
 
 		/// <summary>
 		/// Constructor for function
@@ -27,6 +29,7 @@ namespace Marbles
 			this.returnType = returnType;
 			this.parameters = new Dictionary<string, Variable>();
 			this.localVariables = new Dictionary<string, Variable>();
+			this.temporaryVariables = new List<Variable>();
 		}
 
 		/// <summary>
@@ -65,6 +68,20 @@ namespace Marbles
 			return this.localVariables;
 		}
 
+		public Variable GetParameter(string varId)
+		{
+			if (parameters.ContainsKey(varId)) { return parameters[varId]; }
+
+			throw new ArgumentException();
+		}
+
+		public Variable GetLocalVariable(string varId)
+		{
+			if (localVariables.ContainsKey(varId)) { return localVariables[varId]; }
+
+			throw new ArgumentException();
+		}
+
 		/// <summary>
 		/// Function that adds a new local variable to the function
 		/// </summary>
@@ -72,12 +89,23 @@ namespace Marbles
 		/// <returns></returns>
 		public bool AddLocalVariable(Variable variable)
 		{
-			if (!localVariables.ContainsKey(""))
+			if (!localVariables.ContainsKey(variable.GetName()) && !parameters.ContainsKey(variable.GetName()))
 			{
-				localVariables.Add("", variable);
+				localVariables.Add(variable.GetName(), variable);
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// Function that adds a new temporary variable to the function
+		/// </summary>
+		/// <param name="variable"></param>
+		/// <returns></returns>
+		public void AddTempVariable(Variable variable)
+		{
+			variable.SetName((temporaryVariables.Count + 1).ToString());
+			temporaryVariables.Add(variable);
 		}
 
 		/// <summary>
@@ -111,6 +139,23 @@ namespace Marbles
 		public int CountParameters()
 		{
 			return this.parameters.Count;
+		}
+
+		/// <summary>
+		/// Sets or modifies the memory address value
+		/// </summary>
+		/// <param name="mem"></param>
+		public void SetMemoryAddress(int mem)
+		{
+			memoryAddress = mem;
+		}
+
+		/// <summary>
+		/// Retrieves the memory address
+		/// </summary>
+		public int GetMemoryAddress()
+		{
+			return memoryAddress;
 		}
 	}
 }
