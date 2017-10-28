@@ -92,6 +92,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Analysis\ErrorPrinter.cs" />
+    <Compile Include="Analysis\Parser.cs" />
+    <Compile Include="Analysis\Scanner.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
