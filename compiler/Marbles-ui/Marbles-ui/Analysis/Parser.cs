@@ -27,6 +27,7 @@ Coco/R itself) does not fall under the GNU General Public License.
 
 using Marbles;
 using Marbles.Analysis;
+using Marbles.MemoryManagement;
 using System;
 
 
@@ -119,7 +120,24 @@ public class Parser {
 			CREATE_ASSET();
 		}
 		while (la.kind == 16) {
-			CREATE_VAR();
+			Variable newGlobalVariable = CREATE_VAR();
+			if (!FunctionDirectory.GlobalFunction().AddGlobalVariables(newGlobalVariable))
+			{
+				SemErr("Name " + newGlobalVariable.GetName() + " is duplicated.");
+			}
+			int memorySpace = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.global, newGlobalVariable.GetDataType());
+			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+			{
+				MemoryManager.SetMemory(memorySpace, 0);
+			}
+			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+			{
+				MemoryManager.SetMemory(memorySpace, "");
+			}
+			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
+			{
+				MemoryManager.SetMemory(memorySpace, false);
+			}
 		}
 		while (la.kind == 9) {
 			CREATE_FUNCTION();
@@ -143,19 +161,19 @@ public class Parser {
 		SemanticCubeUtilities.DataTypes varType = TYPE_VAR();
 		Expect(1);
 		string varName = t.val;
-		// dirmem = guardar en memoria y asignarle direccion
-		// variable newvar = new variable(varname, vartype, dirmem)
 		Variable newVar = new Variable(varName, varType);
 		Expect(17);
 		return newVar;
 	}
 
-	Function CREATE_FUNCTION() {
+	void CREATE_FUNCTION() {
 		Expect(9);
 		SemanticCubeUtilities.DataTypes functionType = TYPE_FUNC();
 		Expect(1);
 		string functionName = t.val;
 		Function newFunction = new Function(functionName, functionType);
+
+		QuadrupleManager.EnterFunction(functionName);
 		Expect(10);
 		if (la.kind == 13 || la.kind == 14 || la.kind == 15) {
 			SemanticCubeUtilities.DataTypes parameterType = TYPE_VAR();
@@ -173,16 +191,28 @@ public class Parser {
 		Expect(12);
 		Expect(7);
 		while (la.kind == 16) {
-			// variable temp = CREATE_VAR();
-			// int next_mem = memoryMap.getNextMem(temp.type, newFunction.getMemoryAddress());
-			// newFunction.AddLocalVariable(temp);
+			// add variables to the local variables directory
+			var localVariable = CREATE_VAR();
 			newFunction.AddLocalVariable(CREATE_VAR());
 		}
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
 		Expect(8);
-		return newFunction;
+
+		// if function name already exists, throw a semantic error.
+		if (!FunctionDirectory.InsertFunction(newFunction))
+		{
+			SemErr("Function named " + newFunction.GetName() + " already exists.");
+		}
+
+		// add this function to the global variables directory
+		if (!FunctionDirectory.GlobalFunction().AddGlobalVariables(newFunction))
+		{
+			SemErr("Name " + newFunction.GetName() + " is duplicated.");
+		}
+
+		QuadrupleManager.ExitFunction();
 	}
 
 	void INSTRUCTION() {

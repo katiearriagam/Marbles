@@ -20,26 +20,37 @@ namespace Marbles.MemoryManagement
 		public static Dictionary<int, object> memoryLocal;
 		public static Dictionary<int, object> memoryConstant;
 
+		// Global Lower Limits
+		const int lowestGlobalIntAddress = 1000;
+		const int lowestGlobalStringAddress = 2000;
+		const int lowestGlobalBoolAddress = 3000;
+
 		// Global Upper Limits
-		static int highestGlobalIntAddress = 1999;
-		static int highestGlobalStringAddress = 2999;
-		static int highestGlobalBoolAddress = 3999;
+		const int highestGlobalIntAddress = 1999;
+		const int highestGlobalStringAddress = 2999;
+		const int highestGlobalBoolAddress = 3999;
 
 		// Global Current Indexes
 		static int currentGlobalIntAddress = 1000;
 		static int currentGlobalStringAddress = 2000;
 		static int currentGlobalBoolAddress = 3000;
 
-		// Local Upper Limits
-		static int highestLocalAddress = 6999;
+		// Local Limits
+		const int lowestLocalAddress = 4000;
+		const int highestLocalAddress = 6999;
 
-		// Local Current Indexes
+		// Local Current Index
 		static int currentLocalAddress = 6000;
 
+		// Temporary Lower Limits
+		const int lowestTempIntAddress = 7999;
+		const int lowestTempStringAddress = 8999;
+		const int lowestTempBoolAddress = 9999;
+
 		// Temporary Upper Limits
-		static int highestTempIntAddress = 7999;
-		static int highestTempStringAddress = 8999;
-		static int highestTempBoolAddress = 9999;
+		const int highestTempIntAddress = 7999;
+		const int highestTempStringAddress = 8999;
+		const int highestTempBoolAddress = 9999;
 
 		// Temporary Current Indexes
 		static int currentTempIntAddress = 7000;
@@ -47,9 +58,14 @@ namespace Marbles.MemoryManagement
 		static int currentTempBoolAddress = 9000;
 
 		// Constant Upper Limits
-		static int highestConstantIntAddress = 10999;
-		static int highestConstantStringAddress = 11999;
-		static int highestConstantBoolAddress = 12001;
+		const int lowestConstantIntAddress = 10000;
+		const int lowestConstantStringAddress = 11000;
+		const int lowestConstantBoolAddress = 12000;
+
+		// Constant Upper Limits
+		const int highestConstantIntAddress = 10999;
+		const int highestConstantStringAddress = 11999;
+		const int highestConstantBoolAddress = 12001;
 
 		// Constant Current Indexes
 		static int currentConstantIntAddress = 10000;
@@ -135,31 +151,31 @@ namespace Marbles.MemoryManagement
 		public static int SetMemory(int memAddress, object value)
 		{
 			// insert a global/temporary number in memory
-			if ((memAddress >= currentGlobalIntAddress && memAddress <= highestGlobalIntAddress) ||
-				(memAddress >= currentTempIntAddress && memAddress <= highestTempIntAddress))
+			if ((memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress) ||
+				(memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress))
 			{
 				memory[memAddress] = (int)value;
 				return memAddress;
 			}
 
 			// insert a global/temporary string in memory
-			else if ((memAddress >= currentGlobalStringAddress && memAddress <= highestGlobalStringAddress) ||
-				(memAddress >= currentTempStringAddress && memAddress <= highestTempStringAddress))
+			else if ((memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress) ||
+				(memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress))
 			{
 				memory[memAddress] = (string)value;
 				return memAddress;
 			}
 
 			// insert a global/temporary boolean in memory
-			else if ((memAddress >= currentGlobalBoolAddress && memAddress <= highestGlobalBoolAddress) ||
-				(memAddress >= currentTempBoolAddress && memAddress <= highestTempBoolAddress))
+			else if ((memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress) ||
+				(memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress))
 			{
 				memory[memAddress] = (bool)value;
 				return memAddress;
 			}
 
 			// insert numeric constant
-			else if (memAddress >= currentConstantIntAddress && memAddress <= highestConstantIntAddress)
+			else if (memAddress >= lowestConstantIntAddress && memAddress <= highestConstantIntAddress)
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
@@ -173,7 +189,7 @@ namespace Marbles.MemoryManagement
 			}
 
 			// insert string constant
-			else if (memAddress >= currentConstantStringAddress && memAddress <= highestConstantStringAddress)
+			else if (memAddress >= lowestConstantStringAddress && memAddress <= highestConstantStringAddress)
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
@@ -187,7 +203,7 @@ namespace Marbles.MemoryManagement
 			}
 
 			// insert boolean constant
-			else if (memAddress >= currentConstantBoolAddress && memAddress <= highestConstantBoolAddress)
+			else if (memAddress >= lowestConstantBoolAddress && memAddress <= highestConstantBoolAddress)
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{

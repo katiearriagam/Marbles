@@ -16,6 +16,10 @@ namespace Marbles
 		private int memoryAddress;
 		private Dictionary<string, Variable> parameters;
 		private Dictionary<string, Variable> localVariables;
+		private static Dictionary<string, Variable> globalVariables;
+
+		// only used in global
+		private Dictionary<string, Asset> assets;
 
 		// number, boolean, text
 		private int[] counterLocal = new int[] {0,0,0};
@@ -97,10 +101,43 @@ namespace Marbles
 		/// <returns></returns>
 		public bool AddLocalVariable(Variable variable)
 		{
-			if (!localVariables.ContainsKey(variable.GetName()) && !parameters.ContainsKey(variable.GetName()))
+			if (!localVariables.ContainsKey(variable.GetName()) 
+				&& !parameters.ContainsKey(variable.GetName())
+				&& !FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
 			{
 				localVariables.Add(variable.GetName(), variable);
 				counterLocal[(int)variable.GetDataType() - 1]++;
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Adds a variable to the global directory
+		/// </summary>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		public bool AddGlobalVariables(Variable variable)
+		{
+			if(!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
+			{
+				globalVariables.Add(variable.GetName(), variable);
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Adds a function reference to the global directory
+		/// </summary>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		public bool AddGlobalVariables(Function func)
+		{
+			if (!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(func.GetName()))
+			{
+				Variable var = new Variable(func.GetName(), func.GetReturnType());
+				globalVariables.Add(func.GetName(), var);
 				return true;
 			}
 			return false;
