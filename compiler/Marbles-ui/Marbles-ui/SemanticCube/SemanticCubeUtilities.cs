@@ -70,11 +70,8 @@ namespace Marbles
 			equals = 10,
 			and = 11,
 			or = 12,
-            Goto = 13,
-            GotoF = 14,
-            GotoV = 15,
-            fakeBottom = 16,
-			invalidOperator = 17
+            fakeBottom,
+			invalidOperator = 13
 		}
 
 		public static DataTypes GetDataTypeFromType(Type t)

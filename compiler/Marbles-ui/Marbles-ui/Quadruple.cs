@@ -8,10 +8,10 @@ namespace Marbles
 {
     public class Quadruple
     {
-        private SemanticCubeUtilities.Operators op;
+        private Utilities.QuadrupleAction op;
         private int operandOne, operandTwo, assignee;
 
-        public Quadruple(SemanticCubeUtilities.Operators op, int operandOne, int operandTwo, int assignee)
+        public Quadruple(Utilities.QuadrupleAction op, int operandOne, int operandTwo, int assignee)
         {
             this.op = op;
             this.operandOne = operandOne;
@@ -19,7 +19,7 @@ namespace Marbles
             this.assignee = assignee;
         }
 
-        public Quadruple(SemanticCubeUtilities.Operators op, int operandOne, int assignee)
+        public Quadruple(Utilities.QuadrupleAction op, int operandOne, int assignee)
         {
             this.op = op;
             this.operandOne = operandOne;
@@ -27,7 +27,7 @@ namespace Marbles
             this.assignee = assignee;
         }
 
-        public Quadruple(SemanticCubeUtilities.Operators op, int operandOne)
+        public Quadruple(Utilities.QuadrupleAction op, int operandOne)
         {
             this.op = op;
             this.operandOne = operandOne;
@@ -35,7 +35,7 @@ namespace Marbles
             this.assignee = -1;
         }
 
-        public Quadruple(SemanticCubeUtilities.Operators op)
+        public Quadruple(Utilities.QuadrupleAction op)
         {
             this.op = op;
             this.operandOne = -1;
@@ -43,7 +43,7 @@ namespace Marbles
             this.assignee = -1;
         }
 
-        public SemanticCubeUtilities.Operators GetOperator()
+        public Utilities.QuadrupleAction GetOperator()
         {
             return op;
         }
@@ -63,7 +63,7 @@ namespace Marbles
             return assignee;
         }
 
-        public void SetOperator(SemanticCubeUtilities.Operators op)
+        public void SetOperator(Utilities.QuadrupleAction op)
         {
             this.op = op;
         }
