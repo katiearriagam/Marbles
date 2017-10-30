@@ -37,7 +37,7 @@ namespace Marbles
         {
             if (!FunctionDictionary.ContainsKey(funcID))
             {
-                throw new KeyNotFoundException("The function named " + funcID + " was not found in the directory.");
+                throw new KeyNotFoundException("Use of undeclared function " + funcID);
             }
             else
             {

@@ -44,6 +44,21 @@ namespace Marbles
         private static bool inFunction = false;
 
         /// <summary>
+        /// If inFunction is true, this value holds the ID of the function we are currently in.
+        /// </summary>
+        private static string functionId = "";
+
+        /// <summary>
+        /// An object of the last function that was called.
+        /// </summary>
+        private static Function LastFunctionCalled;
+
+        /// <summary>
+        /// Counter used to compare a called function's parameters against the actual called function's parameters
+        /// </summary>
+        private static int parameterCount = 0;
+
+        /// <summary>
         /// Add the memory address pointing to an operand to the operand stack
         /// and its data type to the type stack.
         /// </summary>
@@ -76,7 +91,11 @@ namespace Marbles
             operatorStack.Push(op);
         }
 
-        
+        /// <summary>
+        /// Pop an operator from the operator stack and two corresponding operands from the
+        /// operand stack. Verify their compatibility with the Semantic Cube and push the resulting
+        /// operand to the operand stack. Adds a quadruple with the operation that was verified.
+        /// </summary>
         public static void PopOperator()
         {
             if (operatorStack.Count == 0)
@@ -103,15 +122,15 @@ namespace Marbles
             int addressTemp;
             if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
             {
-                addressTemp = MemoryManager.GetNextIntTemp();
+                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.number);
             }
             else if (resultingDataType == SemanticCubeUtilities.DataTypes.boolean)
             {
-                addressTemp = MemoryManager.GetNextBoolTemp();
+                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                addressTemp = MemoryManager.GetNextStringTemp();
+                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.text);
             }
             
             AddOperand(addressTemp, resultingDataType);
@@ -230,14 +249,14 @@ namespace Marbles
         /// </summary>
         public static void WhileEnd()
         {
-            int GotoFToUpdate = jumpStack.Pop();
-            int jumpTo = jumpStack.Pop();
+            int jumpToOnFalse = jumpStack.Pop();
+            int jumpToBeginningOfWhile = jumpStack.Pop();
 
             // Jump back to where the WHILE condition is evaluated
-            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, jumpTo));
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, jumpToBeginningOfWhile));
 
             // Update the jump of the while condition to jump here
-            quadruples[GotoFToUpdate].SetAssignee(counter);
+            quadruples[jumpToOnFalse].SetAssignee(counter);
         }
 
         /// <summary>
@@ -252,7 +271,8 @@ namespace Marbles
         /// <summary>
         /// This method is called when we have read the closing parenthesis of a FOR expression.
         /// The function verifies that the expression is numeric and, if it is, sets the GOTOF
-        /// in case it is false.
+        /// in case it is less than or equal to 0. Finally, substracts one from the numeric expression
+        /// in the FOR condition.
         /// </summary>
         public static void ForAfterCondition()
         {
@@ -262,55 +282,110 @@ namespace Marbles
                 throw new Exception("FOR loop conditions must contain a numeric data type.");
             }
 
-            int numericExp = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-            
             // we will have to set this jump's position at the end of the FOR statement
             jumpStack.Push(counter);
 
-            // bool condition = MemoryManager.GetValueAtAddress(numericExp) > 0;
+            int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
+            int numericExpValue = MemoryManager.GetValueAtAddress(numericExpAddress);
+            bool condition = numericExpValue > 0;
 
             int conditionMem = 0;
             if (inFunction)
             {
-                // conditionMem = MemoryManager.GetNextMemoryAddressTempBoolean(condition, "local")
-                // asumo que esto ^^^ la guarda en ese temp boolean address y me regresa su address
+                conditionMem = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                // conditionMem = MemoryManager.GetNextMemoryAddressTempBoolean(condition, "global")
-                // asumo que esto ^^^ la guarda en ese temp boolean address y me regresa su address
+                conditionMem = MemoryManager.GetNextAvailable("global", SemanticCubeUtilities.DataTypes.boolean);
             }
 
+            MemoryManager.SetMemory(conditionMem, condition);
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
+
+            // After checking the condition, we can safely substract one from the numeric expression on the FOR condition
+            MemoryManager.SetMemory(numericExpAddress, numericExpValue - 1);
         }
-
-        public static void ForBegin()
-        {
-
-        }
-
+        
         /// <summary>
         /// This method is called after every instruction inside the FOR loop is executed.
-        /// Substracts one from the numeric expression we are evaluating on the for loop
-        /// and
+        /// Jumps back to before the FOR condition and sets the jump to here when the FOR
+        /// condition evaluates to false.
         /// </summary>
         public static void ForEnd()
         {
-            // agregar un quad que le reste 1 a la numericExp del FOR
-            // luego hacer un jump de regreso al inicio del FOR (antes de evaluar la numericExp)
+            int jumpToOnFalse = jumpStack.Pop();
+            int jumpToBeginningOfFor = jumpStack.Pop();
 
+            // Jump back to where the FOR condition is evaluated
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, jumpToBeginningOfFor));
+            
+            quadruples[jumpToOnFalse].SetAssignee(counter);
+        }
 
-            // set the place where the FOR loop will jump to if its expression is <= 0
-            int exitFor = jumpStack.Pop();
-            quadruples[exitFor].SetAssignee(counter);
+        public static void CallFunctionBeforeParameters(string functionId)
+        {
+            if (!FunctionDirectory.FunctionExists(functionId))
+            {
+                // make this a semantic error
+                throw new Exception("Use of undeclared function " + functionId);
+            }
+            LastFunctionCalled = FunctionDirectory.GetFunction(functionId);
+        }
+
+        public static void CallFunctionOpeningParenthesis()
+        {
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), -1, -1));
+            parameterCount = 0;
+        }
+
+        /// <summary>
+        /// Compare the current parameter's type against the called functions's parameter type.
+        /// If types match, adds a new quadruple with PARAM action.
+        /// </summary>
+        public static void CallFunctionParameter()
+        {
+            SemanticCubeUtilities.DataTypes type = typeStack.Pop();
+            if (type != LastFunctionCalled.GetParameters().Values.ToList()[parameterCount].GetDataType())
+            {
+                throw new Exception("Parameter types do not match.");
+            }
+
+            int param = operandStack.Pop();
+
+            int paramAddress = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.local, SemanticCubeUtilities.DataTypes.number);
+            MemoryManager.SetMemory(paramAddress, param);
+
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, paramAddress));
+        }
+
+        /// <summary>
+        /// Increase the current parameter counter, since we are now expecting another parameter.
+        /// </summary>
+        public static void CallFunctionComma()
+        {
+            parameterCount++;
+        }
+
+        public static void CallFunctionClosingParenthesis()
+        {
+            if (parameterCount != LastFunctionCalled.GetParameters().Count - 1)
+            {
+                throw new Exception("Number of arguments on function call do not match.");
+            }
+        }
+
+        public static void CallFunctionEnd()
+        {
+            int funcNameAddress = MemoryManager.GetNextAvailable(inFunction ? MemoryManager.MemoryScope.local : MemoryManager.MemoryScope.global, SemanticCubeUtilities.DataTypes.text);
+            MemoryManager.SetMemory(funcNameAddress, LastFunctionCalled.GetName());
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, funcNameAddress , -1, -1));
         }
 
 
         /// <summary>
         /// Returns whether we are currently in a function or not.
         /// </summary>
-        /// <returns></returns>
-        public static bool GetInFunction()
+        public static bool IsInFunction()
         {
             return inFunction;
         }
@@ -318,9 +393,10 @@ namespace Marbles
         /// <summary>
         /// Sets the value of InFunction to true, meaning we are now inside a function.
         /// </summary>
-        public static void EnterFunction()
+        public static void EnterFunction(string functionID)
         {
             inFunction = true;
+            functionId = functionID;
         }
 
         /// <summary>
@@ -329,7 +405,7 @@ namespace Marbles
         public static void ExitFunction()
         {
             inFunction = false;
-
+            functionId = "";
         }
     }
 }
