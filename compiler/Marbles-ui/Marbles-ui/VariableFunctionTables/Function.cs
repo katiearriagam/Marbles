@@ -16,7 +16,16 @@ namespace Marbles
 		private int memoryAddress;
 		private Dictionary<string, Variable> parameters;
 		private Dictionary<string, Variable> localVariables;
-		private List<Variable> temporaryVariables;
+
+		// number, boolean, text
+		private int[] counterLocal = new int[] {0,0,0};
+		private int[] counterTemp = new int[] {0,0,0};
+
+		public enum FunctionScope
+		{
+			local = 0,
+			temporary = 1
+		}
 
 		/// <summary>
 		/// Constructor for function
@@ -29,7 +38,6 @@ namespace Marbles
 			this.returnType = returnType;
 			this.parameters = new Dictionary<string, Variable>();
 			this.localVariables = new Dictionary<string, Variable>();
-			this.temporaryVariables = new List<Variable>();
 		}
 
 		/// <summary>
@@ -92,20 +100,26 @@ namespace Marbles
 			if (!localVariables.ContainsKey(variable.GetName()) && !parameters.ContainsKey(variable.GetName()))
 			{
 				localVariables.Add(variable.GetName(), variable);
+				counterLocal[(int)variable.GetDataType() - 1]++;
 				return true;
 			}
 			return false;
 		}
 
 		/// <summary>
-		/// Function that adds a new temporary variable to the function
+		/// Function that accounts for a new temporary variable to the function
 		/// </summary>
-		/// <param name="variable"></param>
+		/// <param name="dataType"></param>
 		/// <returns></returns>
-		public void AddTempVariable(Variable variable)
+		public void AddTempVariable(SemanticCubeUtilities.DataTypes dataType)
 		{
-			variable.SetName((temporaryVariables.Count + 1).ToString());
-			temporaryVariables.Add(variable);
+			if (dataType == SemanticCubeUtilities.DataTypes.number){ counterTemp[(int)SemanticCubeUtilities.DataTypes.number - 1]++; }
+			if (dataType == SemanticCubeUtilities.DataTypes.text) { counterTemp[(int)SemanticCubeUtilities.DataTypes.text - 1]++; }
+			if (dataType == SemanticCubeUtilities.DataTypes.boolean) { counterTemp[(int)SemanticCubeUtilities.DataTypes.boolean - 1]++; }
+			else
+			{
+				throw new Exception("Can't add temporary. No valid type.");
+			}
 		}
 
 		/// <summary>
@@ -127,6 +141,7 @@ namespace Marbles
 			if (!parameters.ContainsKey(variable.GetName()))
 			{
 				parameters.Add(variable.GetName(), variable);
+				counterLocal[(int)variable.GetDataType() - 1]++;
 				return true;
 			}
 			return false;
@@ -156,6 +171,46 @@ namespace Marbles
 		public int GetMemoryAddress()
 		{
 			return memoryAddress;
+		}
+
+		/// <summary>
+		/// Returns the size of the function based on its number of 
+		/// local and temporary variables.
+		/// </summary>
+		/// <returns></returns>
+		public int GetFunctionSize()
+		{
+			return counterLocal[0] + counterLocal[1] + counterLocal[2] +
+				   counterTemp[0] + counterTemp[1] + counterTemp[2];
+		}
+		
+		/// <summary>
+		/// Gets the data type of a memory address in the function
+		/// </summary>
+		/// <param name="address"></param>
+		/// <param name="initialAddress"></param>
+		/// <returns></returns>
+		public SemanticCubeUtilities.DataTypes GetDataTypeFromAddress(int address, int initialAddress)
+		{
+			// cumulative limits
+			int amountIntLocal = counterLocal[0];
+			int amountBooleanLocal = amountIntLocal + counterLocal[1];
+			int amountStringLocal = amountBooleanLocal + counterLocal[2];
+			int amountIntTemp = amountStringLocal + counterTemp[0];
+			int amountBooleanTemp = amountIntTemp + counterTemp[1];
+			int amountStringTemp = amountBooleanTemp + counterTemp[2];
+
+			// normalized address
+			address = -initialAddress;
+
+			if (address >= 0 && address < amountIntLocal) { return SemanticCubeUtilities.DataTypes.number; }
+			if (address >= amountIntLocal && address < amountBooleanLocal) { return SemanticCubeUtilities.DataTypes.boolean; }
+			if (address >= amountBooleanLocal && address < amountStringLocal) { return SemanticCubeUtilities.DataTypes.text; }
+			if (address >= amountStringLocal && address < amountIntTemp) { return SemanticCubeUtilities.DataTypes.number; }
+			if (address >= amountIntTemp && address < amountBooleanTemp) { return SemanticCubeUtilities.DataTypes.boolean; }
+			if (address >= amountBooleanTemp && address < amountStringTemp) { return SemanticCubeUtilities.DataTypes.text; }
+
+			return SemanticCubeUtilities.DataTypes.invalidDataType;
 		}
 	}
 }
