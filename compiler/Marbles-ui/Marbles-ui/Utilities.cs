@@ -16,30 +16,6 @@ namespace Marbles
         public static ArrayList linesOfCode = new ArrayList();
 		public static ArrayList assetsInCanvas = new ArrayList();
 
-        public enum DataTypes
-        {
-            dtInt = 0,
-            dtString = 1,
-            dtBoolean = 2
-        }
-
-        public enum Operators
-        {
-            plus = 0,
-            minus = 1,
-            multiply = 2,
-            divide = 3,
-            greaterThan = 4,
-            lessThan = 5,
-            greaterThanOrEqualTo = 6,
-            lessThanOrEqualTo = 7,
-            equalEqual = 8,
-            notEqual = 9,
-            equals = 10,
-            and = 11,
-            or = 12,
-        }
-
 		public enum ShapeTypes
         {
             Circle,
@@ -75,8 +51,30 @@ namespace Marbles
             AssetFunction
         }
 
+        public enum QuadrupleAction
+        {
+            plus = 0,
+            minus = 1,
+            multiply = 2,
+            divide = 3,
+            greaterThan = 4,
+            lessThan = 5,
+            greaterThanOrEqualTo = 6,
+            lessThanOrEqualTo = 7,
+            equalEqual = 8,
+            notEqual = 9,
+            equals = 10,
+            and = 11,
+            or = 12,
+            Goto = 13,
+            GotoF = 14,
+            GotoV = 15,
+            fakeBottom = 16,
+        }
+
         public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();
         public static Dictionary<string, ShapeTypes> actionToShapeType = new Dictionary<string, ShapeTypes>();
+        public static Dictionary<SemanticCubeUtilities.Operators, QuadrupleAction> operatorToAction = new Dictionary<SemanticCubeUtilities.Operators, QuadrupleAction>();
 
         public static BitmapImage BitmapFromPath(string path)
         {
@@ -95,6 +93,20 @@ namespace Marbles
             actionToShapeType.Add("CircleInstantiator", ShapeTypes.Circle);
             actionToShapeType.Add("TriangleInstantiator", ShapeTypes.Triangle);
             actionToShapeType.Add("SquareInstantiator", ShapeTypes.Square);
+
+            operatorToAction.Add(SemanticCubeUtilities.Operators.plus, QuadrupleAction.plus);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.minus, QuadrupleAction.minus);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.multiply, QuadrupleAction.multiply);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.divide, QuadrupleAction.divide);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.greaterThan, QuadrupleAction.greaterThan);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.lessThan, QuadrupleAction.lessThan);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.greaterThanOrEqualTo, QuadrupleAction.greaterThanOrEqualTo);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.lessThanOrEqualTo, QuadrupleAction.lessThanOrEqualTo);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.equalEqual, QuadrupleAction.equalEqual);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.notEqual, QuadrupleAction.notEqual);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.equals, QuadrupleAction.equals);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.and, QuadrupleAction.and);
+            operatorToAction.Add(SemanticCubeUtilities.Operators.or, QuadrupleAction.or);
         }
     }
 }

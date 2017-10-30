@@ -8,9 +8,10 @@ namespace Marbles
 {
     public class Quadruple
     {
-        int op, operandOne, operandTwo, assignee;
+        private Utilities.QuadrupleAction op;
+        private int operandOne, operandTwo, assignee;
 
-        public Quadruple(int op, int operandOne, int operandTwo, int assignee)
+        public Quadruple(Utilities.QuadrupleAction op, int operandOne, int operandTwo, int assignee)
         {
             this.op = op;
             this.operandOne = operandOne;
@@ -18,7 +19,7 @@ namespace Marbles
             this.assignee = assignee;
         }
 
-        public Quadruple(int op, int operandOne, int assignee)
+        public Quadruple(Utilities.QuadrupleAction op, int operandOne, int assignee)
         {
             this.op = op;
             this.operandOne = operandOne;
@@ -26,12 +27,60 @@ namespace Marbles
             this.assignee = assignee;
         }
 
-        public Quadruple(int op, int operandOne)
+        public Quadruple(Utilities.QuadrupleAction op, int operandOne)
         {
             this.op = op;
             this.operandOne = operandOne;
             this.operandTwo = -1;
             this.assignee = -1;
+        }
+
+        public Quadruple(Utilities.QuadrupleAction op)
+        {
+            this.op = op;
+            this.operandOne = -1;
+            this.operandTwo = -1;
+            this.assignee = -1;
+        }
+
+        public Utilities.QuadrupleAction GetOperator()
+        {
+            return op;
+        }
+
+        public int GetOperandOne()
+        {
+            return operandOne;
+        }
+
+        public int GetOperandTwo()
+        {
+            return operandTwo;
+        }
+
+        public int GetAssignee()
+        {
+            return assignee;
+        }
+
+        public void SetOperator(Utilities.QuadrupleAction op)
+        {
+            this.op = op;
+        }
+
+        public void SetOperandOne(int operandOne)
+        {
+            this.operandOne = operandOne;
+        }
+
+        public void SetOperandTwo(int operandTwo)
+        {
+            this.operandTwo = operandTwo;
+        }
+
+        public void SetAssignee(int assignee)
+        {
+            this.assignee = assignee;
         }
     }
 }

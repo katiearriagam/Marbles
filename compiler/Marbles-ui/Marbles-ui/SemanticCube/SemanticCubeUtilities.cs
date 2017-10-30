@@ -70,6 +70,7 @@ namespace Marbles
 			equals = 10,
 			and = 11,
 			or = 12,
+            fakeBottom,
 			invalidOperator = 13
 		}
 
