@@ -87,7 +87,7 @@ namespace Marbles
 			}
 		}
 
-		public static Operators GetOperatorFromChar(String c)
+		public static Operators GetOperatorFromString(String c)
 		{
 			Operators op;
 			if (StringToOperator.TryGetValue(c, out op))

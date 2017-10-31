@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Marbles.MemoryManagement;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,6 +83,16 @@ namespace Marbles
         public void SetAssignee(int assignee)
         {
             this.assignee = assignee;
+        }
+
+        public void Print()
+        {
+            Debug.WriteLine(op.ToString() + ", " + operandOne + ", " + operandTwo + ", " + assignee);
+        }
+
+        public void PrintValues()
+        {
+            Debug.WriteLine(op.ToString() + ", " + MemoryManager.GetValueFromAddress(operandOne) + ", " + MemoryManager.GetValueFromAddress(operandTwo) + ", " + MemoryManager.GetValueFromAddress(assignee));
         }
     }
 }

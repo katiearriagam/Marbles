@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Marbles.MemoryManagement;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,6 +60,15 @@ namespace Marbles
         private static int parameterCount = 0;
 
         /// <summary>
+        /// Returns the list of all quadruples generated.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Quadruple> GetQuadruples()
+        {
+            return quadruples;
+        }
+
+        /// <summary>
         /// Add the memory address pointing to an operand to the operand stack
         /// and its data type to the type stack.
         /// </summary>
@@ -115,22 +125,21 @@ namespace Marbles
                         
             if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
             {
-                // TO-DO: make this a semantic error and return
                 throw new Exception("Invalid operation: " + operandOne + " " + op + " " + operandTwo);
             }
 
             int addressTemp;
             if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
             {
-                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.number);
+                addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
             }
             else if (resultingDataType == SemanticCubeUtilities.DataTypes.boolean)
             {
-                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.boolean);
+                addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.text);
+                addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
             }
             
             AddOperand(addressTemp, resultingDataType);
@@ -188,21 +197,6 @@ namespace Marbles
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
 
         }
-
-        ///// <summary>
-        ///// This method is called when we detect an ELSE or an ELSE-IF expression.
-        ///// Set the jump of the latest IF or ELSE-IF condition to jump here, and add a
-        ///// GOTO quadruple at the end of this block to go to the end of the IF.
-        ///// </summary>
-        //public void IfElse()
-        //{
-        //    int latestJump = jumpStack.Pop();
-        //    quadruples[latestJump].SetAssignee(counter + 1);
-
-        //    // we will have to set this jump's position at the next ELSE or ELSE-IF statement or at the end of the whole IF statement if none
-        //    jumpStack.Push(counter);
-        //    quadruples.Add(new Quadruple(SemanticCubeUtilities.Operators.Goto));
-        //}
 
         /// <summary>
         /// This method is called when the last block in the IF statement has been processed.
@@ -286,17 +280,17 @@ namespace Marbles
             jumpStack.Push(counter);
 
             int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-            int numericExpValue = MemoryManager.GetValueAtAddress(numericExpAddress);
+            int numericExpValue = (int)(MemoryManager.GetValueFromAddress(numericExpAddress));
             bool condition = numericExpValue > 0;
 
             int conditionMem = 0;
             if (inFunction)
             {
-                conditionMem = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.boolean);
+                conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                conditionMem = MemoryManager.GetNextAvailable("global", SemanticCubeUtilities.DataTypes.boolean);
+                conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.global, SemanticCubeUtilities.DataTypes.boolean);
             }
 
             MemoryManager.SetMemory(conditionMem, condition);
@@ -320,6 +314,11 @@ namespace Marbles
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, jumpToBeginningOfFor));
             
             quadruples[jumpToOnFalse].SetAssignee(counter);
+        }
+
+        public static void CreateFunctionBeforeParameters()
+        {
+
         }
 
         public static void CallFunctionBeforeParameters(string functionId)
@@ -406,6 +405,161 @@ namespace Marbles
         {
             inFunction = false;
             functionId = "";
+        }
+
+        /// <summary>
+        /// Actual verification of an variables's ID existence. Returns the memory address of the
+        /// variable found, -1 otherwise.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="idMemoryAddress"></param>
+        /// <returns></returns>
+        public static bool VerifyVariableIDExists(string id, out SemanticCubeUtilities.DataTypes type, out int idMemoryAddress)
+        {
+            type = SemanticCubeUtilities.DataTypes.invalidDataType;
+            idMemoryAddress = -1;
+
+            bool existsLocal = false, existsGlobal = false;
+
+            if (inFunction)
+            {
+                Function current = FunctionDirectory.GetFunction(functionId);
+                existsLocal = current.GetLocalVariables().ContainsKey(id);
+                if (existsLocal)
+                {
+                    type = current.GetLocalVariables()[id].GetDataType();
+                    idMemoryAddress = current.GetLocalVariables()[id].GetMemoryAddress();
+                }
+            }
+            else
+            {
+                existsGlobal = FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(id);
+                if (existsGlobal)
+                {
+                    type = FunctionDirectory.GlobalFunction().GetLocalVariables()[id].GetDataType();
+                    idMemoryAddress = FunctionDirectory.GlobalFunction().GetLocalVariables()[id].GetMemoryAddress();
+                }
+            }
+
+            return existsLocal || existsGlobal;
+        }
+
+        /// <summary>
+        /// Actual verification of an asset's ID existence. Returns the memory address of the
+        /// Asset found, -1 otherwise.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="idMemoryAddress"></param>
+        /// <returns></returns>
+        public static bool VerifyAssetIDExists(string id, out int idMemoryAddress)
+        {
+            idMemoryAddress = -1;
+
+            bool exists = FunctionDirectory.GlobalFunction().GetAssets().ContainsKey(id);
+            if (exists)
+            {
+                idMemoryAddress = FunctionDirectory.GlobalFunction().GetAssets()[id].GetMemoryAddress();
+            }
+
+            return exists;
+        }
+
+        /// <summary>
+        /// This method is called when we read an id and it is not followed by a decimal point (meaning it is a variable).
+        /// Verifies that the variable exists either locally or globally and, if it exists, returns its memory address.
+        /// </summary>
+        /// <param name="id"></param>
+        public static void ReadIDVariable(string id)
+        {
+            // When we read a variable ID, we have to verify that it is valid (existent)
+            SemanticCubeUtilities.DataTypes idType;
+            int idMemoryAddress;
+            bool exists = VerifyVariableIDExists(id, out idType, out idMemoryAddress);
+            if (!exists)
+            {
+                throw new Exception("Use of undeclared identifier.");
+            }
+
+            AddOperand(idMemoryAddress, idType);
+        }
+
+        /// <summary>
+        /// This method is called when we read an id followed by a decimal point (meaning it is an asset).
+        /// Verifies that the Asset exists and, if it exists, returns its memory address.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="idMemoryAddress"></param>
+        public static void ReadIDAsset(string id, out int idMemoryAddress)
+        {
+            // When we read an asset ID, we have to verify that it is valid (existent)
+            bool exists = VerifyAssetIDExists(id, out idMemoryAddress);
+            if (!exists)
+            {
+                throw new Exception("Use of undeclared identifier.");
+            }
+        }
+
+        /// <summary>
+        /// Called after reading the expression in an assign instruction. Verifies that the assignation
+        /// matches both data types and generates a new quadruple with this instruction.
+        /// </summary>
+        public static void AssignEnd()
+        {
+            int expressionResult = operandStack.Pop();
+            SemanticCubeUtilities.DataTypes expressionType = typeStack.Pop();
+
+            int assigneeID = operandStack.Pop();
+            SemanticCubeUtilities.DataTypes assigneeType = typeStack.Pop();
+
+            if (expressionType != assigneeType)
+            {
+                throw new Exception("Expected " + assigneeType + ". Found " + expressionType + ".");
+            }
+
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, expressionResult, assigneeID));
+        }
+
+        /// <summary>
+        /// Called every time we read a constant number. We add it to memory (if not already present)
+        /// and push it to the operand stack.
+        /// </summary>
+        /// <param name="num"></param>
+        public static void ReadConstantNumber(int num)
+        {
+            // we read a constant number, so we add it to global constant memory
+            int constMem = MemoryManager.AddConstantInt(num);
+
+            // push it to the operand stack
+            AddConstant(constMem, SemanticCubeUtilities.DataTypes.number);
+        }
+
+        /// <summary>
+        /// Called every time we read a constant string. We add it to memory (if not already present)
+        /// and push it to the operand stack.
+        /// </summary>
+        /// <param name="text"></param>
+        public static void ReadConstantText(string text)
+        {
+            // we read a constant string, so we add it to global constant memory
+            int constMem = MemoryManager.AddConstantString(text);
+
+            // push it to the operand stack
+            AddConstant(constMem, SemanticCubeUtilities.DataTypes.text);
+        }
+
+        /// <summary>
+        /// Called every time we read a constant boolean. We add it to memory (if not already present)
+        /// and push it to the operand stack.
+        /// </summary>
+        /// <param name="condition"></param>
+        public static void ReadConstantBool(bool condition)
+        {
+            // we read a constant bool, so we add it to global constant memory
+            int constMem = MemoryManager.AddConstantBool(condition);
+
+            // push it to the operand stack
+            AddConstant(constMem, SemanticCubeUtilities.DataTypes.boolean);
         }
     }
 }

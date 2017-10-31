@@ -95,7 +95,6 @@ public class Parser {
 		}
 	}
 
-
 	bool WeakSeparator(int n, int syFol, int repFol) {
 		int kind = la.kind;
 		if (kind == n) {Get(); return true;}
@@ -109,7 +108,6 @@ public class Parser {
 			return StartOf(syFol);
 		}
 	}
-
 	
 	void Marbles() {
 		PROGRAM();
@@ -239,13 +237,13 @@ public class Parser {
 	}
 
 	SemanticCubeUtilities.DataTypes TYPE_FUNC() {
-		if (la.kind == 13) {
+		if (la.kind == 13) { // "text"
 			Get();
 			return SemanticCubeUtilities.DataTypes.text;
-		} else if (la.kind == 14) {
+		} else if (la.kind == 14) { // "number"
 			Get();
 			return SemanticCubeUtilities.DataTypes.number;
-		} else if (la.kind == 15) {
+		} else if (la.kind == 15) { // "bool"
 			Get();
 			return SemanticCubeUtilities.DataTypes.boolean;
 		} else SynErr(55);
@@ -253,17 +251,17 @@ public class Parser {
 	}
 
 	SemanticCubeUtilities.DataTypes TYPE_VAR() {
-		if (la.kind == 13)
+		if (la.kind == 13) // "text"
 		{
 			Get();
 			return SemanticCubeUtilities.DataTypes.text;
 		}
-		else if (la.kind == 14)
+		else if (la.kind == 14) // "number"
 		{
 			Get();
 			return SemanticCubeUtilities.DataTypes.number;
 		}
-		else if (la.kind == 15)
+		else if (la.kind == 15) // "bool"
 		{
 			Get();
 			return SemanticCubeUtilities.DataTypes.boolean;
@@ -272,155 +270,190 @@ public class Parser {
 	}
 
 	void CALL_TO_FUNCTION() {
-		Expect(19);
-		Expect(1);
-		Expect(10);
+		Expect(19); // "call"
+		Expect(1); // id
+		Expect(10); // '('
 		if (StartOf(3)) {
 			EXP();
-			while (la.kind == 11) {
+			while (la.kind == 11) { // ','
 				Get();
 				EXP();
 			}
 		}
-		Expect(12);
+		Expect(12); // ')'
 	}
 
+    // DONE
 	void EXP() {
 		TERM();
-		while (la.kind == 36 || la.kind == 37) {
-			if (la.kind == 36) {
+		while (la.kind == 36 || la.kind == 37) { // '+' or '-'
+            QuadrupleManager.PopOperator();
+			if (la.kind == 36) { // '+'
 				Get();
-			} else {
+                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.plus);
+			} else { // '-'
 				Get();
+                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.minus);
 			}
 			TERM();
 		}
 	}
 
 	void STOP() {
-		Expect(20);
+		Expect(20); // "stop"
 	}
 
 	void DO() {
-		Expect(21);
-		Expect(1);
-		Expect(22);
+		Expect(21); // "do"
+		Expect(1); // id
+		Expect(22); // '.'
 		ACTION();
 	}
 
+    // DONE
 	void ASSIGNMENT() {
-		Expect(32);
-		Expect(1);
-		if (la.kind == 22) {
-			Get();
-			ATTRIBUTE();
-		}
-		// quadruple_store.lastIdName = t.val;
-		// initassign()
-		Expect(33);
+		Expect(32); // set
+		Expect(1); // id
+        string id = t.val;
+        if (la.kind == 22) // '.'
+        {
+            int assetMemoryAddress = -1;
+            try
+            {
+                QuadrupleManager.ReadIDAsset(id, out assetMemoryAddress);
+            }
+            catch (Exception e)
+            {
+                // TODO: create semantic error: Use of undeclared identifier
+            }
+
+            Get();
+			ATTRIBUTE(); // we don't need to verify the attribute as the UI forces the user to select a valid one
+
+            string assetAttribute = t.val;
+            int attributeOffset = MemoryManager.AttributeToOffset(assetAttribute);
+            SemanticCubeUtilities.DataTypes attributeType = MemoryManager.AttributeToType(assetAttribute);
+            QuadrupleManager.AddOperand(assetMemoryAddress + attributeOffset, attributeType);
+        }
+        else
+        {
+            try
+            {
+                QuadrupleManager.ReadIDVariable(id);
+            }
+            catch (Exception e)
+            {
+                // TODO: Create semantic error with message e.Message
+            }
+        }
+
+        Expect(33); // '='
 		SUPER_EXP();
-		// assign() pop de lo que se mete en la pila
+
+        QuadrupleManager.AssignEnd();
 	}
 
 	void RETURN() {
-		Expect(52);
+		Expect(52); // "return"
 		SUPER_EXP();
 	}
 
 	void FOR() {
-		Expect(28);
-		Expect(10);
+		Expect(28); // "for"
+		Expect(10); // '('
 		EXP();
-		Expect(12);
-		Expect(29);
-		Expect(7);
+		Expect(12); // ')'
+		Expect(29); // "loops"
+		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
-		Expect(8);
+		Expect(8); // '}'
 	}
 
 	void WHILE() {
-		Expect(30);
-		Expect(10);
+		Expect(30); // "while"
+		Expect(10); // '('
 		SUPER_EXP();
-		Expect(12);
-		Expect(7);
+		Expect(12); // ')'
+		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
-		Expect(8);
+		Expect(8); // '}'
 	}
 
 	void IFF() {
-		Expect(31);
-		Expect(10);
+		Expect(31); // "if"
+		Expect(10); // '('
 		SUPER_EXP();
-		Expect(12);
-		Expect(7);
+		Expect(12); // ')'
+		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
-		Expect(8);
+		Expect(8); // '}'
 	}
 
 	void ACTION() {
 		if (StartOf(4)) {
-			if (la.kind == 23) {
+			if (la.kind == 23) { // "move_x"
 				Get();
-				Expect(10);
-			} else if (la.kind == 24) {
+				Expect(10); // '('
+			} else if (la.kind == 24) { // "move_y"
 				Get();
-				Expect(10);
-			} else if (la.kind == 25) {
+				Expect(10); // '('
+			} else if (la.kind == 25) { // "rotate"
 				Get();
-				Expect(10);
-			} else {
+				Expect(10); // '('
+			} else { // "set_position"
 				Get();
-				Expect(10);
+				Expect(10); // '('
 				EXP();
-				Expect(11);
+				Expect(11); // ','
 			}
 			EXP();
 			Expect(12);
-		} else if (la.kind == 27) {
+		} else if (la.kind == 27) { // "spin"
 			Get();
-			Expect(10);
-			Expect(12);
+			Expect(10); // (
+			Expect(12); // )
 		} else SynErr(57);
 	}
 
 	void SUPER_EXP() {
 		EXP_L();
-		while (la.kind == 34) {
+		while (la.kind == 34) { // or
 			Get();
-			EXP_L();
+            QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.and);
+            EXP_L();
+            QuadrupleManager.PopOperator(); // not sure about this one here
 		}
 	}
 
 	void ATTRIBUTE() {
 		switch (la.kind) {
-		case 46: {
+		case 46: { // "value"
 			Get();
 			break;
 		}
-		case 47: {
+		case 47: { // "label"
 			Get();
 			break;
 		}
-		case 48: {
+		case 48: { // "position_x"
 			Get();
 			break;
 		}
-		case 49: {
+		case 49: { // "position_y"
 			Get();
 			break;
 		}
-		case 50: {
+		case 50: { // "width"
 			Get();
 			break;
 		}
-		case 51: {
+		case 51: { // "height"
 			Get();
 			break;
 		}
@@ -430,43 +463,48 @@ public class Parser {
 
 	void EXP_L() {
 		EXP_R();
-		while (la.kind == 35) {
+		while (la.kind == 35) { // "and"
 			Get();
+            QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.and);
 			EXP_R();
+            QuadrupleManager.PopOperator(); // not sure about this one here
 		}
 	}
 
+    // DONE
 	void EXP_R() {
 		EXP();
 		if (StartOf(5)) {
 			OP();
+            QuadrupleManager.AddOperator(SemanticCubeUtilities.GetOperatorFromString(t.val));
 			EXP();
+            QuadrupleManager.PopOperator();
 		}
 	}
 
 	void OP() {
 		switch (la.kind) {
-		case 40: {
+		case 40: { // >
 			Get();
 			break;
 		}
-		case 41: {
+		case 41: { // <
 			Get();
 			break;
 		}
-		case 42: {
+		case 42: { // ==
 			Get();
 			break;
 		}
-		case 43: {
+		case 43: { // <=
 			Get();
 			break;
 		}
-		case 44: {
+		case 44: { // >=
 			Get();
 			break;
 		}
-		case 45: {
+		case 45: { // !=
 			Get();
 			break;
 		}
@@ -474,51 +512,95 @@ public class Parser {
 		}
 	}
 
+    // DONE
 	void TERM() {
 		FACTOR();
-		while (la.kind == 38 || la.kind == 39) {
-			if (la.kind == 38) {
+		while (la.kind == 38 || la.kind == 39) { // '*' or '/'
+            QuadrupleManager.PopOperator();
+			if (la.kind == 38) { // '*'
 				Get();
-			} else {
+                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.multiply);
+			} else { // '/'
 				Get();
-			}
+                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.divide);
+            }
 			FACTOR();
 		}
 	}
 
+    // Done
 	void FACTOR() {
-		if (la.kind == 10) {
+		if (la.kind == 10) { // '('
+            // push a fake bottom
+            QuadrupleManager.AddParenthesis();
 			Get();
 			EXP_R();
-			Expect(12);
+			Expect(12); // ')'
+            // exit fake bottom
+            QuadrupleManager.PopParenthesis();
 		} else if (StartOf(6)) {
-			if (la.kind == 37) {
+			if (la.kind == 37) { // negative sign
 				Get();
 			}
-			if (la.kind == 4) {
+			if (la.kind == 4) { // number constant
 				Get();
-			} else if (la.kind == 1) {
+                QuadrupleManager.ReadConstantNumber(Int32.Parse(t.val));
+
+            } else if (la.kind == 1) { // id
 				Get();
-				if (la.kind == 22) {
-					Get();
-					ATTRIBUTE();
-				}
-			} else if (la.kind == 19) {
+                string id = t.val;
+                if (la.kind == 22) // '.' character
+                {
+                    int assetMemoryAddress = -1;
+                    try
+                    {
+                        QuadrupleManager.ReadIDAsset(id, out assetMemoryAddress);
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO: create semantic error: Use of undeclared identifier
+                    }
+
+                    Get();
+                    ATTRIBUTE(); // we don't need to validate the attribute as the UI forces the user to select a valid one
+
+                    string assetAttribute = t.val;
+                    int attributeOffset = MemoryManager.AttributeToOffset(assetAttribute);
+                    SemanticCubeUtilities.DataTypes attributeType = MemoryManager.AttributeToType(assetAttribute);
+                    QuadrupleManager.AddOperand(assetMemoryAddress + attributeOffset, attributeType);
+                }
+                else
+                {
+                    try
+                    {
+                        QuadrupleManager.ReadIDVariable(id);
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO: create semantic error: Use of undeclared identifier
+                    }
+                }
+			} else if (la.kind == 19) { // "call"
 				CALL_TO_FUNCTION();
-			} else if (la.kind == 2 || la.kind == 3) {
+			} else if (la.kind == 2 || la.kind == 3) { // true or false
 				BOOL();
-			} else if (la.kind == 5) {
+			} else if (la.kind == 5) { // string constant
 				Get();
-			} else SynErr(60);
-		} else SynErr(61);
+                QuadrupleManager.ReadConstantText(t.val);
+
+            } else SynErr(60); // invalid FACTOR
+		} else SynErr(61); // invalid FACTOR
 	}
 
+    // DONE
 	void BOOL() {
-		if (la.kind == 2) {
+		if (la.kind == 2) { // true
 			Get();
-		} else if (la.kind == 3) {
+            QuadrupleManager.ReadConstantBool(true);
+		} else if (la.kind == 3) { // false
 			Get();
-		} else SynErr(62);
+            QuadrupleManager.ReadConstantBool(false);
+        } else SynErr(62);
 	}
 
 

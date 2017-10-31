@@ -88,7 +88,17 @@ namespace Marbles
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
 			parser.Parse();
-			Debug.WriteLine("=================" + parser.errors.count + "=============");
+
+            List<Quadruple> quads = QuadrupleManager.GetQuadruples();
+
+            Debug.WriteLine("---- QUADRUPLES START ----");
+            foreach (Quadruple quad in quads)
+            {
+                quad.Print();
+            }
+            Debug.WriteLine("---- QUADRUPLES END ----");
+
+            Debug.WriteLine("=================" + parser.errors.count + "=============");
 			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
 			foreach (int warningLine in ErrorPrinter.GetWarningLines())
 			{

@@ -70,6 +70,10 @@ namespace Marbles
             GotoF = 14,
             GotoV = 15,
             fakeBottom = 16,
+            param = 17,
+            gosub = 18,
+            retorno = 19,
+            era = 20
         }
 
         public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();

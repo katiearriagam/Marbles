@@ -16,7 +16,18 @@ namespace Marbles.MemoryManagement
 			constant = 3
 		}
 
-		public static Dictionary<int, object> memory;
+        public enum AssetAttributes
+        {
+            x = 0,
+            y = 1,
+            width = 2,
+            height = 3,
+            rotation = 4,
+            number = 5,
+            label = 6
+        }
+
+        public static Dictionary<int, object> memory;
 		public static Dictionary<int, object> memoryLocal;
 		public static Dictionary<int, object> memoryConstant;
 
@@ -249,5 +260,69 @@ namespace Marbles.MemoryManagement
 				throw new Exception("Trying to deallocate memory from non-local scope.");
 			}
 		}
-	}
+
+        public static int AddConstantInt(int constant)
+        {
+            int constMem = GetNextAvailable(MemoryScope.global, SemanticCubeUtilities.DataTypes.number);
+            return SetMemory(constMem, constant);
+        }
+
+        public static int AddConstantString(string constant)
+        {
+            int constMem = GetNextAvailable(MemoryScope.global, SemanticCubeUtilities.DataTypes.text);
+            return SetMemory(constMem, constant);
+        }
+
+        public static int AddConstantBool(bool constant)
+        {
+            int constMem = GetNextAvailable(MemoryScope.global, SemanticCubeUtilities.DataTypes.boolean);
+            return SetMemory(constMem, constant);
+        }
+
+        public static int AttributeToOffset(string attr)
+        {
+            switch (attr)
+            {
+                case "x":
+                    return (int)AssetAttributes.x;
+                case "y":
+                    return (int)AssetAttributes.y;
+                case "width":
+                    return (int)AssetAttributes.width;
+                case "height":
+                    return (int)AssetAttributes.height;
+                case "rotation":
+                    return (int)AssetAttributes.rotation;
+                case "number":
+                    return (int)AssetAttributes.number;
+                case "label":
+                    return (int)AssetAttributes.label;
+                default: // will never execute as we limit the user with a drop-down
+                    return -1;
+            }
+        }
+
+        public static SemanticCubeUtilities.DataTypes AttributeToType(string attr)
+        {
+            switch (attr)
+            {
+                case "x":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "y":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "width":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "height":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "rotation":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "number":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "label":
+                    return SemanticCubeUtilities.DataTypes.text;
+                default: // will never execute as we limit the user with a drop-down
+                    return SemanticCubeUtilities.DataTypes.invalidDataType;
+            }
+        }
+    }
 }

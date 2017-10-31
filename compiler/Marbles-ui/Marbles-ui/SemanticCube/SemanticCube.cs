@@ -423,7 +423,7 @@ namespace Marbles
 		{
 			SemanticCubeUtilities.DataTypes DataTypeOne = SemanticCubeUtilities.GetDataTypeFromType(typeOne);
 			SemanticCubeUtilities.DataTypes DataTypeTwo = SemanticCubeUtilities.GetDataTypeFromType(typeTwo);
-			SemanticCubeUtilities.Operators Operator = SemanticCubeUtilities.GetOperatorFromChar(op);
+			SemanticCubeUtilities.Operators Operator = SemanticCubeUtilities.GetOperatorFromString(op);
 
 			if (DataTypeOne.Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
 				DataTypeTwo.Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
