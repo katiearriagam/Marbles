@@ -52,6 +52,8 @@ public class Parser {
 	public Token la;   // lookahead token
 	int errDist = minErrDist;
 
+	// helper variables
+	public int AssetIndex = 0;
 
 
 	public Parser(Scanner scanner) {
@@ -117,26 +119,27 @@ public class Parser {
 
 	void PROGRAM() {
 		while (la.kind == 18) {
-			CREATE_ASSET();
+			int index = CREATE_ASSET();
+			int memoryAddress = MemoryManager.GetNextAssetAvailable();
+			if (memoryAddress != -1)
+			{
+				MemoryManager.SetAssetInMemory(memoryAddress, (Asset)Utilities.finalAssetsInCanvas[index]);
+			}
 		}
+		AssetIndex = 0;
 		while (la.kind == 16) {
 			Variable newGlobalVariable = CREATE_VAR();
-			if (!FunctionDirectory.GlobalFunction().AddGlobalVariables(newGlobalVariable))
+			try
 			{
-				SemErr("Name " + newGlobalVariable.GetName() + " is duplicated.");
+				MemoryManager.AddGlobalVariable(newGlobalVariable);
 			}
-			int memorySpace = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.global, newGlobalVariable.GetDataType());
-			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+			catch (ArgumentException e)
 			{
-				MemoryManager.SetMemory(memorySpace, 0);
+				SemErr(e.Message);
 			}
-			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+			catch (InvalidOperationException e)
 			{
-				MemoryManager.SetMemory(memorySpace, "");
-			}
-			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
-			{
-				MemoryManager.SetMemory(memorySpace, false);
+				SemErr(e.Message);
 			}
 		}
 		while (la.kind == 9) {
@@ -150,10 +153,16 @@ public class Parser {
 		Expect(8);
 	}
 
-	void CREATE_ASSET() {
+	/// <summary>
+	/// Action called when a creat asset block is found
+	/// </summary>
+	/// <returns> Returns the index of the asset being 
+	/// created in Utilities.finalAssetsInCanvas </returns>
+	int CREATE_ASSET() {
 		Expect(18);
 		Expect(1);
 		Expect(17);
+		return AssetIndex++;
 	}
 
 	Variable CREATE_VAR() {
@@ -174,6 +183,7 @@ public class Parser {
 		Function newFunction = new Function(functionName, functionType);
 
 		QuadrupleManager.EnterFunction(functionName);
+
 		Expect(10);
 		if (la.kind == 13 || la.kind == 14 || la.kind == 15) {
 			SemanticCubeUtilities.DataTypes parameterType = TYPE_VAR();
@@ -193,7 +203,7 @@ public class Parser {
 		while (la.kind == 16) {
 			// add variables to the local variables directory
 			var localVariable = CREATE_VAR();
-			newFunction.AddLocalVariable(CREATE_VAR());
+			newFunction.AddLocalVariable(localVariable);
 		}
 		while (StartOf(1)) {
 			INSTRUCTION();
@@ -201,18 +211,28 @@ public class Parser {
 		Expect(8);
 
 		// if function name already exists, throw a semantic error.
-		if (!FunctionDirectory.InsertFunction(newFunction))
+		if (FunctionDirectory.FunctionExists(newFunction))
 		{
 			SemErr("Function named " + newFunction.GetName() + " already exists.");
 		}
-
-		// add this function to the global variables directory
-		if (!FunctionDirectory.GlobalFunction().AddGlobalVariables(newFunction))
+		else
 		{
-			SemErr("Name " + newFunction.GetName() + " is duplicated.");
+			try
+			{
+				MemoryManager.AddFunctionAsGlobalVariable(newFunction);
+			}
+			catch (ArgumentException e)
+			{
+				SemErr(e.Message);
+			}
+			catch (InvalidOperationException e)
+			{
+				SemErr(e.Message);
+			}
 		}
 
-		QuadrupleManager.ExitFunction();
+		//TODO: Add actual memory address
+		QuadrupleManager.ExitFunction(0);
 	}
 
 	void INSTRUCTION() {

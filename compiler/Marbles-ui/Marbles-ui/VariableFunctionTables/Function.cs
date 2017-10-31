@@ -13,13 +13,13 @@ namespace Marbles
 	{
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
-		private int memoryAddress;
+		private int location;
 		private Dictionary<string, Variable> parameters;
 		private Dictionary<string, Variable> localVariables;
-		private static Dictionary<string, Variable> globalVariables;
 
-		// only used in global
-		private Dictionary<string, Asset> assets;
+		// only used for global
+		private static Dictionary<string, Variable> globalVariables;
+		private static Dictionary<string, Asset> assets;
 
 		// number, boolean, text
 		private int[] counterLocal = new int[] {0,0,0};
@@ -117,27 +117,11 @@ namespace Marbles
 		/// </summary>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public bool AddGlobalVariables(Variable variable)
+		public bool AddGlobalVariable(Variable variable)
 		{
 			if(!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
 			{
 				globalVariables.Add(variable.GetName(), variable);
-				return true;
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Adds a function reference to the global directory
-		/// </summary>
-		/// <param name="func"></param>
-		/// <returns></returns>
-		public bool AddGlobalVariables(Function func)
-		{
-			if (!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(func.GetName()))
-			{
-				Variable var = new Variable(func.GetName(), func.GetReturnType());
-				globalVariables.Add(func.GetName(), var);
 				return true;
 			}
 			return false;
@@ -194,20 +178,20 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Sets or modifies the memory address value
+		/// Sets or modifies the location in quadruples
 		/// </summary>
 		/// <param name="mem"></param>
-		public void SetMemoryAddress(int mem)
+		public void SetLocation(int mem)
 		{
-			memoryAddress = mem;
+			location = mem;
 		}
 
 		/// <summary>
-		/// Retrieves the memory address
+		/// Retrieves the location in quadruples
 		/// </summary>
-		public int GetMemoryAddress()
+		public int GetLocation()
 		{
-			return memoryAddress;
+			return location;
 		}
 
 		/// <summary>
@@ -248,6 +232,14 @@ namespace Marbles
 			if (address >= amountBooleanTemp && address < amountStringTemp) { return SemanticCubeUtilities.DataTypes.text; }
 
 			return SemanticCubeUtilities.DataTypes.invalidDataType;
+		}
+
+		/// <summary>
+		/// Remove all entries from local variables
+		/// </summary>
+		public void ReleaseLocalVariables()
+		{
+			localVariables.Clear();
 		}
 	}
 }
