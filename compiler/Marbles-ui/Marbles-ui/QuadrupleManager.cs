@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Marbles.MemoryManagement;
 
 namespace Marbles
 {
@@ -122,15 +123,15 @@ namespace Marbles
             int addressTemp;
             if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
             {
-                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.number);
+                addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
             }
             else if (resultingDataType == SemanticCubeUtilities.DataTypes.boolean)
             {
-                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.boolean);
+                addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                addressTemp = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.text);
+                addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
             }
             
             AddOperand(addressTemp, resultingDataType);
@@ -188,21 +189,6 @@ namespace Marbles
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
 
         }
-
-        ///// <summary>
-        ///// This method is called when we detect an ELSE or an ELSE-IF expression.
-        ///// Set the jump of the latest IF or ELSE-IF condition to jump here, and add a
-        ///// GOTO quadruple at the end of this block to go to the end of the IF.
-        ///// </summary>
-        //public void IfElse()
-        //{
-        //    int latestJump = jumpStack.Pop();
-        //    quadruples[latestJump].SetAssignee(counter + 1);
-
-        //    // we will have to set this jump's position at the next ELSE or ELSE-IF statement or at the end of the whole IF statement if none
-        //    jumpStack.Push(counter);
-        //    quadruples.Add(new Quadruple(SemanticCubeUtilities.Operators.Goto));
-        //}
 
         /// <summary>
         /// This method is called when the last block in the IF statement has been processed.
@@ -286,17 +272,19 @@ namespace Marbles
             jumpStack.Push(counter);
 
             int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-            int numericExpValue = MemoryManager.GetValueAtAddress(numericExpAddress);
+            int numericExpValue = (int)MemoryManager.GetValueFromAddress(numericExpAddress);
             bool condition = numericExpValue > 0;
 
             int conditionMem = 0;
+
+			// TODO: how to set temporary for function vs. global
             if (inFunction)
             {
-                conditionMem = MemoryManager.GetNextAvailable("temp", SemanticCubeUtilities.DataTypes.boolean);
+                conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                conditionMem = MemoryManager.GetNextAvailable("global", SemanticCubeUtilities.DataTypes.boolean);
+                conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
 
             MemoryManager.SetMemory(conditionMem, condition);
@@ -402,8 +390,11 @@ namespace Marbles
         /// <summary>
         /// Sets the value of InFunction to false, meaning we are now not inside a function.
         /// </summary>
-        public static void ExitFunction()
+        public static void ExitFunction(int memAddress)
         {
+			FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
+			// TODO: Send actual memory address in retorno quadruple
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, 5 /* Must fix */, -1, -1));
             inFunction = false;
             functionId = "";
         }

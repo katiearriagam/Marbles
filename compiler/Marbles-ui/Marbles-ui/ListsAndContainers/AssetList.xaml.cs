@@ -27,10 +27,12 @@ namespace Marbles
 
 		public void UpdateAssets()
 		{
+			Utilities.finalAssetsInCanvas.Clear();
 			AssetListView.Items.Clear();
 			foreach (Asset itemAsset in Utilities.assetsInCanvas)
 			{
 				AssetListView.Items.Add(new CreateAsset(itemAsset.GetID()));
+				Utilities.finalAssetsInCanvas.Add(itemAsset);
 			}
 		}
 		public void PrintCode()

@@ -16,9 +16,27 @@ namespace Marbles.MemoryManagement
 			constant = 3
 		}
 
-		public static Dictionary<int, object> memory;
+		public enum AssetAttributes
+		{
+			x = 0,
+			y = 1,
+			width = 2,
+			height = 3,
+			rotation = 4, 
+			number = 5,
+			label = 6
+		}
+
+		public static Dictionary<int, object> memoryGlobalAssets;
+		public static Dictionary<int, object> memoryGlobal;
 		public static Dictionary<int, object> memoryLocal;
+		public static Dictionary<int, object> memoryTemporary;
 		public static Dictionary<int, object> memoryConstant;
+
+		// Asset Limits
+		const int lowestAssetAddress = 0000;
+		const int highestAssetAddress = 0999;
+		static int currentAssetAddress = 0;
 
 		// Global Lower Limits
 		const int lowestGlobalIntAddress = 1000;
@@ -148,29 +166,85 @@ namespace Marbles.MemoryManagement
 			return -1;
 		}
 
+		/// <summary>
+		/// Gets the next available memory address for assets
+		/// </summary>
+		/// <returns></returns>
+		public static int GetNextAssetAvailable()
+		{
+			if (currentAssetAddress + 7 <= highestAssetAddress)
+			{
+				return currentAssetAddress;
+			}
+			return -1;
+		}
+
+		/// <summary>
+		/// Load an asset into memory
+		/// </summary>
+		/// <param name="memoryAddress"></param>
+		/// <param name="asset"></param>
+		/// <returns></returns>
+		public static int SetAssetInMemory(int memoryAddress, Asset asset)
+		{
+			if (currentAssetAddress + 7 <= highestAssetAddress)
+			{
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.x] = asset.GetX();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.y] = asset.GetY();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.width] = asset.GetWidth();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.height] = asset.GetHeight();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.rotation] = asset.GetRotation();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.number] = asset.GetNumber();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.label] = asset.GetLabel();
+
+				currentAssetAddress += 7;
+				return memoryAddress;
+			}
+
+			return -1;
+		}
+
 		public static int SetMemory(int memAddress, object value)
 		{
-			// insert a global/temporary number in memory
-			if ((memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress) ||
-				(memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress))
+			// insert a global number in memory
+			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
 			{
-				memory[memAddress] = (int)value;
+				memoryGlobal[memAddress] = (int)value;
 				return memAddress;
 			}
 
-			// insert a global/temporary string in memory
-			else if ((memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress) ||
-				(memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress))
+			// insert a temporary number in memory
+			else if (memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress)
 			{
-				memory[memAddress] = (string)value;
+				memoryTemporary[memAddress] = (int)value;
+				return memAddress;
+			}
+
+			// insert a global string in memory
+			else if (memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress)
+			{
+				memoryGlobal[memAddress] = (string)value;
+				return memAddress;
+			}
+
+			// insert a temporary string in memory
+			else if (memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress)
+			{
+				memoryTemporary[memAddress] = (string)value;
 				return memAddress;
 			}
 
 			// insert a global/temporary boolean in memory
-			else if ((memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress) ||
-				(memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress))
+			else if (memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress)
 			{
-				memory[memAddress] = (bool)value;
+				memoryGlobal[memAddress] = (bool)value;
+				return memAddress;
+			}
+
+			// insert temporary boolean in memory
+			else if (memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress)
+			{
+				memoryTemporary[memAddress] = (bool)value;
 				return memAddress;
 			}
 
@@ -247,6 +321,73 @@ namespace Marbles.MemoryManagement
 			else
 			{
 				throw new Exception("Trying to deallocate memory from non-local scope.");
+			}
+		}
+		
+		// TODO: Document this.
+		public static object GetValueFromAddress(int memAddress)
+		{
+			if (memoryGlobal.ContainsKey(memAddress))
+			{
+				return memoryGlobal[memAddress];
+			}
+			else if (memoryLocal.ContainsKey(memAddress))
+			{
+				return memoryLocal[memAddress];
+			}
+			else if (memoryTemporary.ContainsKey(memAddress))
+			{
+				return memoryTemporary[memAddress];
+			}
+			else if (memoryConstant.ContainsKey(memAddress))
+			{
+				return memoryConstant[memAddress];
+			}
+
+			throw new Exception("Memory address not currently set");
+		}
+
+		public static void AddGlobalVariable(Variable newGlobalVariable)
+		{
+			if (!FunctionDirectory.GlobalFunction().AddGlobalVariable(newGlobalVariable))
+			{
+				throw new ArgumentException("Name " + newGlobalVariable.GetName() + " is duplicated in global values.");
+			}
+
+			int memorySpace = GetNextAvailable(MemoryScope.global, newGlobalVariable.GetDataType());
+
+			if (memorySpace == -1)
+			{
+				throw new InvalidOperationException("Out of global memory");
+			}
+			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+			{
+				SetMemory(memorySpace, 0);
+			}
+			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+			{
+				SetMemory(memorySpace, "");
+			}
+			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
+			{
+				SetMemory(memorySpace, false);
+			}
+		}
+
+		public static void AddFunctionAsGlobalVariable(Function func)
+		{
+			Variable var = new Variable(func.GetName(), func.GetReturnType());
+			try
+			{
+				AddGlobalVariable(var);
+			}
+			catch (ArgumentException e)
+			{
+				throw new ArgumentException(e.Message);
+			}
+			catch (InvalidOperationException e)
+			{
+				throw new InvalidOperationException(e.Message);
 			}
 		}
 	}
