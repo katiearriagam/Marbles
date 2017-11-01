@@ -1,4 +1,5 @@
 ﻿using Marbles.Analysis;
+using Marbles.MemoryManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,6 +44,9 @@ namespace Marbles
 			ErrorPrinter.errorCount = 0;
 			ErrorPrinter.errorList = new Dictionary<int, List<string>>();
 			ErrorPrinter.warningList = new Dictionary<int, List<string>>();
+            FunctionDirectory.Reset();
+            MemoryManager.Reset();
+            QuadrupleManager.Reset();
 			UserControl main = new UserControl();
 
             AssetListViewContainer.PrintCode();
@@ -98,7 +102,6 @@ namespace Marbles
             }
             Debug.WriteLine("---- QUADRUPLES END ----");
 
-            Debug.WriteLine("=================" + parser.errors.count + "=============");
 			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
 			foreach (int warningLine in ErrorPrinter.GetWarningLines())
 			{

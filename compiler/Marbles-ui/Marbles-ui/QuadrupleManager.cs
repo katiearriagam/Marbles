@@ -1,9 +1,9 @@
-﻿using Marbles.MemoryManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Marbles.MemoryManagement;
 
 namespace Marbles
 {
@@ -12,27 +12,27 @@ namespace Marbles
         /// <summary>
         /// Stores the list of quadruples generated.
         /// </summary>
-        private static List<Quadruple> quadruples;
+        private static List<Quadruple> quadruples = new List<Quadruple>();
 
         /// <summary>
         /// Stores values referencing <code>Utilities.DataTypes</code>.
         /// </summary>
-        private static Stack<SemanticCubeUtilities.DataTypes> typeStack;
+        private static Stack<SemanticCubeUtilities.DataTypes> typeStack = new Stack<SemanticCubeUtilities.DataTypes>();
 
         /// <summary>
         /// Stores values referencing <code>Utilities.Operators</code>.
         /// </summary>
-        private static Stack<int> operandStack;
+        private static Stack<int> operandStack = new Stack<int>();
 
         /// <summary>
         /// Stores values referencing memory addresses in which the operators are stored.
         /// </summary>
-        private static Stack<SemanticCubeUtilities.Operators> operatorStack;
+        private static Stack<SemanticCubeUtilities.Operators> operatorStack = new Stack<SemanticCubeUtilities.Operators>();
 
         /// <summary>
         /// Stores line numbers (within the quadruples list) to which control will jump.
         /// </summary>
-        private static Stack<int> jumpStack;
+        private static Stack<int> jumpStack = new Stack<int>();
 
         /// <summary>
         /// Maintains the current quadruple line which we are processing.
@@ -74,7 +74,7 @@ namespace Marbles
         /// </summary>
         /// <param name="operand"></param>
         /// <param name="type"></param>
-        public static void AddOperand(int operand, SemanticCubeUtilities.DataTypes type)
+        public static void PushOperand(int operand, SemanticCubeUtilities.DataTypes type)
         {
             operandStack.Push(operand);
             typeStack.Push(type);
@@ -86,7 +86,7 @@ namespace Marbles
         /// </summary>
         /// <param name="value"></param>
         /// <param name="type"></param>
-        public static void AddConstant(int constant, SemanticCubeUtilities.DataTypes type)
+        public static void PushConstant(int constant, SemanticCubeUtilities.DataTypes type)
         {
             operandStack.Push(constant);
             typeStack.Push(type);
@@ -96,7 +96,7 @@ namespace Marbles
         /// Push an operator to the operator stack.
         /// </summary>
         /// <param name="op"></param>
-        public static void AddOperator(SemanticCubeUtilities.Operators op)
+        public static void PushOperator(SemanticCubeUtilities.Operators op)
         {
             operatorStack.Push(op);
         }
@@ -106,19 +106,28 @@ namespace Marbles
         /// operand stack. Verify their compatibility with the Semantic Cube and push the resulting
         /// operand to the operand stack. Adds a quadruple with the operation that was verified.
         /// </summary>
-        public static void PopOperator()
+        public static void PopOperator(int priority)
         {
             if (operatorStack.Count == 0)
             {
-                throw new Exception("There are no operators left on the operator stack.");
+                // Since it's empty, there cannot be operators with the selected priority pending
+                return;
+                // throw new Exception("There are no operators left on the operator stack.");
             }
 
-            SemanticCubeUtilities.Operators op = operatorStack.Pop();
+            SemanticCubeUtilities.Operators op = operatorStack.Peek();
 
-            int operandOne = operandStack.Pop();
-            SemanticCubeUtilities.DataTypes typeOne = typeStack.Pop();
+            if (SemanticCubeUtilities.OperatorToPriority(op) != priority)
+            {
+                // This is not the operator we are expecting at this moment
+                return;
+            }
+            operatorStack.Pop();
+
             int operandTwo = operandStack.Pop();
             SemanticCubeUtilities.DataTypes typeTwo = typeStack.Pop();
+            int operandOne = operandStack.Pop();
+            SemanticCubeUtilities.DataTypes typeOne = typeStack.Pop();
 
             SemanticCubeUtilities.DataTypes resultingDataType = SemanticCube.AnalyzeSemantics(
                 new TypeTypeOperator(typeOne, typeTwo, op));
@@ -141,8 +150,10 @@ namespace Marbles
             {
                 addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
             }
-            
-            AddOperand(addressTemp, resultingDataType);
+
+            addressTemp = MemoryManager.SetMemory(addressTemp, 0);
+
+            PushOperand(addressTemp, resultingDataType);
 
             quadruples.Add(new Quadruple(Utilities.operatorToAction[op],
                 operandOne, operandTwo, addressTemp));
@@ -152,7 +163,7 @@ namespace Marbles
         /// This method is called when we read an open parenthesis. A fake bottom is added to
         /// mark the beginning of a new expression to evaluate.
         /// </summary>
-        public static void AddParenthesis()
+        public static void PushFakeBottom()
         {
             operatorStack.Push(SemanticCubeUtilities.Operators.fakeBottom);
         }
@@ -162,7 +173,7 @@ namespace Marbles
         /// parenthesis at the top of the operator stack. Throws an exception if the latter
         /// is not present.
         /// </summary>
-        public static void PopParenthesis()
+        public static void PopFakeBottom()
         {
             if (operatorStack.Count == 0)
             {
@@ -284,13 +295,16 @@ namespace Marbles
             bool condition = numericExpValue > 0;
 
             int conditionMem = 0;
+
+			// TODO: how to set temporary for function vs. global
             if (inFunction)
             {
                 conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.global, SemanticCubeUtilities.DataTypes.boolean);
+                // TODO: check this
+                conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
 
             MemoryManager.SetMemory(conditionMem, condition);
@@ -401,8 +415,11 @@ namespace Marbles
         /// <summary>
         /// Sets the value of InFunction to false, meaning we are now not inside a function.
         /// </summary>
-        public static void ExitFunction()
+        public static void ExitFunction(int memAddress)
         {
+			FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
+			// TODO: Send actual memory address in retorno quadruple
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, 5 /* Must fix */, -1, -1));
             inFunction = false;
             functionId = "";
         }
@@ -434,11 +451,11 @@ namespace Marbles
             }
             else
             {
-                existsGlobal = FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(id);
+                existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
                 if (existsGlobal)
                 {
-                    type = FunctionDirectory.GlobalFunction().GetLocalVariables()[id].GetDataType();
-                    idMemoryAddress = FunctionDirectory.GlobalFunction().GetLocalVariables()[id].GetMemoryAddress();
+                    type = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetDataType();
+                    idMemoryAddress = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetMemoryAddress();
                 }
             }
 
@@ -481,7 +498,7 @@ namespace Marbles
                 throw new Exception("Use of undeclared identifier.");
             }
 
-            AddOperand(idMemoryAddress, idType);
+            PushOperand(idMemoryAddress, idType);
         }
 
         /// <summary>
@@ -528,10 +545,10 @@ namespace Marbles
         public static void ReadConstantNumber(int num)
         {
             // we read a constant number, so we add it to global constant memory
-            int constMem = MemoryManager.AddConstantInt(num);
-
+            int constMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
+            constMem = MemoryManager.SetMemory(constMem, num);
             // push it to the operand stack
-            AddConstant(constMem, SemanticCubeUtilities.DataTypes.number);
+            PushConstant(constMem, SemanticCubeUtilities.DataTypes.number);
         }
 
         /// <summary>
@@ -542,10 +559,11 @@ namespace Marbles
         public static void ReadConstantText(string text)
         {
             // we read a constant string, so we add it to global constant memory
-            int constMem = MemoryManager.AddConstantString(text);
+            int constMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.text);
+            constMem = MemoryManager.SetMemory(constMem, text);
 
             // push it to the operand stack
-            AddConstant(constMem, SemanticCubeUtilities.DataTypes.text);
+            PushConstant(constMem, SemanticCubeUtilities.DataTypes.text);
         }
 
         /// <summary>
@@ -556,10 +574,25 @@ namespace Marbles
         public static void ReadConstantBool(bool condition)
         {
             // we read a constant bool, so we add it to global constant memory
-            int constMem = MemoryManager.AddConstantBool(condition);
+            int constMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.boolean);
+            constMem = MemoryManager.SetMemory(constMem, condition);
 
             // push it to the operand stack
-            AddConstant(constMem, SemanticCubeUtilities.DataTypes.boolean);
+            PushConstant(constMem, SemanticCubeUtilities.DataTypes.boolean);
+        }
+
+        public static void Reset()
+        {
+            quadruples.Clear();
+            typeStack.Clear();
+            operandStack.Clear();
+            operatorStack.Clear();
+            jumpStack.Clear();
+            counter = 0;
+            inFunction = false;
+            functionId = "";
+            LastFunctionCalled = null;
+            parameterCount = 0;
         }
     }
 }

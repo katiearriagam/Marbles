@@ -15,21 +15,28 @@ namespace Marbles.MemoryManagement
 			temporary = 2,
 			constant = 3
 		}
+        
+		public enum AssetAttributes
+		{
+			x = 0,
+			y = 1,
+			width = 2,
+			height = 3,
+			rotation = 4, 
+			number = 5,
+			label = 6
+		}
 
-        public enum AssetAttributes
-        {
-            x = 0,
-            y = 1,
-            width = 2,
-            height = 3,
-            rotation = 4,
-            number = 5,
-            label = 6
-        }
+        public static Dictionary<int, object> memoryGlobalAssets = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryGlobal = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryLocal = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryTemporary = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryConstant = new Dictionary<int, object>();
 
-        public static Dictionary<int, object> memory;
-		public static Dictionary<int, object> memoryLocal;
-		public static Dictionary<int, object> memoryConstant;
+		// Asset Limits
+		const int lowestAssetAddress = 0000;
+		const int highestAssetAddress = 0999;
+		static int currentAssetAddress = 0000;
 
 		// Global Lower Limits
 		const int lowestGlobalIntAddress = 1000;
@@ -54,9 +61,9 @@ namespace Marbles.MemoryManagement
 		static int currentLocalAddress = 6000;
 
 		// Temporary Lower Limits
-		const int lowestTempIntAddress = 7999;
-		const int lowestTempStringAddress = 8999;
-		const int lowestTempBoolAddress = 9999;
+		const int lowestTempIntAddress = 7000;
+		const int lowestTempStringAddress = 8000;
+		const int lowestTempBoolAddress = 9000;
 
 		// Temporary Upper Limits
 		const int highestTempIntAddress = 7999;
@@ -159,30 +166,94 @@ namespace Marbles.MemoryManagement
 			return -1;
 		}
 
+		/// <summary>
+		/// Gets the next available memory address for assets
+		/// </summary>
+		/// <returns></returns>
+		public static int GetNextAssetAvailable()
+		{
+			if (currentAssetAddress + 7 <= highestAssetAddress)
+			{
+				return currentAssetAddress;
+			}
+			return -1;
+		}
+
+		/// <summary>
+		/// Load an asset into memory
+		/// </summary>
+		/// <param name="memoryAddress"></param>
+		/// <param name="asset"></param>
+		/// <returns></returns>
+		public static int SetAssetInMemory(int memoryAddress, Asset asset)
+		{
+			if (currentAssetAddress + 7 <= highestAssetAddress)
+			{
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.x] = asset.GetX();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.y] = asset.GetY();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.width] = asset.GetWidth();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.height] = asset.GetHeight();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.rotation] = asset.GetRotation();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.number] = asset.GetNumber();
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.label] = asset.GetLabel();
+
+                asset.SetMemoryAddress(memoryAddress);
+
+				currentAssetAddress += 7;
+				return memoryAddress;
+			}
+
+			return -1;
+		}
+
 		public static int SetMemory(int memAddress, object value)
 		{
-			// insert a global/temporary number in memory
-			if ((memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress) ||
-				(memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress))
+			// insert a global number in memory
+			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
 			{
-				memory[memAddress] = (int)value;
+				memoryGlobal[memAddress] = (int)value;
+                currentGlobalIntAddress++;
 				return memAddress;
 			}
 
-			// insert a global/temporary string in memory
-			else if ((memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress) ||
-				(memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress))
+			// insert a temporary number in memory
+			else if (memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress)
 			{
-				memory[memAddress] = (string)value;
-				return memAddress;
+				memoryTemporary[memAddress] = (int)value;
+                currentTempIntAddress++;
+                return memAddress;
 			}
 
-			// insert a global/temporary boolean in memory
-			else if ((memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress) ||
-				(memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress))
+			// insert a global string in memory
+			else if (memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress)
 			{
-				memory[memAddress] = (bool)value;
-				return memAddress;
+				memoryGlobal[memAddress] = (string)value;
+                currentGlobalStringAddress++;
+                return memAddress;
+			}
+
+			// insert a temporary string in memory
+			else if (memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress)
+			{
+				memoryTemporary[memAddress] = (string)value;
+                currentTempStringAddress++;
+                return memAddress;
+			}
+
+			// insert a global boolean in memory
+			else if (memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress)
+			{
+				memoryGlobal[memAddress] = (bool)value;
+                currentGlobalBoolAddress++;
+                return memAddress;
+			}
+
+			// insert temporary boolean in memory
+			else if (memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress)
+			{
+				memoryTemporary[memAddress] = (bool)value;
+                currentTempBoolAddress++;
+                return memAddress;
 			}
 
 			// insert numeric constant
@@ -191,13 +262,14 @@ namespace Marbles.MemoryManagement
 				if (!memoryConstant.ContainsValue(value))
 				{
 					memoryConstant[memAddress] = (int)value;
+                    currentConstantIntAddress++;
 					return memAddress;
 				}
 				else
 				{
-					return memoryConstant.FirstOrDefault(x => x.Value == value).Key;
-				}
-			}
+                    return memoryConstant.Where(x => (int)(x.Value) == (int)value).First().Key;
+                }
+            }
 
 			// insert string constant
 			else if (memAddress >= lowestConstantStringAddress && memAddress <= highestConstantStringAddress)
@@ -205,13 +277,14 @@ namespace Marbles.MemoryManagement
 				if (!memoryConstant.ContainsValue(value))
 				{
 					memoryConstant[memAddress] = (string)value;
+                    currentConstantStringAddress++;
 					return memAddress;
 				}
 				else
 				{
-					return memoryConstant.FirstOrDefault(x => x.Value == value).Key;
-				}
-			}
+                    return memoryConstant.Where(x => (string)(x.Value) == (string)value).First().Key;
+                }
+            }
 
 			// insert boolean constant
 			else if (memAddress >= lowestConstantBoolAddress && memAddress <= highestConstantBoolAddress)
@@ -219,11 +292,12 @@ namespace Marbles.MemoryManagement
 				if (!memoryConstant.ContainsValue(value))
 				{
 					memoryConstant[memAddress] = (bool)value;
+                    currentConstantBoolAddress++;
 					return memAddress;
 				}
 				else
 				{
-					return memoryConstant.FirstOrDefault(x => x.Value == value).Key;
+                    return memoryConstant.Where(x => (bool)(x.Value) == (bool)value).First().Key;
 				}
 			}
 			return -1;
@@ -260,24 +334,6 @@ namespace Marbles.MemoryManagement
 				throw new Exception("Trying to deallocate memory from non-local scope.");
 			}
 		}
-
-        public static int AddConstantInt(int constant)
-        {
-            int constMem = GetNextAvailable(MemoryScope.global, SemanticCubeUtilities.DataTypes.number);
-            return SetMemory(constMem, constant);
-        }
-
-        public static int AddConstantString(string constant)
-        {
-            int constMem = GetNextAvailable(MemoryScope.global, SemanticCubeUtilities.DataTypes.text);
-            return SetMemory(constMem, constant);
-        }
-
-        public static int AddConstantBool(bool constant)
-        {
-            int constMem = GetNextAvailable(MemoryScope.global, SemanticCubeUtilities.DataTypes.boolean);
-            return SetMemory(constMem, constant);
-        }
 
         public static int AttributeToOffset(string attr)
         {
@@ -324,5 +380,105 @@ namespace Marbles.MemoryManagement
                     return SemanticCubeUtilities.DataTypes.invalidDataType;
             }
         }
-    }
+		
+		// TODO: Document this.
+		public static object GetValueFromAddress(int memAddress)
+		{
+			if (memoryGlobal.ContainsKey(memAddress))
+			{
+				return memoryGlobal[memAddress];
+			}
+			else if (memoryLocal.ContainsKey(memAddress))
+			{
+				return memoryLocal[memAddress];
+			}
+			else if (memoryTemporary.ContainsKey(memAddress))
+			{
+				return memoryTemporary[memAddress];
+			}
+			else if (memoryConstant.ContainsKey(memAddress))
+			{
+				return memoryConstant[memAddress];
+			}
+
+			throw new Exception("Memory address not currently set");
+		}
+
+		public static void AddGlobalVariable(Variable newGlobalVariable)
+		{
+			if (!FunctionDirectory.GlobalFunction().AddGlobalVariable(newGlobalVariable))
+			{
+				throw new ArgumentException("Name " + newGlobalVariable.GetName() + " is duplicated in global values.");
+			}
+
+			int memorySpace = GetNextAvailable(MemoryScope.global, newGlobalVariable.GetDataType());
+
+			if (memorySpace == -1)
+			{
+				throw new InvalidOperationException("Out of global memory");
+			}
+
+            newGlobalVariable.SetMemoryAddress(memorySpace);
+
+			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+			{
+				SetMemory(memorySpace, 0);
+			}
+			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+			{
+				SetMemory(memorySpace, "");
+			}
+			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
+			{
+				SetMemory(memorySpace, false);
+			}
+		}
+
+		public static void AddFunctionAsGlobalVariable(Function func)
+		{
+			Variable var = new Variable(func.GetName(), func.GetReturnType());
+			try
+			{
+				AddGlobalVariable(var);
+			}
+			catch (ArgumentException e)
+			{
+				throw new ArgumentException(e.Message);
+			}
+			catch (InvalidOperationException e)
+			{
+				throw new InvalidOperationException(e.Message);
+			}
+		}
+
+        public static void Reset()
+        {
+            memoryGlobalAssets.Clear();
+            memoryGlobal.Clear();
+            memoryLocal.Clear();
+            memoryTemporary.Clear();
+            memoryConstant.Clear();
+
+            // Asset Limits
+            currentAssetAddress = 0000;
+
+            // Global Current Indexes
+            currentGlobalIntAddress = 1000;
+            currentGlobalStringAddress = 2000;
+            currentGlobalBoolAddress = 3000;
+
+            // Local Current Index
+            currentLocalAddress = 6000;
+
+            // Temporary Current Indexes
+            currentTempIntAddress = 7000;
+            currentTempStringAddress = 8000;
+            currentTempBoolAddress = 9000;
+
+            // Constant Current Indexes
+            currentConstantIntAddress = 10000;
+            currentConstantStringAddress = 11000;
+            currentConstantBoolAddress = 12000;
+        }
+	}
 }

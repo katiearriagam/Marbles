@@ -52,6 +52,8 @@ public class Parser {
 	public Token la;   // lookahead token
 	int errDist = minErrDist;
 
+	// helper variables
+	public int AssetIndex = 0;
 
 
 	public Parser(Scanner scanner) {
@@ -114,121 +116,139 @@ public class Parser {
 	}
 
 	void PROGRAM() {
-		while (la.kind == 18) {
-			CREATE_ASSET();
+		while (la.kind == 18) { // "asset"
+			int index = CREATE_ASSET();
+			int memoryAddress = MemoryManager.GetNextAssetAvailable();
+			if (memoryAddress != -1)
+			{
+				MemoryManager.SetAssetInMemory(memoryAddress, (Asset)Utilities.finalAssetsInCanvas[index]);
+			}
 		}
-		while (la.kind == 16) {
+		AssetIndex = 0;
+		while (la.kind == 16) { // "var"
 			Variable newGlobalVariable = CREATE_VAR();
-			if (!FunctionDirectory.GlobalFunction().AddGlobalVariables(newGlobalVariable))
+			try
 			{
-				SemErr("Name " + newGlobalVariable.GetName() + " is duplicated.");
+				MemoryManager.AddGlobalVariable(newGlobalVariable);
 			}
-			int memorySpace = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.global, newGlobalVariable.GetDataType());
-			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+			catch (ArgumentException e)
 			{
-				MemoryManager.SetMemory(memorySpace, 0);
+				SemErr(e.Message);
 			}
-			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+			catch (InvalidOperationException e)
 			{
-				MemoryManager.SetMemory(memorySpace, "");
-			}
-			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
-			{
-				MemoryManager.SetMemory(memorySpace, false);
+				SemErr(e.Message);
 			}
 		}
-		while (la.kind == 9) {
+		while (la.kind == 9) { // "function"
 			CREATE_FUNCTION();
 		}
-		Expect(6);
-		Expect(7);
+		Expect(6); // "instructions"
+		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
-		Expect(8);
+		Expect(8); // '}'
 	}
 
-	void CREATE_ASSET() {
-		Expect(18);
-		Expect(1);
-		Expect(17);
+	/// <summary>
+	/// Action called when a creat asset block is found
+	/// </summary>
+	/// <returns> Returns the index of the asset being 
+	/// created in Utilities.finalAssetsInCanvas </returns>
+	int CREATE_ASSET() {
+		Expect(18); // "asset"
+		Expect(1); // id
+		Expect(17); // ';'
+		return AssetIndex++;
 	}
 
 	Variable CREATE_VAR() {
-		Expect(16);
+		Expect(16); // "var"
 		SemanticCubeUtilities.DataTypes varType = TYPE_VAR();
-		Expect(1);
+		Expect(1); // id
 		string varName = t.val;
 		Variable newVar = new Variable(varName, varType);
-		Expect(17);
+		Expect(17); // ';'
 		return newVar;
 	}
 
 	void CREATE_FUNCTION() {
-		Expect(9);
+		Expect(9); // "function"
 		SemanticCubeUtilities.DataTypes functionType = TYPE_FUNC();
-		Expect(1);
+		Expect(1); // id
 		string functionName = t.val;
 		Function newFunction = new Function(functionName, functionType);
 
 		QuadrupleManager.EnterFunction(functionName);
-		Expect(10);
-		if (la.kind == 13 || la.kind == 14 || la.kind == 15) {
+
+		Expect(10); // '('
+		if (la.kind == 13 || la.kind == 14 || la.kind == 15) { // "text" || "number" || "bool"
 			SemanticCubeUtilities.DataTypes parameterType = TYPE_VAR();
-			Expect(1);
+			Expect(1); // id
 			string parameterName = t.val;
 			newFunction.AddParameter(new Variable(parameterName, parameterType));
-			while (la.kind == 11) {
+			while (la.kind == 11) { // ','
 				Get();
 				parameterType = TYPE_VAR();
-				Expect(1);
+				Expect(1); // id
 				parameterName = t.val;
 				newFunction.AddParameter(new Variable(parameterName, parameterType));
 			}
 		}
-		Expect(12);
-		Expect(7);
-		while (la.kind == 16) {
+		Expect(12); // ')'
+		Expect(7); // '{'
+		while (la.kind == 16) { // "var"
 			// add variables to the local variables directory
 			var localVariable = CREATE_VAR();
-			newFunction.AddLocalVariable(CREATE_VAR());
+			newFunction.AddLocalVariable(localVariable);
 		}
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
-		Expect(8);
+		Expect(8); // '}'
 
 		// if function name already exists, throw a semantic error.
-		if (!FunctionDirectory.InsertFunction(newFunction))
+		if (FunctionDirectory.FunctionExists(newFunction))
 		{
 			SemErr("Function named " + newFunction.GetName() + " already exists.");
 		}
-
-		// add this function to the global variables directory
-		if (!FunctionDirectory.GlobalFunction().AddGlobalVariables(newFunction))
+		else
 		{
-			SemErr("Name " + newFunction.GetName() + " is duplicated.");
+			try
+			{
+				MemoryManager.AddFunctionAsGlobalVariable(newFunction);
+			}
+			catch (ArgumentException e)
+			{
+				SemErr(e.Message);
+			}
+			catch (InvalidOperationException e)
+			{
+				SemErr(e.Message);
+			}
 		}
 
-		QuadrupleManager.ExitFunction();
+		//TODO: Add actual memory address
+		QuadrupleManager.ExitFunction(0);
 	}
 
 	void INSTRUCTION() {
 		if (StartOf(2)) {
-			if (la.kind == 20) {
+			if (la.kind == 20) { // "stop"
 				STOP();
-			} else if (la.kind == 21) {
+			} else if (la.kind == 21) { // "do"
 				DO();
-			} else if (la.kind == 32) {
+			} else if (la.kind == 32) { // "set"
 				ASSIGNMENT();
 			} else {
 				RETURN();
 			}
 			Expect(17);
-		} else if (la.kind == 28 || la.kind == 30 || la.kind == 31) {
-			if (la.kind == 28) {
+		} else if (la.kind == 28 || la.kind == 30 || la.kind == 31) { // "for" || "while" || "if"
+			if (la.kind == 28) { // "for"
 				FOR();
-			} else if (la.kind == 30) {
+			} else if (la.kind == 30) { // "while"
 				WHILE();
 			} else {
 				IFF();
@@ -286,17 +306,18 @@ public class Parser {
     // DONE
 	void EXP() {
 		TERM();
+        QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus));
 		while (la.kind == 36 || la.kind == 37) { // '+' or '-'
-            QuadrupleManager.PopOperator();
 			if (la.kind == 36) { // '+'
 				Get();
-                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.plus);
+                QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.plus);
 			} else { // '-'
 				Get();
-                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.minus);
+                QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.minus);
 			}
 			TERM();
-		}
+            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus));
+        }
 	}
 
 	void STOP() {
@@ -333,7 +354,7 @@ public class Parser {
             string assetAttribute = t.val;
             int attributeOffset = MemoryManager.AttributeToOffset(assetAttribute);
             SemanticCubeUtilities.DataTypes attributeType = MemoryManager.AttributeToType(assetAttribute);
-            QuadrupleManager.AddOperand(assetMemoryAddress + attributeOffset, attributeType);
+            QuadrupleManager.PushOperand(assetMemoryAddress + attributeOffset, attributeType);
         }
         else
         {
@@ -425,9 +446,9 @@ public class Parser {
 		EXP_L();
 		while (la.kind == 34) { // or
 			Get();
-            QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.and);
+            QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.or);
             EXP_L();
-            QuadrupleManager.PopOperator(); // not sure about this one here
+            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.or)); // not sure about this one here
 		}
 	}
 
@@ -465,9 +486,9 @@ public class Parser {
 		EXP_R();
 		while (la.kind == 35) { // "and"
 			Get();
-            QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.and);
+            QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.and);
 			EXP_R();
-            QuadrupleManager.PopOperator(); // not sure about this one here
+            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.and)); // not sure about this one here
 		}
 	}
 
@@ -476,9 +497,10 @@ public class Parser {
 		EXP();
 		if (StartOf(5)) {
 			OP();
-            QuadrupleManager.AddOperator(SemanticCubeUtilities.GetOperatorFromString(t.val));
+            SemanticCubeUtilities.Operators op = SemanticCubeUtilities.GetOperatorFromString(t.val);
+            QuadrupleManager.PushOperator(op);
 			EXP();
-            QuadrupleManager.PopOperator();
+            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(op));
 		}
 	}
 
@@ -515,29 +537,30 @@ public class Parser {
     // DONE
 	void TERM() {
 		FACTOR();
-		while (la.kind == 38 || la.kind == 39) { // '*' or '/'
-            QuadrupleManager.PopOperator();
+        QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply));
+        while (la.kind == 38 || la.kind == 39) { // '*' or '/'
 			if (la.kind == 38) { // '*'
 				Get();
-                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.multiply);
+                QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.multiply);
 			} else { // '/'
 				Get();
-                QuadrupleManager.AddOperator(SemanticCubeUtilities.Operators.divide);
+                QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.divide);
             }
 			FACTOR();
-		}
+            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply));
+        }
 	}
 
     // Done
 	void FACTOR() {
 		if (la.kind == 10) { // '('
             // push a fake bottom
-            QuadrupleManager.AddParenthesis();
+            QuadrupleManager.PushFakeBottom();
 			Get();
 			EXP_R();
 			Expect(12); // ')'
             // exit fake bottom
-            QuadrupleManager.PopParenthesis();
+            QuadrupleManager.PopFakeBottom();
 		} else if (StartOf(6)) {
 			if (la.kind == 37) { // negative sign
 				Get();
@@ -567,7 +590,7 @@ public class Parser {
                     string assetAttribute = t.val;
                     int attributeOffset = MemoryManager.AttributeToOffset(assetAttribute);
                     SemanticCubeUtilities.DataTypes attributeType = MemoryManager.AttributeToType(assetAttribute);
-                    QuadrupleManager.AddOperand(assetMemoryAddress + attributeOffset, attributeType);
+                    QuadrupleManager.PushOperand(assetMemoryAddress + attributeOffset, attributeType);
                 }
                 else
                 {

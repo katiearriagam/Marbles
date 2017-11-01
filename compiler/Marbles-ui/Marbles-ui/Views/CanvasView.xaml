@@ -130,12 +130,18 @@
 										FontSize="20"
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"/>
-									<TextBox
-										x:Name="IDTextBox"
-										Grid.Column="1"
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										MaxWidth="{Binding Path=ActualWidth, ElementName=IDTextBox}"/>
+									<Border x:Name="IDTextBoxBorder" 
+											Grid.Column="1"
+											BorderBrush="#E81123"
+											BorderThickness="0">
+										<TextBox
+											x:Name="IDTextBox"
+											Grid.Column="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											PlaceholderText="Add a unique ID here."
+											MaxWidth="{Binding Path=ActualWidth, ElementName=IDTextBox}"/>
+									</Border>
 								</Grid>
 								<Grid Grid.Row="1">
 									<Grid.ColumnDefinitions>
@@ -149,14 +155,20 @@
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"
 										/>
-									<TextBox
-										x:Name="LabelTextBox"
-										Grid.Column="1"
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Width="{Binding Path=ActualWidth, ElementName=IDTextBox}"
-										MaxWidth="{Binding Path=ActualWidth, ElementName=IDTextBox}"
-										/>
+									<Border x:Name="LabelTextBoxBorder" 
+											Grid.Column="1"
+											BorderBrush="#E81123"
+											BorderThickness="0">
+										<TextBox
+											x:Name="LabelTextBox"
+											Grid.Column="1"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											PlaceholderText="Add any text here."
+											Width="{Binding Path=ActualWidth, ElementName=IDTextBox}"
+											MaxWidth="{Binding Path=ActualWidth, ElementName=IDTextBox}"
+											/>
+									</Border>
 								</Grid>
 								<Grid Grid.Row="2">
 									<Grid.ColumnDefinitions>
@@ -170,14 +182,19 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     />
-									<TextBox
-										x:Name="NumberTextBox"
-										Grid.Column="1"
-										HorizontalAlignment="Stretch"
-										VerticalAlignment="Center"
-										Width="{Binding Path=ActualWidth, ElementName=IDTextBox}"
-										MaxWidth="{Binding Path=ActualWidth, ElementName=IDTextBox}"
-									/>
+									<Border x:Name="NumberTextBoxBorder" 
+											Grid.Column="1"
+											BorderBrush="#E81123"
+											BorderThickness="0">
+										<TextBox
+											x:Name="NumberTextBox"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Center"
+											PlaceholderText="Add a number here."
+											Width="{Binding Path=ActualWidth, ElementName=IDTextBox}"
+											MaxWidth="{Binding Path=ActualWidth, ElementName=IDTextBox}"
+										/>
+									</Border>
 								</Grid>
 							</Grid>
 						</Grid>

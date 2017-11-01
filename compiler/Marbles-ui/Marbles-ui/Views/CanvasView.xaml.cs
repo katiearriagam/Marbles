@@ -79,12 +79,53 @@ namespace Marbles
 
         private void Modal_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if (IDTextBox.Text.Length == 0)
-            {
-                args.Cancel = true;
-                return;
-            }
+			// prevents the user from adding an empty ID
+			if (IDTextBox.Text.Length == 0)
+			{
+				IDTextBox.Text = "";
+				args.Cancel = true;
+				IDTextBoxBorder.BorderThickness = new Thickness(2.0);
+				return;
+			}
+			else
+			{
+				try
+				{
+					Convert.ToString(IDTextBox.Text);
+					foreach (Asset a in Utilities.assetsInCanvas)
+					{
+						if (a.GetID() == IDTextBox.Text)
+						{
+							IDTextBox.Text = "";
+							args.Cancel = true;
+							IDTextBoxBorder.BorderThickness = new Thickness(2.0);
+							return;
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					IDTextBox.Text = "";
+					args.Cancel = true;
+					IDTextBoxBorder.BorderThickness = new Thickness(2.0);
+					return;
+				}
+			}
+
+			// prevents the user from adding an invalid string
+			try
+			{
+				Convert.ToString(LabelTextBox.Text);
+			}
+			catch
+			{
+				args.Cancel = true;
+				LabelTextBox.Text = "";
+				LabelTextBoxBorder.BorderThickness = new Thickness(2.0);
+				return;
+			}
             
+			// prevents the user from adding an invalid number
             try
             {
                 Convert.ToInt32(NumberTextBox.Text);
@@ -95,6 +136,8 @@ namespace Marbles
 				{
 					// The input number was not valid
 					args.Cancel = true;
+					NumberTextBox.Text = "";
+					NumberTextBoxBorder.BorderThickness = new Thickness(2.0);
 					return;
 				}
             }
@@ -111,7 +154,10 @@ namespace Marbles
             IDTextBox.Text = "";
             LabelTextBox.Text = "";
             NumberTextBox.Text = "";
-        }
+			IDTextBoxBorder.BorderThickness = new Thickness(0.0);
+			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
+			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
+		}
 
         private void MainCanvas_DragOver(object sender, DragEventArgs e)
         {

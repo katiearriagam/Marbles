@@ -82,9 +82,13 @@ namespace Marbles
         /// <summary>
         /// Removes all entries from the Function Directory.
         /// </summary>
-        public static void Clear()
+        public static void Reset()
         {
             FunctionDictionary.Clear();
+            FunctionDictionary = new Dictionary<String, Function>
+            {
+                { "_Global", new Function("_Global", SemanticCubeUtilities.DataTypes.number) }
+            };
         }
 
         /// <summary>

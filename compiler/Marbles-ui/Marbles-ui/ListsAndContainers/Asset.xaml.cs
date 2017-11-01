@@ -26,7 +26,12 @@ namespace Marbles
         private int number;
         private int rotation;
 
-        private Point lastPositionClicked;
+		/// <summary>
+		/// The variable's memory address
+		/// </summary>
+		private int memoryAddress;
+
+		private Point lastPositionClicked;
 
         public Asset(string id, string imageSource, string label, int x, int y, int number)
         {
@@ -83,7 +88,32 @@ namespace Marbles
             return height;
         }
 
-        public void SetPosition(int x, int y)
+		public int GetX()
+		{
+			return x;
+		}
+
+		public int GetY()
+		{
+			return y;
+		}
+
+		public int GetRotation()
+		{
+			return (int)rotation;
+		}
+
+		public int GetNumber()
+		{
+			return (int)number;
+		}
+
+		public string GetLabel()
+		{
+			return label;
+		}
+
+		public void SetPosition(int x, int y)
         {
             if (x < 0 || y < 0 || x > cv.GetCanvasWidth() || y > cv.GetCanvasHeight())
             {
@@ -151,5 +181,22 @@ namespace Marbles
             // sender: Marbles.Asset
             lastPositionClicked = e.GetCurrentPoint(relativeTo: AssetUserControl).Position;
         }
-    }
+
+		/// <summary>
+		/// Sets or modifies the memory address value
+		/// </summary>
+		/// <param name="mem"></param>
+		public void SetMemoryAddress(int mem)
+		{
+			memoryAddress = mem;
+		}
+
+		/// <summary>
+		/// Retrieves the memory address
+		/// </summary>
+		public int GetMemoryAddress()
+		{
+			return memoryAddress;
+		}
+	}
 }

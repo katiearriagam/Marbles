@@ -92,7 +92,7 @@ namespace Marbles
 
         public void PrintValues()
         {
-            Debug.WriteLine(op.ToString() + ", " + MemoryManager.GetValueFromAddress(operandOne) + ", " + MemoryManager.GetValueFromAddress(operandTwo) + ", " + MemoryManager.GetValueFromAddress(assignee));
+            Debug.WriteLine(op.ToString() + ", " + (operandOne == -1 ? "_" : MemoryManager.GetValueFromAddress(operandOne)) + ", " + (operandTwo == -1 ? "_" : MemoryManager.GetValueFromAddress(operandTwo)) + ", " + (assignee == -1 ? "_" : MemoryManager.GetValueFromAddress(assignee)));
         }
     }
 }
