@@ -14,8 +14,8 @@ namespace Marbles
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
 		private int location;
-		private Dictionary<string, Variable> parameters;
-		private Dictionary<string, Variable> localVariables;
+		private Dictionary<string, Variable> parameters = new Dictionary<string, Variable>();
+		private Dictionary<string, Variable> localVariables = new Dictionary<string, Variable>();
 
 		// only used for global
 		private static Dictionary<string, Variable> globalVariables = new Dictionary<string, Variable>();
@@ -40,8 +40,6 @@ namespace Marbles
 		{
 			this.name = name;
 			this.returnType = returnType;
-			this.parameters = new Dictionary<string, Variable>();
-			this.localVariables = new Dictionary<string, Variable>();
 		}
 
         /// <summary>
@@ -137,7 +135,7 @@ namespace Marbles
 		/// <returns></returns>
 		public bool AddGlobalVariable(Variable variable)
 		{
-			if(!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
+			if (!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
 			{
 				globalVariables.Add(variable.GetName(), variable);
 				return true;
@@ -259,5 +257,21 @@ namespace Marbles
 		{
 			localVariables.Clear();
 		}
+
+        public void Reset()
+        {
+            assets.Clear();
+            globalVariables.Clear();
+            localVariables.Clear();
+            parameters.Clear();
+            
+            counterLocal = new int[] { 0, 0, 0 };
+            counterTemp = new int[] { 0, 0, 0 };
+
+            assets = new Dictionary<string, Asset>();
+            globalVariables = new Dictionary<string, Variable>();
+            localVariables = new Dictionary<string, Variable>();
+            parameters = new Dictionary<string, Variable>();
+        }
 	}
 }

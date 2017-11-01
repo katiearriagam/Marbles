@@ -95,7 +95,6 @@ namespace Marbles.MemoryManagement
 		/// </summary>
 		/// <param name="scope"></param>
 		/// <param name="type"></param>
-		/// <returns></returns>
 		public static int GetNextAvailable(MemoryScope scope, SemanticCubeUtilities.DataTypes type)
 		{
 			switch (scope)

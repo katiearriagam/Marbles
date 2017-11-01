@@ -84,6 +84,10 @@ namespace Marbles
         /// </summary>
         public static void Reset()
         {
+            foreach (Function fn in FunctionDictionary.Values)
+            {
+                fn.Reset();
+            }
             FunctionDictionary.Clear();
             FunctionDictionary = new Dictionary<String, Function>
             {

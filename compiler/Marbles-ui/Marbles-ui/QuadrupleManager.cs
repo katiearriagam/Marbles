@@ -523,6 +523,11 @@ namespace Marbles
         /// </summary>
         public static void AssignEnd()
         {
+            if (operandStack.Count < 2)
+            {
+                throw new Exception("Error in assignment");
+            }
+
             int expressionResult = operandStack.Pop();
             SemanticCubeUtilities.DataTypes expressionType = typeStack.Pop();
 

@@ -364,15 +364,22 @@ public class Parser {
             }
             catch (Exception e)
             {
-                // TODO: Create semantic error with message e.Message
+                ErrorPrinter.AddError(e.Message);
             }
         }
 
         Expect(33); // '='
 		SUPER_EXP();
 
-        QuadrupleManager.AssignEnd();
-	}
+        try
+        {
+            QuadrupleManager.AssignEnd();
+        }
+        catch (Exception e)
+        {
+            ErrorPrinter.AddError(e.Message);
+        }
+    }
 
 	void RETURN() {
 		Expect(52); // "return"
