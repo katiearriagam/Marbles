@@ -74,7 +74,8 @@ namespace Marbles
             param = 17,
             gosub = 18,
             retorno = 19,
-            era = 20
+            era = 20,
+            end = 21
         }
 
         public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();

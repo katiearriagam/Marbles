@@ -94,6 +94,7 @@ namespace Marbles
 			parser.Parse();
 
             List<Quadruple> quads = QuadrupleManager.GetQuadruples();
+            quads.Add(new Quadruple(Utilities.QuadrupleAction.end, -1, -1, -1));
 
             Debug.WriteLine("---- QUADRUPLES START ----");
             foreach (Quadruple quad in quads)

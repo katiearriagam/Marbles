@@ -141,22 +141,24 @@ namespace Marbles
             if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
             {
                 addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                addressTemp = MemoryManager.SetMemory(addressTemp, 0);
             }
             else if (resultingDataType == SemanticCubeUtilities.DataTypes.boolean)
             {
                 addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
+                addressTemp = MemoryManager.SetMemory(addressTemp, false);
             }
             else
             {
                 addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
+                addressTemp = MemoryManager.SetMemory(addressTemp, "");
             }
-
-            addressTemp = MemoryManager.SetMemory(addressTemp, 0);
-
+            
             PushOperand(addressTemp, resultingDataType);
 
             quadruples.Add(new Quadruple(Utilities.operatorToAction[op],
                 operandOne, operandTwo, addressTemp));
+            counter++;
         }
 
         /// <summary>
@@ -203,10 +205,10 @@ namespace Marbles
 
             int condition = operandStack.Pop(); // memory address where the boolean result is stored
 
-            // we will have to set this jump's position at the next ELSE or ELSE-IF statement or at the end of the whole IF statement if none
+            // we will have to set this jump's position at the end of the whole IF statement
             jumpStack.Push(counter);
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
-
+            counter++;
         }
 
         /// <summary>
@@ -246,6 +248,7 @@ namespace Marbles
             // we will have to set this jump's position at the end of the WHILE statement
             jumpStack.Push(counter);
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
+            counter++;
         }
 
         /// <summary>
@@ -259,25 +262,17 @@ namespace Marbles
 
             // Jump back to where the WHILE condition is evaluated
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, jumpToBeginningOfWhile));
+            counter++;
 
             // Update the jump of the while condition to jump here
             quadruples[jumpToOnFalse].SetAssignee(counter);
         }
 
         /// <summary>
-        /// This method is called after a FOR expression is detected but before we read
-        /// its condition. This point is where we will jump to each time after the end of the loop.
-        /// </summary>
-        public static void ForBeforeCondition()
-        {
-            jumpStack.Push(counter);
-        }
-
-        /// <summary>
         /// This method is called when we have read the closing parenthesis of a FOR expression.
         /// The function verifies that the expression is numeric and, if it is, sets the GOTOF
         /// in case it is less than or equal to 0. Finally, substracts one from the numeric expression
-        /// in the FOR condition.
+        /// in the FOR condition (after evaluating the condition).
         /// </summary>
         public static void ForAfterCondition()
         {
@@ -287,12 +282,12 @@ namespace Marbles
                 throw new Exception("FOR loop conditions must contain a numeric data type.");
             }
 
-            // we will have to set this jump's position at the end of the FOR statement
-            jumpStack.Push(counter);
-
             int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
             int numericExpValue = (int)(MemoryManager.GetValueFromAddress(numericExpAddress));
             bool condition = numericExpValue > 0;
+
+            int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
+            zeroMem = MemoryManager.SetMemory(zeroMem, 0);
 
             int conditionMem = 0;
 
@@ -307,17 +302,28 @@ namespace Marbles
                 conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
 
-            MemoryManager.SetMemory(conditionMem, condition);
+            // This is where we will jump back to at the end of every FOR loop iteration
+            jumpStack.Push(counter);
+
+            conditionMem = MemoryManager.SetMemory(conditionMem, condition);
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, numericExpAddress, zeroMem, conditionMem));
+            counter++;
+
+            // we will have to set this jump's position at the end of the FOR statement
+            jumpStack.Push(counter);
+
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
+            counter++;
 
             // After checking the condition, we can safely substract one from the numeric expression on the FOR condition
-            MemoryManager.SetMemory(numericExpAddress, numericExpValue - 1);
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, numericExpAddress, 1, numericExpAddress));
+            counter++;
         }
-        
+
         /// <summary>
         /// This method is called after every instruction inside the FOR loop is executed.
-        /// Jumps back to before the FOR condition and sets the jump to here when the FOR
-        /// condition evaluates to false.
+        /// Jumps back to where the FOR condition was checked against 0, and sets the jump
+        /// to here when the FOR condition evaluates to false.
         /// </summary>
         public static void ForEnd()
         {
@@ -326,7 +332,8 @@ namespace Marbles
 
             // Jump back to where the FOR condition is evaluated
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, jumpToBeginningOfFor));
-            
+            counter++;
+
             quadruples[jumpToOnFalse].SetAssignee(counter);
         }
 
@@ -348,6 +355,7 @@ namespace Marbles
         public static void CallFunctionOpeningParenthesis()
         {
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), -1, -1));
+            counter++;
             parameterCount = 0;
         }
 
@@ -369,6 +377,7 @@ namespace Marbles
             MemoryManager.SetMemory(paramAddress, param);
 
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, paramAddress));
+            counter++;
         }
 
         /// <summary>
@@ -392,6 +401,7 @@ namespace Marbles
             int funcNameAddress = MemoryManager.GetNextAvailable(inFunction ? MemoryManager.MemoryScope.local : MemoryManager.MemoryScope.global, SemanticCubeUtilities.DataTypes.text);
             MemoryManager.SetMemory(funcNameAddress, LastFunctionCalled.GetName());
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, funcNameAddress , -1, -1));
+            counter++;
         }
 
 
@@ -420,6 +430,7 @@ namespace Marbles
 			FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
 			// TODO: Send actual memory address in retorno quadruple
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, 5 /* Must fix */, -1, -1));
+            counter++;
             inFunction = false;
             functionId = "";
         }
@@ -540,6 +551,7 @@ namespace Marbles
             }
 
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, expressionResult, assigneeID));
+            counter++;
         }
 
         /// <summary>

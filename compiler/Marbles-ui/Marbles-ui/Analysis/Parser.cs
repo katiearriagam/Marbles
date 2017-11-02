@@ -127,6 +127,7 @@ public class Parser {
 		AssetIndex = 0;
 		while (la.kind == 16) { // "var"
 			Variable newGlobalVariable = CREATE_VAR();
+
 			try
 			{
 				MemoryManager.AddGlobalVariable(newGlobalVariable);
@@ -168,6 +169,7 @@ public class Parser {
 		SemanticCubeUtilities.DataTypes varType = TYPE_VAR();
 		Expect(1); // id
 		string varName = t.val;
+
 		Variable newVar = new Variable(varName, varType);
 		Expect(17); // ';'
 		return newVar;
@@ -281,11 +283,16 @@ public class Parser {
 			Get();
 			return SemanticCubeUtilities.DataTypes.number;
 		}
-		else if (la.kind == 15) // "bool"
+		else if (la.kind == 15) // "boolean"
 		{
 			Get();
 			return SemanticCubeUtilities.DataTypes.boolean;
-		} else SynErr(56);
+		}
+        else
+        {
+            SynErr(56);
+        }
+            
 		return SemanticCubeUtilities.DataTypes.invalidDataType;
 	}
 
@@ -388,27 +395,33 @@ public class Parser {
 
 	void FOR() {
 		Expect(28); // "for"
+        QuadrupleManager.ForBeforeCondition();
 		Expect(10); // '('
 		EXP();
 		Expect(12); // ')'
+        QuadrupleManager.ForAfterCondition();
 		Expect(29); // "loops"
 		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
 		Expect(8); // '}'
+        QuadrupleManager.ForEnd();
 	}
 
 	void WHILE() {
 		Expect(30); // "while"
-		Expect(10); // '('
+        QuadrupleManager.WhileBeforeCondition();
+        Expect(10); // '('
 		SUPER_EXP();
 		Expect(12); // ')'
+        QuadrupleManager.WhileAfterCondition();
 		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
 		Expect(8); // '}'
+        QuadrupleManager.WhileEnd();
 	}
 
 	void IFF() {
@@ -416,11 +429,13 @@ public class Parser {
 		Expect(10); // '('
 		SUPER_EXP();
 		Expect(12); // ')'
+        QuadrupleManager.IfAfterCondition();
 		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
 		Expect(8); // '}'
+        QuadrupleManager.IfEnd();
 	}
 
 	void ACTION() {

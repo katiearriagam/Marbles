@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -103,15 +104,15 @@ namespace Marbles.MemoryManagement
 					switch (type)
 					{
 						case SemanticCubeUtilities.DataTypes.number:
-							if (currentGlobalIntAddress < highestGlobalIntAddress)
+							if (currentGlobalIntAddress <= highestGlobalIntAddress)
 								return currentGlobalIntAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.text:
-							if (currentGlobalStringAddress < highestGlobalStringAddress)
+							if (currentGlobalStringAddress <= highestGlobalStringAddress)
 								return currentGlobalStringAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.boolean:
-							if (currentGlobalBoolAddress < highestGlobalBoolAddress)
+							if (currentGlobalBoolAddress <= highestGlobalBoolAddress)
 								return currentGlobalBoolAddress;
 							break;
 						default:
@@ -123,15 +124,15 @@ namespace Marbles.MemoryManagement
 					switch (type)
 					{
 						case SemanticCubeUtilities.DataTypes.number:
-							if (currentTempIntAddress < highestTempIntAddress)
+							if (currentTempIntAddress <= highestTempIntAddress)
 								return currentTempIntAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.text:
-							if (currentTempStringAddress < highestTempStringAddress)
+							if (currentTempStringAddress <= highestTempStringAddress)
 								return currentTempStringAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.boolean:
-							if (currentTempBoolAddress < highestTempBoolAddress)
+							if (currentTempBoolAddress <= highestTempBoolAddress)
 								return currentTempBoolAddress;
 							break;
 						default:
@@ -143,15 +144,15 @@ namespace Marbles.MemoryManagement
 					switch (type)
 					{
 						case SemanticCubeUtilities.DataTypes.number:
-							if (currentConstantIntAddress < highestConstantIntAddress)
+							if (currentConstantIntAddress <= highestConstantIntAddress)
 								return currentConstantIntAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.text:
-							if (currentConstantStringAddress < highestConstantStringAddress)
+							if (currentConstantStringAddress <= highestConstantStringAddress)
 								return currentConstantStringAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.boolean:
-							if (currentConstantBoolAddress < highestConstantBoolAddress)
+							if (currentConstantBoolAddress <= highestConstantBoolAddress)
 								return currentConstantBoolAddress;
 							break;
 						default:
@@ -256,11 +257,17 @@ namespace Marbles.MemoryManagement
 			}
 
 			// insert numeric constant
-			else if (memAddress >= lowestConstantIntAddress && memAddress <= highestConstantIntAddress)
+			else if ((memAddress >= lowestConstantIntAddress && memAddress <= highestConstantIntAddress) || (memAddress == -1 && value.GetType() == typeof(Int32)))
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
-					memoryConstant[memAddress] = (int)value;
+                    if (memAddress == -1)
+                    {
+                        // constant numeric memory was full, and you tried to add a new value.
+                        throw new Exception("Constant memory overflow.");
+                    }
+
+                    memoryConstant[memAddress] = (int)value;
                     currentConstantIntAddress++;
 					return memAddress;
 				}
@@ -271,11 +278,17 @@ namespace Marbles.MemoryManagement
             }
 
 			// insert string constant
-			else if (memAddress >= lowestConstantStringAddress && memAddress <= highestConstantStringAddress)
+			else if ((memAddress >= lowestConstantStringAddress && memAddress <= highestConstantStringAddress) || (memAddress == -1 && value.GetType() == typeof(string)))
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
-					memoryConstant[memAddress] = (string)value;
+                    if (memAddress == -1)
+                    {
+                        // constant string memory was full, and you tried to add a new value.
+                        throw new Exception("Constant memory overflow.");
+                    }
+
+                    memoryConstant[memAddress] = (string)value;
                     currentConstantStringAddress++;
 					return memAddress;
 				}
@@ -286,10 +299,17 @@ namespace Marbles.MemoryManagement
             }
 
 			// insert boolean constant
-			else if (memAddress >= lowestConstantBoolAddress && memAddress <= highestConstantBoolAddress)
+			else if ((memAddress >= lowestConstantBoolAddress && memAddress <= highestConstantBoolAddress) || (memAddress == -1 && value.GetType() == typeof(bool)))
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
+                    if (memAddress == -1)
+                    {
+                        // constant bool memory was full, and you tried to add a new value.
+                        // (this should never happen, since boolean only has 2 possible constants)
+                        throw new Exception("Constant memory overflow.");
+                    }
+
 					memoryConstant[memAddress] = (bool)value;
                     currentConstantBoolAddress++;
 					return memAddress;
