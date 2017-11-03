@@ -74,6 +74,37 @@ namespace Marbles
 			invalidOperator = 13
 		}
 
+        public static int OperatorToPriority(Operators op)
+        {
+            switch (op)
+            {
+                case Operators.fakeBottom:
+                    return 0;
+                case Operators.multiply:
+                case Operators.divide:
+                    return 1;
+                case Operators.plus:
+                case Operators.minus:
+                    return 2;
+                case Operators.greaterThan:
+                case Operators.lessThan:
+                case Operators.greaterThanOrEqualTo:
+                case Operators.lessThanOrEqualTo:
+                    return 3;
+                case Operators.equalEqual:
+                case Operators.notEqual:
+                    return 4;
+                case Operators.and:
+                    return 5;
+                case Operators.or:
+                    return 6;
+                case Operators.equals:
+                    return 7;
+                default: // should never arrive here
+                    return -1;
+            }
+        }
+
 		public static DataTypes GetDataTypeFromType(Type t)
 		{
 			DataTypes type;
@@ -87,7 +118,7 @@ namespace Marbles
 			}
 		}
 
-		public static Operators GetOperatorFromChar(String c)
+		public static Operators GetOperatorFromString(String c)
 		{
 			Operators op;
 			if (StringToOperator.TryGetValue(c, out op))

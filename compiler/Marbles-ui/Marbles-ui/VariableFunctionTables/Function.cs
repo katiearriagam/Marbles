@@ -14,12 +14,13 @@ namespace Marbles
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
 		private int location;
-		private Dictionary<string, Variable> parameters;
-		private Dictionary<string, Variable> localVariables;
+        private int quadrupleStart;
+		private Dictionary<string, Variable> parameters = new Dictionary<string, Variable>();
+		private Dictionary<string, Variable> localVariables = new Dictionary<string, Variable>();
 
 		// only used for global
-		private static Dictionary<string, Variable> globalVariables;
-		private static Dictionary<string, Asset> assets;
+		private static Dictionary<string, Variable> globalVariables = new Dictionary<string, Variable>();
+		private static Dictionary<string, Asset> assets = new Dictionary<string, Asset>();
 
 		// number, boolean, text
 		private int[] counterLocal = new int[] {0,0,0};
@@ -40,9 +41,16 @@ namespace Marbles
 		{
 			this.name = name;
 			this.returnType = returnType;
-			this.parameters = new Dictionary<string, Variable>();
-			this.localVariables = new Dictionary<string, Variable>();
 		}
+
+        /// <summary>
+        /// Returns the dictionary of assets.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, Asset> GetAssets()
+        {
+            return assets;
+        }
 
 		/// <summary>
 		/// Getter for the return data type of the function
@@ -94,12 +102,21 @@ namespace Marbles
 			throw new ArgumentException();
 		}
 
-		/// <summary>
-		/// Function that adds a new local variable to the function
-		/// </summary>
-		/// <param name="variable"></param>
-		/// <returns></returns>
-		public bool AddLocalVariable(Variable variable)
+        /// <summary>
+        /// Retrieves the static global variables
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, Variable> GetGlobalVariables()
+        {
+            return globalVariables;
+        }
+
+        /// <summary>
+        /// Function that adds a new local variable to the function
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        public bool AddLocalVariable(Variable variable)
 		{
 			if (!localVariables.ContainsKey(variable.GetName()) 
 				&& !parameters.ContainsKey(variable.GetName())
@@ -119,7 +136,7 @@ namespace Marbles
 		/// <returns></returns>
 		public bool AddGlobalVariable(Variable variable)
 		{
-			if(!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
+			if (!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
 			{
 				globalVariables.Add(variable.GetName(), variable);
 				return true;
@@ -194,6 +211,23 @@ namespace Marbles
 			return location;
 		}
 
+        /// <summary>
+        /// Returns the quadruple number in which this function starts.
+        /// </summary>
+        public int GetQuadrupleStart()
+        {
+            return quadrupleStart;
+        }
+
+        /// <summary>
+        /// Sets the quadruple number in which this function starts.
+        /// </summary>
+        /// <param name="start"></param>
+        public void SetQuadrupleStart(int start)
+        {
+            quadrupleStart = start;
+        }
+
 		/// <summary>
 		/// Returns the size of the function based on its number of 
 		/// local and temporary variables.
@@ -241,5 +275,21 @@ namespace Marbles
 		{
 			localVariables.Clear();
 		}
+
+        public void Reset()
+        {
+            assets.Clear();
+            globalVariables.Clear();
+            localVariables.Clear();
+            parameters.Clear();
+            
+            counterLocal = new int[] { 0, 0, 0 };
+            counterTemp = new int[] { 0, 0, 0 };
+
+            assets = new Dictionary<string, Asset>();
+            globalVariables = new Dictionary<string, Variable>();
+            localVariables = new Dictionary<string, Variable>();
+            parameters = new Dictionary<string, Variable>();
+        }
 	}
 }

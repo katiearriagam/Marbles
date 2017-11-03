@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Marbles.MemoryManagement
 			temporary = 2,
 			constant = 3
 		}
-
+        
 		public enum AssetAttributes
 		{
 			x = 0,
@@ -27,16 +28,16 @@ namespace Marbles.MemoryManagement
 			label = 6
 		}
 
-		public static Dictionary<int, object> memoryGlobalAssets;
-		public static Dictionary<int, object> memoryGlobal;
-		public static Dictionary<int, object> memoryLocal;
-		public static Dictionary<int, object> memoryTemporary;
-		public static Dictionary<int, object> memoryConstant;
+        public static Dictionary<int, object> memoryGlobalAssets = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryGlobal = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryLocal = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryTemporary = new Dictionary<int, object>();
+		public static Dictionary<int, object> memoryConstant = new Dictionary<int, object>();
 
 		// Asset Limits
 		const int lowestAssetAddress = 0000;
 		const int highestAssetAddress = 0999;
-		static int currentAssetAddress = 0;
+		static int currentAssetAddress = 0000;
 
 		// Global Lower Limits
 		const int lowestGlobalIntAddress = 1000;
@@ -61,9 +62,9 @@ namespace Marbles.MemoryManagement
 		static int currentLocalAddress = 6000;
 
 		// Temporary Lower Limits
-		const int lowestTempIntAddress = 7999;
-		const int lowestTempStringAddress = 8999;
-		const int lowestTempBoolAddress = 9999;
+		const int lowestTempIntAddress = 7000;
+		const int lowestTempStringAddress = 8000;
+		const int lowestTempBoolAddress = 9000;
 
 		// Temporary Upper Limits
 		const int highestTempIntAddress = 7999;
@@ -95,7 +96,6 @@ namespace Marbles.MemoryManagement
 		/// </summary>
 		/// <param name="scope"></param>
 		/// <param name="type"></param>
-		/// <returns></returns>
 		public static int GetNextAvailable(MemoryScope scope, SemanticCubeUtilities.DataTypes type)
 		{
 			switch (scope)
@@ -104,15 +104,15 @@ namespace Marbles.MemoryManagement
 					switch (type)
 					{
 						case SemanticCubeUtilities.DataTypes.number:
-							if (currentGlobalIntAddress < highestGlobalIntAddress)
+							if (currentGlobalIntAddress <= highestGlobalIntAddress)
 								return currentGlobalIntAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.text:
-							if (currentGlobalStringAddress < highestGlobalStringAddress)
+							if (currentGlobalStringAddress <= highestGlobalStringAddress)
 								return currentGlobalStringAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.boolean:
-							if (currentGlobalBoolAddress < highestGlobalBoolAddress)
+							if (currentGlobalBoolAddress <= highestGlobalBoolAddress)
 								return currentGlobalBoolAddress;
 							break;
 						default:
@@ -124,15 +124,15 @@ namespace Marbles.MemoryManagement
 					switch (type)
 					{
 						case SemanticCubeUtilities.DataTypes.number:
-							if (currentTempIntAddress < highestTempIntAddress)
+							if (currentTempIntAddress <= highestTempIntAddress)
 								return currentTempIntAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.text:
-							if (currentTempStringAddress < highestTempStringAddress)
+							if (currentTempStringAddress <= highestTempStringAddress)
 								return currentTempStringAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.boolean:
-							if (currentTempBoolAddress < highestTempBoolAddress)
+							if (currentTempBoolAddress <= highestTempBoolAddress)
 								return currentTempBoolAddress;
 							break;
 						default:
@@ -144,15 +144,15 @@ namespace Marbles.MemoryManagement
 					switch (type)
 					{
 						case SemanticCubeUtilities.DataTypes.number:
-							if (currentConstantIntAddress < highestConstantIntAddress)
+							if (currentConstantIntAddress <= highestConstantIntAddress)
 								return currentConstantIntAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.text:
-							if (currentConstantStringAddress < highestConstantStringAddress)
+							if (currentConstantStringAddress <= highestConstantStringAddress)
 								return currentConstantStringAddress;
 							break;
 						case SemanticCubeUtilities.DataTypes.boolean:
-							if (currentConstantBoolAddress < highestConstantBoolAddress)
+							if (currentConstantBoolAddress <= highestConstantBoolAddress)
 								return currentConstantBoolAddress;
 							break;
 						default:
@@ -197,6 +197,8 @@ namespace Marbles.MemoryManagement
 				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.number] = asset.GetNumber();
 				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.label] = asset.GetLabel();
 
+                asset.SetMemoryAddress(memoryAddress);
+
 				currentAssetAddress += 7;
 				return memoryAddress;
 			}
@@ -210,6 +212,7 @@ namespace Marbles.MemoryManagement
 			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
 			{
 				memoryGlobal[memAddress] = (int)value;
+                currentGlobalIntAddress++;
 				return memAddress;
 			}
 
@@ -217,76 +220,103 @@ namespace Marbles.MemoryManagement
 			else if (memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress)
 			{
 				memoryTemporary[memAddress] = (int)value;
-				return memAddress;
+                currentTempIntAddress++;
+                return memAddress;
 			}
 
 			// insert a global string in memory
 			else if (memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress)
 			{
 				memoryGlobal[memAddress] = (string)value;
-				return memAddress;
+                currentGlobalStringAddress++;
+                return memAddress;
 			}
 
 			// insert a temporary string in memory
 			else if (memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress)
 			{
 				memoryTemporary[memAddress] = (string)value;
-				return memAddress;
+                currentTempStringAddress++;
+                return memAddress;
 			}
 
-			// insert a global/temporary boolean in memory
+			// insert a global boolean in memory
 			else if (memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress)
 			{
 				memoryGlobal[memAddress] = (bool)value;
-				return memAddress;
+                currentGlobalBoolAddress++;
+                return memAddress;
 			}
 
 			// insert temporary boolean in memory
 			else if (memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress)
 			{
 				memoryTemporary[memAddress] = (bool)value;
-				return memAddress;
+                currentTempBoolAddress++;
+                return memAddress;
 			}
 
 			// insert numeric constant
-			else if (memAddress >= lowestConstantIntAddress && memAddress <= highestConstantIntAddress)
+			else if ((memAddress >= lowestConstantIntAddress && memAddress <= highestConstantIntAddress) || (memAddress == -1 && value.GetType() == typeof(Int32)))
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
-					memoryConstant[memAddress] = (int)value;
+                    if (memAddress == -1)
+                    {
+                        // constant numeric memory was full, and you tried to add a new value.
+                        throw new Exception("Constant memory overflow.");
+                    }
+
+                    memoryConstant[memAddress] = (int)value;
+                    currentConstantIntAddress++;
 					return memAddress;
 				}
 				else
 				{
-					return memoryConstant.FirstOrDefault(x => x.Value == value).Key;
-				}
-			}
+                    return memoryConstant.Where(x => (int)(x.Value) == (int)value).First().Key;
+                }
+            }
 
 			// insert string constant
-			else if (memAddress >= lowestConstantStringAddress && memAddress <= highestConstantStringAddress)
+			else if ((memAddress >= lowestConstantStringAddress && memAddress <= highestConstantStringAddress) || (memAddress == -1 && value.GetType() == typeof(string)))
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
-					memoryConstant[memAddress] = (string)value;
+                    if (memAddress == -1)
+                    {
+                        // constant string memory was full, and you tried to add a new value.
+                        throw new Exception("Constant memory overflow.");
+                    }
+
+                    memoryConstant[memAddress] = (string)value;
+                    currentConstantStringAddress++;
 					return memAddress;
 				}
 				else
 				{
-					return memoryConstant.FirstOrDefault(x => x.Value == value).Key;
-				}
-			}
+                    return memoryConstant.Where(x => (string)(x.Value) == (string)value).First().Key;
+                }
+            }
 
 			// insert boolean constant
-			else if (memAddress >= lowestConstantBoolAddress && memAddress <= highestConstantBoolAddress)
+			else if ((memAddress >= lowestConstantBoolAddress && memAddress <= highestConstantBoolAddress) || (memAddress == -1 && value.GetType() == typeof(bool)))
 			{
 				if (!memoryConstant.ContainsValue(value))
 				{
+                    if (memAddress == -1)
+                    {
+                        // constant bool memory was full, and you tried to add a new value.
+                        // (this should never happen, since boolean only has 2 possible constants)
+                        throw new Exception("Constant memory overflow.");
+                    }
+
 					memoryConstant[memAddress] = (bool)value;
+                    currentConstantBoolAddress++;
 					return memAddress;
 				}
 				else
 				{
-					return memoryConstant.FirstOrDefault(x => x.Value == value).Key;
+                    return memoryConstant.Where(x => (bool)(x.Value) == (bool)value).First().Key;
 				}
 			}
 			return -1;
@@ -323,6 +353,52 @@ namespace Marbles.MemoryManagement
 				throw new Exception("Trying to deallocate memory from non-local scope.");
 			}
 		}
+
+        public static int AttributeToOffset(string attr)
+        {
+            switch (attr)
+            {
+                case "x":
+                    return (int)AssetAttributes.x;
+                case "y":
+                    return (int)AssetAttributes.y;
+                case "width":
+                    return (int)AssetAttributes.width;
+                case "height":
+                    return (int)AssetAttributes.height;
+                case "rotation":
+                    return (int)AssetAttributes.rotation;
+                case "number":
+                    return (int)AssetAttributes.number;
+                case "label":
+                    return (int)AssetAttributes.label;
+                default: // will never execute as we limit the user with a drop-down
+                    return -1;
+            }
+        }
+
+        public static SemanticCubeUtilities.DataTypes AttributeToType(string attr)
+        {
+            switch (attr)
+            {
+                case "x":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "y":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "width":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "height":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "rotation":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "number":
+                    return SemanticCubeUtilities.DataTypes.number;
+                case "label":
+                    return SemanticCubeUtilities.DataTypes.text;
+                default: // will never execute as we limit the user with a drop-down
+                    return SemanticCubeUtilities.DataTypes.invalidDataType;
+            }
+        }
 		
 		// TODO: Document this.
 		public static object GetValueFromAddress(int memAddress)
@@ -360,6 +436,9 @@ namespace Marbles.MemoryManagement
 			{
 				throw new InvalidOperationException("Out of global memory");
 			}
+
+            newGlobalVariable.SetMemoryAddress(memorySpace);
+
 			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
 			{
 				SetMemory(memorySpace, 0);
@@ -390,5 +469,35 @@ namespace Marbles.MemoryManagement
 				throw new InvalidOperationException(e.Message);
 			}
 		}
+
+        public static void Reset()
+        {
+            memoryGlobalAssets.Clear();
+            memoryGlobal.Clear();
+            memoryLocal.Clear();
+            memoryTemporary.Clear();
+            memoryConstant.Clear();
+
+            // Asset Limits
+            currentAssetAddress = 0000;
+
+            // Global Current Indexes
+            currentGlobalIntAddress = 1000;
+            currentGlobalStringAddress = 2000;
+            currentGlobalBoolAddress = 3000;
+
+            // Local Current Index
+            currentLocalAddress = 6000;
+
+            // Temporary Current Indexes
+            currentTempIntAddress = 7000;
+            currentTempStringAddress = 8000;
+            currentTempBoolAddress = 9000;
+
+            // Constant Current Indexes
+            currentConstantIntAddress = 10000;
+            currentConstantStringAddress = 11000;
+            currentConstantBoolAddress = 12000;
+        }
 	}
 }

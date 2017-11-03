@@ -103,7 +103,14 @@ namespace Marbles
                         ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", ";
                     }
 
-                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ((ComboBoxItem)(((ComboBox)item).SelectedItem)).Content.ToString() + " ";
+                    string dataTypeSelected = ((ComboBoxItem)(((ComboBox)item).SelectedItem)).Content.ToString();
+
+                    if (dataTypeSelected == "boolean")
+                    {
+                        dataTypeSelected = "bool";
+                    }
+
+                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += dataTypeSelected + " ";
                 }
                 else
                 {
