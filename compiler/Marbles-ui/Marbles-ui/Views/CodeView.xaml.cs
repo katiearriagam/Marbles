@@ -93,14 +93,10 @@ namespace Marbles
 			Parser parser = new Parser(scanner);
 			parser.Parse();
 
-            List<Quadruple> quads = QuadrupleManager.GetQuadruples();
-            quads.Add(new Quadruple(Utilities.QuadrupleAction.end, -1, -1, -1));
+            
 
             Debug.WriteLine("---- QUADRUPLES START ----");
-            foreach (Quadruple quad in quads)
-            {
-                quad.Print();
-            }
+            QuadrupleManager.PrintQuadruples();
             Debug.WriteLine("---- QUADRUPLES END ----");
 
 			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");

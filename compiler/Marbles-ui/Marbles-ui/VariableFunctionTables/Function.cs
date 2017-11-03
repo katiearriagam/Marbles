@@ -14,6 +14,7 @@ namespace Marbles
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
 		private int location;
+        private int quadrupleStart;
 		private Dictionary<string, Variable> parameters = new Dictionary<string, Variable>();
 		private Dictionary<string, Variable> localVariables = new Dictionary<string, Variable>();
 
@@ -209,6 +210,23 @@ namespace Marbles
 		{
 			return location;
 		}
+
+        /// <summary>
+        /// Returns the quadruple number in which this function starts.
+        /// </summary>
+        public int GetQuadrupleStart()
+        {
+            return quadrupleStart;
+        }
+
+        /// <summary>
+        /// Sets the quadruple number in which this function starts.
+        /// </summary>
+        /// <param name="start"></param>
+        public void SetQuadrupleStart(int start)
+        {
+            quadrupleStart = start;
+        }
 
 		/// <summary>
 		/// Returns the size of the function based on its number of 

@@ -113,7 +113,8 @@ public class Parser {
 	
 	void Marbles() {
 		PROGRAM();
-	}
+        QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.end, -1, -1, -1));
+    }
 
 	void PROGRAM() {
 		while (la.kind == 18) { // "asset"
@@ -181,10 +182,10 @@ public class Parser {
 		Expect(1); // id
 		string functionName = t.val;
 		Function newFunction = new Function(functionName, functionType);
-
 		QuadrupleManager.EnterFunction(functionName);
 
 		Expect(10); // '('
+
 		if (la.kind == 13 || la.kind == 14 || la.kind == 15) { // "text" || "number" || "bool"
 			SemanticCubeUtilities.DataTypes parameterType = TYPE_VAR();
 			Expect(1); // id
@@ -205,9 +206,13 @@ public class Parser {
 			var localVariable = CREATE_VAR();
 			newFunction.AddLocalVariable(localVariable);
 		}
+
+        newFunction.SetQuadrupleStart(QuadrupleManager.GetCounter());
+
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
+
 		Expect(8); // '}'
 
 		// if function name already exists, throw a semantic error.
@@ -232,7 +237,8 @@ public class Parser {
 		}
 
 		//TODO: Add actual memory address
-		QuadrupleManager.ExitFunction(0);
+
+		QuadrupleManager.ExitFunction(0); // releases local variable and generates quadruple 'retorno'
 	}
 
 	void INSTRUCTION() {
@@ -395,7 +401,6 @@ public class Parser {
 
 	void FOR() {
 		Expect(28); // "for"
-        QuadrupleManager.ForBeforeCondition();
 		Expect(10); // '('
 		EXP();
 		Expect(12); // ')'

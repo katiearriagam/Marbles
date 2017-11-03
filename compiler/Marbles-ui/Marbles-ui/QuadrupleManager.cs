@@ -291,14 +291,13 @@ namespace Marbles
 
             int conditionMem = 0;
 
-			// TODO: how to set temporary for function vs. global
+			// TODO: check how to set temporary for function vs. global
             if (inFunction)
             {
                 conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
             else
             {
-                // TODO: check this
                 conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
             }
 
@@ -424,6 +423,8 @@ namespace Marbles
 
         /// <summary>
         /// Sets the value of InFunction to false, meaning we are now not inside a function.
+        /// Releases the local variable table of the function we exited, and generates a
+        /// retorno quadruple.
         /// </summary>
         public static void ExitFunction(int memAddress)
         {
@@ -448,16 +449,24 @@ namespace Marbles
             type = SemanticCubeUtilities.DataTypes.invalidDataType;
             idMemoryAddress = -1;
 
-            bool existsLocal = false, existsGlobal = false;
+            bool existsLocalVar = false, existsLocalParam = false, existsGlobal = false;
 
             if (inFunction)
             {
                 Function current = FunctionDirectory.GetFunction(functionId);
-                existsLocal = current.GetLocalVariables().ContainsKey(id);
-                if (existsLocal)
+
+                existsLocalVar = current.GetLocalVariables().ContainsKey(id);
+                if (existsLocalVar)
                 {
                     type = current.GetLocalVariables()[id].GetDataType();
                     idMemoryAddress = current.GetLocalVariables()[id].GetMemoryAddress();
+                }
+
+                existsLocalParam = current.GetParameters().ContainsKey(id);
+                if (existsLocalParam)
+                {
+                    type = current.GetParameters()[id].GetDataType();
+                    idMemoryAddress = current.GetParameters()[id].GetMemoryAddress();
                 }
             }
             else
@@ -470,7 +479,7 @@ namespace Marbles
                 }
             }
 
-            return existsLocal || existsGlobal;
+            return existsLocalVar || existsLocalParam || existsGlobal;
         }
 
         /// <summary>
@@ -596,6 +605,24 @@ namespace Marbles
 
             // push it to the operand stack
             PushConstant(constMem, SemanticCubeUtilities.DataTypes.boolean);
+        }
+
+        public static int GetCounter()
+        {
+            return counter;
+        }
+
+        public static void AddQuadruple(Quadruple q)
+        {
+            quadruples.Add(q);
+        }
+
+        public static void PrintQuadruples()
+        {
+            foreach (Quadruple quad in quadruples)
+            {
+                quad.Print();
+            }
         }
 
         public static void Reset()
