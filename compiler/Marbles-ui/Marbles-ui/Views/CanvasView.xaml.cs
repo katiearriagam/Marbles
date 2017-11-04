@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -31,7 +32,7 @@ namespace Marbles
         public CanvasView()
         {
             this.InitializeComponent();
-			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+			this.NavigationCacheMode = NavigationCacheMode.Enabled;
 		}
 
         private async void MainCanvas_Drop(object sender, DragEventArgs e)
@@ -47,9 +48,6 @@ namespace Marbles
 
                 int newXPosition = (int)e.GetPosition(relativeTo: cv).X - xClicked;
                 int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
-
-                Canvas.SetLeft(assetDragged, newXPosition);
-                Canvas.SetTop(assetDragged, newYPosition);
 
                 assetDragged.SetPosition(newXPosition, newYPosition);
             }
@@ -142,7 +140,7 @@ namespace Marbles
 				}
             }
 
-            Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text));
+            Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text), cv);
             Canvas.SetLeft(assetToAdd, (int)lastDropPosition.X);
             Canvas.SetTop(assetToAdd, (int)lastDropPosition.Y);
 

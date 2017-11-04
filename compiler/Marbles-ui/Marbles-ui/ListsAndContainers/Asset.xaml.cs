@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -17,7 +18,7 @@ namespace Marbles
 {
     public sealed partial class Asset : UserControl
     {
-        private CanvasView cv;
+        private Canvas cv;
         private string id;
         private string imageSource;
         private string label;
@@ -33,11 +34,12 @@ namespace Marbles
 
 		private Point lastPositionClicked;
 
-        public Asset(string id, string imageSource, string label, int x, int y, int number)
+        public Asset(string id, string imageSource, string label, int x, int y, int number, Canvas parentCanvas)
         {
             this.InitializeComponent();
-            cv = new CanvasView();
 
+            cv = parentCanvas;
+            
             this.id = id;
 
             this.imageSource = imageSource;
@@ -46,8 +48,8 @@ namespace Marbles
             this.label = label;
             AssetLabel.Text = label;
 
-            this.x = x;
-            this.y = y;
+            this.x = (int)AssetImage.Width; // distance to the leftmost part of the canvas
+            this.y = (int)AssetImage.Height; // distance to the top of the canvas
 
             this.number = number;
             AssetNumber.Text = number.ToString();
@@ -60,17 +62,17 @@ namespace Marbles
 
         public string ImageSource
         {
-            get { return this.imageSource; }
+            get { return imageSource; }
         }
 
         public string Label
         {
-            get { return this.label; }
+            get { return label; }
         }
 
         public string Number
         {
-            get { return this.number.ToString(); }
+            get { return number.ToString(); }
         }
 
         public string GetID()
@@ -100,12 +102,12 @@ namespace Marbles
 
 		public int GetRotation()
 		{
-			return (int)rotation;
+			return rotation;
 		}
 
 		public int GetNumber()
 		{
-			return (int)number;
+			return number;
 		}
 
 		public string GetLabel()
@@ -115,37 +117,89 @@ namespace Marbles
 
 		public void SetPosition(int x, int y)
         {
-            if (x < 0 || y < 0 || x > cv.GetCanvasWidth() || y > cv.GetCanvasHeight())
+            bool outOfBounds = false;
+            if (x < 0)
             {
-                return;
+                outOfBounds = true;
+                x = 1;
             }
 
+            if (x + (int)AssetImage.ActualWidth >= cv.ActualWidth)
+            {
+                outOfBounds = true;
+                x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
+            }
+
+            if (y < 0)
+            {
+                outOfBounds = true;
+                y = 1;
+            }
+
+            if (y + (int)AssetImage.ActualHeight >= cv.ActualHeight)
+            {
+                outOfBounds = true;
+                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 1;
+            }
+
+            if (outOfBounds)
+            {
+                Canvas.SetLeft(this, x);
+                Canvas.SetTop(this, y);
+                return;
+            }
+            
             this.x = x;
             this.y = y;
+            
+            Canvas.SetLeft(this, x);
+            Canvas.SetTop(this, y);
         }
 
         public void MoveX(int displacement)
         {
             int newX = x + displacement;
 
-            if (newX < 0 || newX > cv.GetCanvasWidth())
+            if (newX < 0)
             {
+                x = 1;
+                Canvas.SetLeft(this, x);
                 return;
             }
 
-            x += displacement;
+            if (newX + (int)AssetImage.ActualWidth >= cv.ActualWidth)
+            {
+                x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
+                Canvas.SetLeft(this, x);
+                return;
+            }
+
+            x = newX;
+
+            Canvas.SetLeft(this, x);
         }
 
         public void MoveY(int displacement)
         {
             int newY = y + displacement;
 
-            if (newY < 0 || newY > cv.GetCanvasHeight())
+            if (newY < 0)
             {
+                y = 1;
+                Canvas.SetTop(this, y);
                 return;
             }
 
-            y += displacement;
+            if (newY + (int)AssetImage.ActualHeight >= cv.ActualHeight)
+            {
+                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 1;
+                Canvas.SetTop(this, y);
+                return;
+            }
+
+            y = newY;
+
+            Canvas.SetTop(this, y);
         }
 
         public void Turn(int degrees)

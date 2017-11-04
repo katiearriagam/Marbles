@@ -39,6 +39,7 @@ namespace Marbles
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
+            
             Utilities.linesOfCodeCount = 0;
             Utilities.linesOfCode = new ArrayList();
 			ErrorPrinter.errorCount = 0;
@@ -60,9 +61,9 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main));
             Utilities.linesOfCodeCount++;
-			string filePath;
-            WriteCodeToFile(out filePath);
-			AnalyzeCode(filePath);
+            WriteCodeToFile(out string filePath);
+            AnalyzeCode(filePath);
+            
         }
 
         private void WriteCodeToFile(out string filePath)
@@ -93,27 +94,13 @@ namespace Marbles
 			Parser parser = new Parser(scanner);
 			parser.Parse();
 
-            
-
             Debug.WriteLine("---- QUADRUPLES START ----");
             QuadrupleManager.PrintQuadruples();
             Debug.WriteLine("---- QUADRUPLES END ----");
 
 			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
-			foreach (int warningLine in ErrorPrinter.GetWarningLines())
-			{
-				foreach (string warning in ErrorPrinter.GetWarningsAtLine(warningLine))
-				{
-					Debug.WriteLine("Warning in line " + warningLine + ": " + warning);
-				}
-			}
-			foreach (int errorLine in ErrorPrinter.GetErrorLines())
-			{
-				foreach (string error in ErrorPrinter.GetErrorsAtLine(errorLine))
-				{
-					Debug.WriteLine("Error in line " + errorLine + ": " + error);
-				}
-			}
+            ErrorPrinter.PrintWarnings();
+            ErrorPrinter.PrintErrors();
 		}
     }
 }

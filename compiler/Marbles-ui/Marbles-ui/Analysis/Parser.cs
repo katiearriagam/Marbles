@@ -199,9 +199,11 @@ public class Parser {
 				newFunction.AddParameter(new Variable(parameterName, parameterType));
 			}
 		}
+
 		Expect(12); // ')'
 		Expect(7); // '{'
-		while (la.kind == 16) { // "var"
+
+        while (la.kind == 16) { // "var"
 			// add variables to the local variables directory
 			var localVariable = CREATE_VAR();
 			newFunction.AddLocalVariable(localVariable);
@@ -215,7 +217,7 @@ public class Parser {
 
 		Expect(8); // '}'
 
-		// if function name already exists, throw a semantic error.
+        // if function name already exists, throw a semantic error.
 		if (FunctionDirectory.FunctionExists(newFunction))
 		{
 			SemErr("Function named " + newFunction.GetName() + " already exists.");
@@ -224,6 +226,7 @@ public class Parser {
 		{
 			try
 			{
+                FunctionDirectory.InsertFunction(newFunction);
 				MemoryManager.AddFunctionAsGlobalVariable(newFunction);
 			}
 			catch (ArgumentException e)
@@ -444,25 +447,31 @@ public class Parser {
 	}
 
 	void ACTION() {
+        Utilities.AssetAction action;
 		if (StartOf(4)) {
 			if (la.kind == 23) { // "move_x"
+                action = Utilities.AssetAction.move_x;
 				Get();
 				Expect(10); // '('
 			} else if (la.kind == 24) { // "move_y"
+                action = Utilities.AssetAction.move_y;
 				Get();
 				Expect(10); // '('
 			} else if (la.kind == 25) { // "rotate"
+                action = Utilities.AssetAction.rotate;
 				Get();
 				Expect(10); // '('
 			} else { // "set_position"
+                action = Utilities.AssetAction.set_position;
 				Get();
 				Expect(10); // '('
 				EXP();
 				Expect(11); // ','
 			}
 			EXP();
-			Expect(12);
+			Expect(12); // ')'
 		} else if (la.kind == 27) { // "spin"
+            action = Utilities.AssetAction.spin;
 			Get();
 			Expect(10); // (
 			Expect(12); // )
