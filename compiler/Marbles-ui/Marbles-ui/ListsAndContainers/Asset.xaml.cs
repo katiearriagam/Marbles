@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
@@ -26,11 +27,14 @@ namespace Marbles
         private int width, height;
         private int number;
         private int rotation;
+        RotateTransform rot = new RotateTransform();
+        Storyboard sb = new Storyboard();
+        DoubleAnimation da = new DoubleAnimation();
 
-		/// <summary>
-		/// The variable's memory address
-		/// </summary>
-		private int memoryAddress;
+        /// <summary>
+        /// The variable's memory address
+        /// </summary>
+        private int memoryAddress;
 
 		private Point lastPositionClicked;
 
@@ -58,6 +62,13 @@ namespace Marbles
 
             width = Utilities.assetInitialWidth;
             height = Utilities.assetInitialHeight;
+
+            AssetUserControl.RenderTransform = rot;
+
+            sb.Duration = new Duration(TimeSpan.FromMilliseconds(500));
+            Storyboard.SetTarget(da, AssetUserControl);
+            Storyboard.SetTargetProperty(da, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
+            sb.Children.Add(da);
         }
 
         public string ImageSource
@@ -204,8 +215,24 @@ namespace Marbles
 
         public void Turn(int degrees)
         {
+            da.From = rotation;
+
             degrees = degrees % 360;
-            rotation = (rotation + degrees) % 360;
+            rotation = rotation + degrees;
+
+            da.To = rotation;
+            da.Duration = sb.Duration;
+
+            sb.Begin();
+        }
+
+        public void Spin()
+        {
+            da.From = rotation;
+            da.To = rotation + 360;
+            da.Duration = sb.Duration;
+
+            sb.Begin();
         }
 
         public void SetNumber(int number)
