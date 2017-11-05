@@ -63,8 +63,8 @@ namespace Marbles
 
             rotation = 0;
 
-            width = Utilities.assetInitialWidth;
-            height = Utilities.assetInitialHeight;
+            width = (int)AssetImage.Width;
+            height = (int)AssetImage.Height;
 
             // rot is for rotations
             rot.CenterX = width / 2;
