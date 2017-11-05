@@ -50,6 +50,12 @@ namespace Marbles
                 int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
 
                 assetDragged.SetPosition(newXPosition, newYPosition);
+
+                await assetDragged.MoveY(100);
+                await assetDragged.Turn(800);
+                await assetDragged.MoveX(100);
+                await assetDragged.MoveY(100);
+                await assetDragged.Spin();
             }
             else
             {

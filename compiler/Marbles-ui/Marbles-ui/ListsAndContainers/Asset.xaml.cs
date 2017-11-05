@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -28,8 +29,9 @@ namespace Marbles
         private int number;
         private int rotation;
         RotateTransform rot = new RotateTransform();
+        CompositeTransform ct = new CompositeTransform();
         Storyboard sb = new Storyboard();
-        DoubleAnimation da = new DoubleAnimation();
+        DoubleAnimation anim = new DoubleAnimation();
 
         /// <summary>
         /// The variable's memory address
@@ -52,6 +54,7 @@ namespace Marbles
             this.label = label;
             AssetLabel.Text = label;
 
+            // The point (x,y) points to the top left point of the asset's image
             this.x = (int)AssetImage.Width; // distance to the leftmost part of the canvas
             this.y = (int)AssetImage.Height; // distance to the top of the canvas
 
@@ -63,12 +66,16 @@ namespace Marbles
             width = Utilities.assetInitialWidth;
             height = Utilities.assetInitialHeight;
 
-            AssetUserControl.RenderTransform = rot;
+            // rot is for rotations
+            rot.CenterX = width / 2;
+            rot.CenterY = height / 2;
+
+            // ct is for translations
+            ct.CenterX = width / 2;
+            ct.CenterY = height / 2;
 
             sb.Duration = new Duration(TimeSpan.FromMilliseconds(500));
-            Storyboard.SetTarget(da, AssetUserControl);
-            Storyboard.SetTargetProperty(da, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
-            sb.Children.Add(da);
+            sb.Children.Add(anim);
         }
 
         public string ImageSource
@@ -167,72 +174,118 @@ namespace Marbles
             Canvas.SetTop(this, y);
         }
 
-        public void MoveX(int displacement)
+        public async Task MoveX(int displacement)
         {
+            AssetUserControl.RenderTransform = ct;
+            Storyboard.SetTarget(anim, AssetUserControl);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)").Path);
+
+            anim.From = 0;
+            anim.To = displacement;
+            anim.Duration = sb.Duration;
+
+            int originalX = x;
             int newX = x + displacement;
 
             if (newX < 0)
             {
                 x = 1;
+                anim.To = x - originalX;
+                await sb.BeginAsync();
                 Canvas.SetLeft(this, x);
+                sb.Stop();
                 return;
             }
 
             if (newX + (int)AssetImage.ActualWidth >= cv.ActualWidth)
             {
                 x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
+                anim.To = x - originalX;
+                await sb.BeginAsync();
                 Canvas.SetLeft(this, x);
+                sb.Stop();
                 return;
             }
 
             x = newX;
 
+            await sb.BeginAsync();
             Canvas.SetLeft(this, x);
+            sb.Stop();
         }
 
-        public void MoveY(int displacement)
+        public async Task MoveY(int displacement)
         {
+            AssetUserControl.RenderTransform = ct;
+            Storyboard.SetTarget(anim, AssetUserControl);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)").Path);
+
+            anim.From = 0;
+            anim.To = displacement;
+            anim.Duration = sb.Duration;
+
+            int originalY = y;
             int newY = y + displacement;
 
             if (newY < 0)
             {
                 y = 1;
+                anim.To = y - originalY;
+                await sb.BeginAsync();
                 Canvas.SetTop(this, y);
+                sb.Stop();
                 return;
             }
 
-            if (newY + (int)AssetImage.ActualHeight >= cv.ActualHeight)
+            if (newY + (int)AssetImage.ActualHeight >= cv.ActualHeight - 20)
             {
-                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 1;
+                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 20;
+                anim.To = y - originalY;
+                await sb.BeginAsync();
                 Canvas.SetTop(this, y);
+                sb.Stop();
                 return;
             }
 
             y = newY;
 
+            await sb.BeginAsync();
             Canvas.SetTop(this, y);
+            sb.Stop();
         }
 
-        public void Turn(int degrees)
+        public async Task Turn(int degrees)
         {
-            da.From = rotation;
+            AssetImage.RenderTransform = rot;
+            Storyboard.SetTarget(anim, AssetImage);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
+
+            anim.From = rotation;
+            anim.To = rotation + degrees;
 
             degrees = degrees % 360;
-            rotation = rotation + degrees;
 
-            da.To = rotation;
-            da.Duration = sb.Duration;
+            rotation = (rotation + degrees) % 360;
+            rot.Angle = rotation;
+            
+            anim.Duration = sb.Duration;
 
-            sb.Begin();
+            await sb.BeginAsync();
+            sb.Stop();
         }
 
-        public void Spin()
+        public async Task Spin()
         {
-            da.From = rotation;
-            da.To = rotation + 360;
-            da.Duration = sb.Duration;
+            AssetImage.RenderTransform = rot;
+            Storyboard.SetTarget(anim, AssetImage);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
 
-            sb.Begin();
+            anim.From = rotation;
+            anim.To = rotation + 360;
+            anim.Duration = sb.Duration;
+
+            await sb.BeginAsync();
+            sb.Stop();
         }
 
         public void SetNumber(int number)
