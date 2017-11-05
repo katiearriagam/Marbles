@@ -103,6 +103,9 @@
       <DependentUpon>Asset.xaml</DependentUpon>
     </Compile>
     <Compile Include="MemoryManagement\MemoryManager.cs" />
+    <Compile Include="Values\Parenthesis.xaml.cs">
+      <DependentUpon>Parenthesis.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Quadruple.cs" />
     <Compile Include="QuadrupleManager.cs" />
     <Compile Include="Values\AssetAttribute.xaml.cs">
@@ -119,6 +122,9 @@
     </Compile>
     <Compile Include="Values\BooleanExpression.xaml.cs">
       <DependentUpon>BooleanExpression.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Values\DragAValueHereContainer.xaml.cs">
+      <DependentUpon>DragAValueHereContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="VariableFunctionTables\Function.cs" />
     <Compile Include="VariableFunctionTables\FunctionDirectory.cs" />
@@ -249,6 +255,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Values\Parenthesis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Values\AssetAttribute.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -266,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Values\BooleanExpression.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Values\DragAValueHereContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

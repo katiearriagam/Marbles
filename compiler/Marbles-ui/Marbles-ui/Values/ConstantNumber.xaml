@@ -18,9 +18,13 @@
 			VerticalAlignment="Center"
 			InputScope="Number"
 			TextAlignment="Center"
-			PlaceholderText="Write a number here! (Example: '5')"
-			HorizontalContentAlignment="Center"
-			Width="Auto">
+			HorizontalTextAlignment="Center"
+			PlaceholderText="Number"
+			HorizontalContentAlignment="Stretch"
+			VerticalContentAlignment="Center"
+			Width="Auto"
+			Margin="2,0"
+			TextChanged="ConstantNumber_TextChanged">
 		</TextBox>
 	</Grid>
 </UserControl>

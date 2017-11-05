@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -18,16 +17,16 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
-	public sealed partial class ConstantBoolean : UserControl
+	public sealed partial class DragAValueHereContainer : UserControl
 	{
-		public ConstantBoolean()
+		public DragAValueHereContainer()
 		{
 			this.InitializeComponent();
 		}
 
-        public void PrintCode()
-        {
-            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " " + ((ComboBoxItem)(BooleanConstantComboBox.SelectedItem)).Content.ToString();
-        }
+		public void PrintCode()
+		{
+			values.PrintCode();
+		}
 	}
 }

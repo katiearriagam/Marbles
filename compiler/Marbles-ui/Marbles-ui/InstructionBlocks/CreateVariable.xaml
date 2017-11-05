@@ -58,7 +58,8 @@
 						TextAlignment="Center"
 						PlaceholderText="VariableName"
 						Margin="5,10,10,10"
-						Width="Auto">
+						Width="Auto"
+						TextChanged="VariableName_TextChanged">
 				</TextBox>
 				<local:DeleteBlockButton Grid.Column="3" HorizontalAlignment="Right" />
 			</Grid>
