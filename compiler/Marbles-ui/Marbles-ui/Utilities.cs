@@ -10,8 +10,8 @@ namespace Marbles
 {
     public static class Utilities
     {
-        public static int assetInitialHeight = 100;
-        public static int assetInitialWidth = 100;
+        public static int assetInitialHeight = 90;
+        public static int assetInitialWidth = 90;
         public static int linesOfCodeCount = 0;
         public static ArrayList linesOfCode = new ArrayList();
 		public static ArrayList assetsInCanvas = new ArrayList();
