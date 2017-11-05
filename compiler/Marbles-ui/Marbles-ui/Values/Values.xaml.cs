@@ -73,13 +73,14 @@ namespace Marbles
                     selectedValueType = Utilities.ValueTypes.NumberConstant;
                     var constantNumber = new ConstantNumber();
 					Values valuePlaceHolder = sender as Values;
-					var grid = valuePlaceHolder.Parent as Grid;
-					if (grid != null)
+					var parent = valuePlaceHolder.Parent as Grid;
+					if (parent != null)
 					{
+						parent = parent as Grid;
 						var row = Grid.GetRow(valuePlaceHolder);
 						var column = Grid.GetColumn(valuePlaceHolder);
-                        grid.Children.Remove(valuePlaceHolder);
-                        grid.Children.Add(constantNumber);
+						parent.Children.Remove(valuePlaceHolder);
+						parent.Children.Add(constantNumber);
 						Grid.SetRow(constantNumber, row);
 						Grid.SetColumn(constantNumber, column);
 					}
@@ -153,6 +154,23 @@ namespace Marbles
 					}
                     selectedValue = boolExp as BooleanExpression;
                 }
+				if (e.DataView.Properties.ContainsKey("ParenthesisExpression"))
+				{
+					selectedValueType = Utilities.ValueTypes.Parenthesis;
+					var parExp = new Parenthesis();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Remove(valuePlaceHolder);
+						grid.Children.Add(parExp);
+						Grid.SetRow(parExp, row);
+						Grid.SetColumn(parExp, column);
+					}
+					selectedValue = parExp as Parenthesis;
+				}
 				if (e.DataView.Properties.ContainsKey("AssetProperty"))
 				{
                     selectedValueType = Utilities.ValueTypes.AssetProperty;
@@ -215,7 +233,12 @@ namespace Marbles
 			e.DragUIOverride.IsCaptionVisible = false;
 		}
 
-        public void PrintCode()
+		public void SetChangeText(string s)
+		{
+			DragAValueHere.Text = s;
+		}
+
+		public void PrintCode()
         {
             if (selectedValueType == Utilities.ValueTypes.AssetFunction)
             {
@@ -233,7 +256,11 @@ namespace Marbles
             {
                 ((BooleanExpression)selectedValue).PrintCode();
             }
-            else if (selectedValueType == Utilities.ValueTypes.FunctionCall)
+			else if (selectedValueType == Utilities.ValueTypes.Parenthesis)
+			{
+				((Parenthesis)selectedValue).PrintCode();
+			}
+			else if (selectedValueType == Utilities.ValueTypes.FunctionCall)
             {
                 ((FunctionCall)selectedValue).PrintCode();
             }

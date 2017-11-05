@@ -24,12 +24,15 @@
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
 			VerticalAlignment="Center"
 			InputScope="Text"
 			TextAlignment="Center"
-			PlaceholderText="YourFunctionNameHere"
-			HorizontalContentAlignment="Center"
-			Width="Auto">
+			PlaceholderText="Function"
+			Width="Auto"
+			Margin="2,0"
+			TextChanged="FunctionNameTextBox_TextChanged">
 		</TextBox>
 		<TextBlock
 			Grid.Column="1"
@@ -39,7 +42,9 @@
 			VerticalAlignment="Center"
 			TextAlignment="Center"
 			Width="Auto"
-			Foreground="White">
+			Foreground="White"
+			Margin="2,2"
+			FontSize="20">
 			(
 		</TextBlock>
 		<ListView Name="Parameters"
@@ -51,10 +56,20 @@
 				ItemsSource="{Binding Collection}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"></StackPanel>
+					<StackPanel Orientation="Horizontal"
+						Margin="0">
+					</StackPanel>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
-        </ListView>
+			<ListView.ItemContainerStyle>
+				<Style TargetType="ListViewItem">
+					<Setter Property="Padding" Value="0"/>
+					<Setter Property="BorderThickness" Value="0"/>
+					<Setter Property="Margin" Value="2,0"/>
+					<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+				</Style>
+			</ListView.ItemContainerStyle>
+		</ListView>
 		<Button Grid.Column="3"
 				Click="AddParameter">
 			<FontIcon
@@ -65,15 +80,16 @@
 				FontWeight="Light"
 				/>
 		</Button>
-		<TextBlock
-			Grid.Column="4"
+		<TextBlock Grid.Column="4"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Center"
-			TextAlignment="Left"
+			TextAlignment="Center"
 			Width="Auto"
-			Foreground="White">
+			Foreground="White"
+			Margin="2,2"
+			FontSize="20">
 			)
 		</TextBlock>
 	</Grid>

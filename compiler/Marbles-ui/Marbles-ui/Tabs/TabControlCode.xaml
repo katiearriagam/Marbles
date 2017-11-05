@@ -120,7 +120,7 @@
 								Asset stuff
 							</TextBlock>
 							<local:TabControlCodeButton BackgroundColor="#FF8C00" Label="Property" Glyph="&#xE7C6;" Group="ValueTemplate" DragStartingId="AssetProperty"/>
-							<local:TabControlCodeButton BackgroundColor="#FFB900" Label="Function" Glyph="&#xE7C7;" Group="ValueTemplate" DragStartingId="AssetFunction"/>
+							<local:TabControlCodeButton BackgroundColor="#FFB900" Label="Behavior" Glyph="&#xE7C7;" Group="ValueTemplate" DragStartingId="AssetFunction"/>
 							<TextBlock 
 								Style="{StaticResource TitleTextBlockStyle}"
 								Foreground="Gray"
@@ -138,6 +138,7 @@
 							</TextBlock>
 							<local:TabControlCodeButton BackgroundColor="#018574" Label="Math" Glyph="&#xE94A;" Group="ValueTemplate" DragStartingId="MathExpression"/>
 							<local:TabControlCodeButton BackgroundColor="#038387" Label="Boolean" Glyph="&#xE784;" Group="ValueTemplate" DragStartingId="BooleanExpression"/>
+							<local:TabControlCodeButton BackgroundColor="#00B294" Label="Parenthesis" Glyph="&#xF168;" Group="ValueTemplate" DragStartingId="ParenthesisExpression"/>
 						</ListView>
 					</Grid>
 				</PivotItem>

@@ -27,7 +27,10 @@ namespace Marbles
 
         public void PrintCode()
         {
-            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += MathExpressionTextBox.Text;
+            operandA.PrintCode();
+			string boolOperatorSelected = " " + ((ComboBoxItem)(mathOperator.SelectedItem)).Content.ToString();
+			((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount - 1]).content += boolOperatorSelected;
+			operandB.PrintCode();
         }
 	}
 }
