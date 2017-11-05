@@ -26,72 +26,72 @@
 					Width="90"
 					VerticalAlignment="Center" 
 					HorizontalAlignment="Center"
+			/>
+        <Grid Grid.Row="1" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+            Grid.Column="0"
+            Text="Label:"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="13"
+            />
+                <ScrollViewer
+				Grid.Column="1"
+				Height="20" 
+				MaxWidth="80" 
+				MaxHeight="20"
+				HorizontalScrollBarVisibility="Disabled" 
+				VerticalScrollBarVisibility="Auto">
+                    <TextBlock
+					x:Name="AssetLabel"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Center"
+					FontSize="13"
+					MaxWidth="100"
+					TextWrapping="Wrap"
+					Text="{Binding Label}"
 				/>
-				<Grid Grid.Row="1" HorizontalAlignment="Center">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="*" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-				<Grid Grid.Row="0">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="*" />
-					</Grid.ColumnDefinitions>
-					<TextBlock
-                Grid.Column="0"
-                Text="Label:"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="13"
-                />
-					<ScrollViewer
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+            Grid.Column="0"
+            Text="Number:"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="13"
+            />
+                <ScrollViewer
+				Grid.Column="1"
+				Height="20" MaxWidth="80"
+				MaxHeight="20"
+				HorizontalScrollBarVisibility="Disabled" 
+				VerticalScrollBarVisibility="Auto">
+                    <TextBlock
+					x:Name="AssetNumber"
 					Grid.Column="1"
-					Height="20" 
-					MaxWidth="80" 
-					MaxHeight="20"
-					HorizontalScrollBarVisibility="Disabled" 
-					VerticalScrollBarVisibility="Auto">
-						<TextBlock
-						x:Name="AssetLabel"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Center"
-						FontSize="13"
-						MaxWidth="100"
-						TextWrapping="Wrap"
-						Text="{Binding Label}"
-					/>
-					</ScrollViewer>
-				</Grid>
-				<Grid Grid.Row="1">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="*" />
-					</Grid.ColumnDefinitions>
-					<TextBlock
-                Grid.Column="0"
-                Text="Number:"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="13"
-                />
-					<ScrollViewer
-					Grid.Column="1"
-					Height="20" MaxWidth="80"
-					MaxHeight="20"
-					HorizontalScrollBarVisibility="Disabled" 
-					VerticalScrollBarVisibility="Auto">
-						<TextBlock
-						x:Name="AssetNumber"
-						Grid.Column="1"
-						TextWrapping="Wrap"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Center"
-						FontSize="13"
-						MaxWidth="100"
-						Text="{Binding Number}"
-					/>
-					</ScrollViewer>
-				</Grid>
-			</Grid>
-		</Grid>
+					TextWrapping="Wrap"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Center"
+					FontSize="13"
+					MaxWidth="100"
+					Text="{Binding Number}"
+				/>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
 </UserControl>

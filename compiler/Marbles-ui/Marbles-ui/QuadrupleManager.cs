@@ -429,8 +429,8 @@ namespace Marbles
         public static void ExitFunction(int memAddress)
         {
 			FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
-			// TODO: Send actual memory address in retorno quadruple
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, 5 /* Must fix */, -1, -1));
+            // TODO: Send actual memory address in retorno quadruple
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, 5 /* Must fix */, -1, -1));
             counter++;
             inFunction = false;
             functionId = "";

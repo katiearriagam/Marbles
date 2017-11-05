@@ -79,6 +79,15 @@ namespace Marbles
             end = 21
         }
 
+        public enum AssetAction
+        {
+            move_x = 0,
+            move_y = 1,
+            set_position = 2,
+            rotate = 3,
+            spin = 4
+        }
+
         public static Dictionary<ShapeTypes, string> shapeToImagePath = new Dictionary<ShapeTypes, string>();
         public static Dictionary<string, ShapeTypes> actionToShapeType = new Dictionary<string, ShapeTypes>();
         public static Dictionary<SemanticCubeUtilities.Operators, QuadrupleAction> operatorToAction = new Dictionary<SemanticCubeUtilities.Operators, QuadrupleAction>();

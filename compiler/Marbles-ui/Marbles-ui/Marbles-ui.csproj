@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Quadruple.cs" />
     <Compile Include="QuadrupleManager.cs" />
+    <Compile Include="StoryboardExtensions.cs" />
     <Compile Include="Values\AssetAttribute.xaml.cs">
       <DependentUpon>AssetAttribute.xaml</DependentUpon>
     </Compile>

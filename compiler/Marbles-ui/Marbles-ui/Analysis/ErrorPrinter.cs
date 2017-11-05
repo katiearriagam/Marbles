@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -94,5 +95,27 @@ namespace Marbles.Analysis
 			}
 			return warningList[line];
 		}
+
+        public static void PrintErrors()
+        {
+            foreach (int errorLine in GetErrorLines())
+            {
+                foreach (string error in GetErrorsAtLine(errorLine))
+                {
+                    Debug.WriteLine("Error in line " + errorLine + ": " + error);
+                }
+            }
+        }
+
+        public static void PrintWarnings()
+        {
+            foreach (int warningLine in GetWarningLines())
+            {
+                foreach (string warning in GetWarningsAtLine(warningLine))
+                {
+                    Debug.WriteLine("Warning in line " + warningLine + ": " + warning);
+                }
+            }
+        }
 	}
 }

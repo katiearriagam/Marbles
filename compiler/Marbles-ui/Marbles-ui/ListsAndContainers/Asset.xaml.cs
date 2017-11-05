@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -11,13 +13,14 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
     public sealed partial class Asset : UserControl
     {
-        private CanvasView cv;
+        private Canvas cv;
         private string id;
         private string imageSource;
         private string label;
@@ -25,19 +28,24 @@ namespace Marbles
         private int width, height;
         private int number;
         private int rotation;
+        RotateTransform rot = new RotateTransform();
+        CompositeTransform ct = new CompositeTransform();
+        Storyboard sb = new Storyboard();
+        DoubleAnimation anim = new DoubleAnimation();
 
-		/// <summary>
-		/// The variable's memory address
-		/// </summary>
-		private int memoryAddress;
+        /// <summary>
+        /// The variable's memory address
+        /// </summary>
+        private int memoryAddress;
 
 		private Point lastPositionClicked;
 
-        public Asset(string id, string imageSource, string label, int x, int y, int number)
+        public Asset(string id, string imageSource, string label, int x, int y, int number, Canvas parentCanvas)
         {
             this.InitializeComponent();
-            cv = new CanvasView();
 
+            cv = parentCanvas;
+            
             this.id = id;
 
             this.imageSource = imageSource;
@@ -46,8 +54,9 @@ namespace Marbles
             this.label = label;
             AssetLabel.Text = label;
 
-            this.x = x;
-            this.y = y;
+            // The point (x,y) points to the top left point of the asset's image
+            this.x = (int)AssetImage.Width; // distance to the leftmost part of the canvas
+            this.y = (int)AssetImage.Height; // distance to the top of the canvas
 
             this.number = number;
             AssetNumber.Text = number.ToString();
@@ -56,21 +65,32 @@ namespace Marbles
 
             width = Utilities.assetInitialWidth;
             height = Utilities.assetInitialHeight;
+
+            // rot is for rotations
+            rot.CenterX = width / 2;
+            rot.CenterY = height / 2;
+
+            // ct is for translations
+            ct.CenterX = width / 2;
+            ct.CenterY = height / 2;
+
+            sb.Duration = new Duration(TimeSpan.FromMilliseconds(500));
+            sb.Children.Add(anim);
         }
 
         public string ImageSource
         {
-            get { return this.imageSource; }
+            get { return imageSource; }
         }
 
         public string Label
         {
-            get { return this.label; }
+            get { return label; }
         }
 
         public string Number
         {
-            get { return this.number.ToString(); }
+            get { return number.ToString(); }
         }
 
         public string GetID()
@@ -100,12 +120,12 @@ namespace Marbles
 
 		public int GetRotation()
 		{
-			return (int)rotation;
+			return rotation;
 		}
 
 		public int GetNumber()
 		{
-			return (int)number;
+			return number;
 		}
 
 		public string GetLabel()
@@ -115,43 +135,157 @@ namespace Marbles
 
 		public void SetPosition(int x, int y)
         {
-            if (x < 0 || y < 0 || x > cv.GetCanvasWidth() || y > cv.GetCanvasHeight())
+            bool outOfBounds = false;
+            if (x < 0)
             {
-                return;
+                outOfBounds = true;
+                x = 1;
             }
 
+            if (x + (int)AssetImage.ActualWidth >= cv.ActualWidth)
+            {
+                outOfBounds = true;
+                x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
+            }
+
+            if (y < 0)
+            {
+                outOfBounds = true;
+                y = 1;
+            }
+
+            if (y + (int)AssetImage.ActualHeight >= cv.ActualHeight)
+            {
+                outOfBounds = true;
+                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 1;
+            }
+
+            if (outOfBounds)
+            {
+                Canvas.SetLeft(this, x);
+                Canvas.SetTop(this, y);
+                return;
+            }
+            
             this.x = x;
             this.y = y;
+            
+            Canvas.SetLeft(this, x);
+            Canvas.SetTop(this, y);
         }
 
-        public void MoveX(int displacement)
+        public async Task MoveX(int displacement)
         {
+            AssetUserControl.RenderTransform = ct;
+            Storyboard.SetTarget(anim, AssetUserControl);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)").Path);
+
+            anim.From = 0;
+            anim.To = displacement;
+            anim.Duration = sb.Duration;
+
+            int originalX = x;
             int newX = x + displacement;
 
-            if (newX < 0 || newX > cv.GetCanvasWidth())
+            if (newX < 0)
             {
+                x = 1;
+                anim.To = x - originalX;
+                await sb.BeginAsync();
+                Canvas.SetLeft(this, x);
+                sb.Stop();
                 return;
             }
 
-            x += displacement;
+            if (newX + (int)AssetImage.ActualWidth >= cv.ActualWidth)
+            {
+                x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
+                anim.To = x - originalX;
+                await sb.BeginAsync();
+                Canvas.SetLeft(this, x);
+                sb.Stop();
+                return;
+            }
+
+            x = newX;
+
+            await sb.BeginAsync();
+            Canvas.SetLeft(this, x);
+            sb.Stop();
         }
 
-        public void MoveY(int displacement)
+        public async Task MoveY(int displacement)
         {
+            AssetUserControl.RenderTransform = ct;
+            Storyboard.SetTarget(anim, AssetUserControl);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)").Path);
+
+            anim.From = 0;
+            anim.To = displacement;
+            anim.Duration = sb.Duration;
+
+            int originalY = y;
             int newY = y + displacement;
 
-            if (newY < 0 || newY > cv.GetCanvasHeight())
+            if (newY < 0)
             {
+                y = 1;
+                anim.To = y - originalY;
+                await sb.BeginAsync();
+                Canvas.SetTop(this, y);
+                sb.Stop();
                 return;
             }
 
-            y += displacement;
+            if (newY + (int)AssetImage.ActualHeight >= cv.ActualHeight - 20)
+            {
+                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 20;
+                anim.To = y - originalY;
+                await sb.BeginAsync();
+                Canvas.SetTop(this, y);
+                sb.Stop();
+                return;
+            }
+
+            y = newY;
+
+            await sb.BeginAsync();
+            Canvas.SetTop(this, y);
+            sb.Stop();
         }
 
-        public void Turn(int degrees)
+        public async Task Turn(int degrees)
         {
+            AssetImage.RenderTransform = rot;
+            Storyboard.SetTarget(anim, AssetImage);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
+
+            anim.From = rotation;
+            anim.To = rotation + degrees;
+
             degrees = degrees % 360;
+
             rotation = (rotation + degrees) % 360;
+            rot.Angle = rotation;
+            
+            anim.Duration = sb.Duration;
+
+            await sb.BeginAsync();
+            sb.Stop();
+        }
+
+        public async Task Spin()
+        {
+            AssetImage.RenderTransform = rot;
+            Storyboard.SetTarget(anim, AssetImage);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
+
+            anim.From = rotation;
+            anim.To = rotation + 360;
+            anim.Duration = sb.Duration;
+
+            await sb.BeginAsync();
+            sb.Stop();
         }
 
         public void SetNumber(int number)
