@@ -17,8 +17,10 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Center"
 			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
 			Width="Auto"
-			SelectedIndex="0">
+			SelectedIndex="0"
+			Margin="2,0">
 			<ComboBoxItem>TRUE</ComboBoxItem>
 			<ComboBoxItem>FALSE</ComboBoxItem>
 		</ComboBox>

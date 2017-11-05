@@ -22,21 +22,25 @@
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
 			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
 			VerticalAlignment="Center"
 			InputScope="Text"
 			TextAlignment="Center"
-			PlaceholderText="AssetNameHere"
-			Width="Auto">
+			PlaceholderText="Asset"
+			Width="Auto"
+			Margin="2,0"
+			TextChanged="AssetNameTextBox_TextChanged">
 		</TextBox>
 		<TextBlock
 			Grid.Column="1"
 			FontFamily="Segoe UI Light"
 			FontWeight="Light"
 			HorizontalAlignment="Stretch"
-			VerticalAlignment="Center"
+			VerticalAlignment="Bottom"
 			TextAlignment="Center"
 			Width="Auto"
 			Foreground="White"
+			Margin="2,2"
 			FontSize="20">
 			.
 		</TextBlock>
@@ -48,8 +52,10 @@
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Center"
 			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
 			Width="Auto"
-			SelectedIndex="0">
+			SelectedIndex="0"
+			Margin="2,0">
 			<ComboBoxItem>value</ComboBoxItem>
 			<ComboBoxItem>label</ComboBoxItem>
 			<ComboBoxItem>width</ComboBoxItem>

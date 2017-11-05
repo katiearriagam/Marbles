@@ -39,8 +39,8 @@
                        for
 			</TextBlock>
 
-            <local:Values Grid.Column="1" x:Name="ValuesInput"></local:Values>
-            <local:DeleteBlockButton Grid.Column="3" HorizontalAlignment="Right" />
+			<local:DragAValueHereContainer Grid.Column="1" x:Name="ValuesInput"></local:DragAValueHereContainer>
+			<local:DeleteBlockButton Grid.Column="3" HorizontalAlignment="Right" />
             <TextBlock Grid.Row="0" Grid.Column="2" 
 						   Foreground="White" 
 						   FontSize="20" 

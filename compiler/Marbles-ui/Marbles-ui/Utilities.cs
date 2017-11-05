@@ -48,6 +48,7 @@ namespace Marbles
             BooleanConstant,
             MathExpression,
             BooleanExpression,
+			Parenthesis,
             AssetProperty,
             AssetFunction
         }
