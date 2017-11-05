@@ -63,7 +63,6 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
             WriteCodeToFile(out string filePath);
             AnalyzeCode(filePath);
-            
         }
 
         private void WriteCodeToFile(out string filePath)

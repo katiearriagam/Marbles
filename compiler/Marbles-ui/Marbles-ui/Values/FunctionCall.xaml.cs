@@ -28,38 +28,107 @@ namespace Marbles
 
 		private void AddParameter(object sender, RoutedEventArgs e)
 		{
-            TextBox parameter = new TextBox()
-            {
-                FontFamily = new FontFamily("Segoe UI Light"),
-                FontWeight = FontWeights.Light,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Center,
-                TextAlignment = TextAlignment.Center,
-                PlaceholderText = "Parameter Here",
-                Width = double.NaN
-            };
+			Grid containerGrid = new Grid();
+			Values newValue = new Values();
+			containerGrid.Children.Add(newValue);
 
-            Parameters.Items.Add(parameter);
+            Parameters.Items.Add(containerGrid);
 		}
 
         public void PrintCode()
         {
-            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += FunctionNameTextBox.Text + "(";
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " call " + FunctionNameTextBox.Text + "(";
             bool firstParam = true;
-            foreach (TextBox tb in Parameters.Items)
+            foreach (Grid holder in Parameters.Items)
             {
-                if (firstParam)
-                {
-                    firstParam = false;
-                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += tb.Text;
-                }
-                else
-                {
-                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", " + tb.Text;
-                }
+				foreach (Object val in holder.Children)
+				{
+					if (firstParam)
+					{
+						firstParam = false;
+						PrintParameterCode(val);
+					}
+					else
+					{
+						((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount - 1]).content += ", ";
+						PrintParameterCode(val);
+					}
+				}
             }
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ")";
         }
+
+		private void PrintParameterCode(Object obj)
+		{
+			var varType = obj.GetType();
+			if (varType == typeof(AssetFunction))
+			{
+				((AssetFunction)obj).PrintCode();
+			}
+			else if (varType == typeof(AssetAttribute))
+			{
+				((AssetAttribute)obj).PrintCode();
+			}
+			else if (varType == typeof(ConstantBoolean))
+			{
+				((ConstantBoolean)obj).PrintCode();
+			}
+			else if (varType == typeof(BooleanExpression))
+			{
+				((BooleanExpression)obj).PrintCode();
+			}
+			else if (varType == typeof(Parenthesis))
+			{
+				((Parenthesis)obj).PrintCode();
+			}
+			else if (varType == typeof(FunctionCall))
+			{
+				((FunctionCall)obj).PrintCode();
+			}
+			else if (varType == typeof(MathExpression))
+			{
+				((MathExpression)obj).PrintCode();
+			}
+			else if (varType == typeof(ConstantNumber))
+			{
+				((ConstantNumber)obj).PrintCode();
+			}
+			else if (varType == typeof(ConstantText))
+			{
+				((ConstantText)obj).PrintCode();
+			}
+			else if (varType == typeof(VariableCall))
+			{
+				((VariableCall)obj).PrintCode();
+			}
+		}
+
+		private void FunctionNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			var textBox = sender as TextBox;
+			if (textBox.Text != "")
+			{
+				if (textBox.SelectionStart == 1)
+				{
+					if (!(Char.IsLetter(textBox.Text[textBox.SelectionStart - 1]) ||
+					textBox.Text[textBox.SelectionStart - 1] == '_'))
+					{
+						int pos = textBox.SelectionStart - 1;
+						textBox.Text = textBox.Text.Remove(pos, 1);
+						textBox.SelectionStart = pos;
+					}
+				}
+				else
+				{
+					if (!(Char.IsLetterOrDigit(textBox.Text[textBox.SelectionStart - 1]) ||
+					textBox.Text[textBox.SelectionStart - 1] == '_'))
+					{
+						int pos = textBox.SelectionStart - 1;
+						textBox.Text = textBox.Text.Remove(pos, 1);
+						textBox.SelectionStart = pos;
+					}
+				}
+			}
+		}
 	}
 }

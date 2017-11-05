@@ -11,21 +11,22 @@ namespace Marbles.MemoryManagement
 	{
 		public enum MemoryScope
 		{
-			global = 0,
-			local = 1,
-			temporary = 2,
-			constant = 3
+			global		= 0,
+			local		= 1,
+			temporary	= 2,
+			constant	= 3
 		}
         
 		public enum AssetAttributes
 		{
-			x = 0,
-			y = 1,
-			width = 2,
-			height = 3,
-			rotation = 4, 
-			number = 5,
-			label = 6
+			id			= 0,
+			x			= 1,
+			y			= 2,
+			width		= 3,
+			height		= 4,
+			rotation	= 5, 
+			number		= 6,
+			label		= 7
 		}
 
         public static Dictionary<int, object> memoryGlobalAssets = new Dictionary<int, object>();
@@ -172,7 +173,7 @@ namespace Marbles.MemoryManagement
 		/// <returns></returns>
 		public static int GetNextAssetAvailable()
 		{
-			if (currentAssetAddress + 7 <= highestAssetAddress)
+			if (currentAssetAddress + Enum.GetNames(typeof(AssetAttributes)).Length <= highestAssetAddress)
 			{
 				return currentAssetAddress;
 			}
@@ -187,8 +188,9 @@ namespace Marbles.MemoryManagement
 		/// <returns></returns>
 		public static int SetAssetInMemory(int memoryAddress, Asset asset)
 		{
-			if (currentAssetAddress + 7 <= highestAssetAddress)
+			if (currentAssetAddress + Enum.GetNames(typeof(AssetAttributes)).Length <= highestAssetAddress)
 			{
+				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.id] = asset.GetID();
 				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.x] = asset.GetX();
 				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.y] = asset.GetY();
 				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.width] = asset.GetWidth();
@@ -199,7 +201,7 @@ namespace Marbles.MemoryManagement
 
                 asset.SetMemoryAddress(memoryAddress);
 
-				currentAssetAddress += 7;
+				currentAssetAddress += Enum.GetNames(typeof(AssetAttributes)).Length;
 				return memoryAddress;
 			}
 

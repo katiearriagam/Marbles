@@ -14,14 +14,21 @@
 	DragLeave="Values_OnDragLeave"
 	BorderBrush="Gray">
 
-	<Grid Background="White">
-		<TextBlock
-			FontFamily="Segoe UI Light"
-			FontWeight="Light"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Center"
-			Foreground="Gray">
-			Drag a value here
-		</TextBlock>
-    </Grid>
+	<Grid>
+		<ScrollViewer
+			HorizontalScrollBarVisibility="Auto" 
+			VerticalScrollBarVisibility="Disabled">
+			<Grid Background="White">
+				<TextBlock
+					x:Name="DragAValueHere"
+					FontFamily="Segoe UI Light"
+					FontWeight="Light"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Foreground="Gray">
+					Drag a value here
+				</TextBlock>
+			</Grid>
+		</ScrollViewer>
+	</Grid>
 </UserControl>

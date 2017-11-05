@@ -29,67 +29,43 @@ namespace Marbles
 		private void MethodChosenChanged(object sender, SelectionChangedEventArgs e)
 		{
             var list = sender as ComboBox;
-            TextBox parameter = new TextBox()
-            {
-                FontFamily = new FontFamily("Segoe UI Light"),
-                FontWeight = FontWeights.Light,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Center,
-                TextAlignment = TextAlignment.Center,
-                PlaceholderText = "Parameter Here",
-                Width = double.NaN,
-                InputScope = new InputScope
-                {
-                    Names =
-                    {
-                        new InputScopeName(InputScopeNameValue.Text)
-                    }
-                }
-            };
-            if (list != null && Parameters != null)
+			var parametersList = Parameters as ListView;
+			Grid containerGrid = new Grid();
+			Values newValue = new Values();
+			if (list != null && parametersList != null)
 			{
-				Parameters.Items.Clear();
+				parametersList.Items.Clear();
 				switch (list.SelectedIndex)
 				{
 					case 0:
 						break;
 					case 1:
-						parameter.PlaceholderText = "Displacement in X";
-						Parameters.Items.Add(parameter);
+						newValue.SetChangeText("Displacement in X");
+						containerGrid.Children.Add(newValue);
+						parametersList.Items.Add(containerGrid);
 						break;
 					case 2:
-						parameter.PlaceholderText = "Displacement in Y";
-						Parameters.Items.Add(parameter);
+						newValue.SetChangeText("Displacement in Y");
+						containerGrid.Children.Add(newValue);
+						parametersList.Items.Add(containerGrid);
 						break;
 					case 3:
-						parameter.PlaceholderText = "Degrees";
-						Parameters.Items.Add(parameter);
+						newValue.SetChangeText("Degrees");
+						containerGrid.Children.Add(newValue);
+						parametersList.Items.Add(containerGrid);
 						break;
 					case 4:
-                        parameter.PlaceholderText = "X";
-                        TextBox parameterY = new TextBox()
-                        {
-                            FontFamily = new FontFamily("Segoe UI Light"),
-                            FontWeight = FontWeights.Light,
-                            HorizontalContentAlignment = HorizontalAlignment.Center,
-                            HorizontalAlignment = HorizontalAlignment.Stretch,
-                            VerticalAlignment = VerticalAlignment.Center,
-                            TextAlignment = TextAlignment.Center,
-                            PlaceholderText = "Y",
-                            Width = double.NaN,
-                            InputScope = new InputScope
-                            {
-                                Names =
-                                {
-                                    new InputScopeName(InputScopeNameValue.Text)
-                                }
-                            }
-                        };
+						newValue.SetChangeText("X");
+						containerGrid.Children.Add(newValue);
+						parametersList.Items.Add(containerGrid);
 
-						Parameters.Items.Add(parameter);
-						Parameters.Items.Add(parameterY);
+						Grid containerGridY = new Grid();
+						Values newValueY = new Values();
+						newValueY.SetChangeText("Y");
+						containerGridY.Children.Add(newValueY);
+						parametersList.Items.Add(containerGridY);
 						break;
+
 					default:
 						break;
 				}
@@ -98,23 +74,100 @@ namespace Marbles
 
         public void PrintCode()
         {
-            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += AssetID.Text + "." + ((ComboBoxItem)(AssetAction.SelectedItem)).Content.ToString() + "(";
+            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " " + AssetID.Text + "." + ((ComboBoxItem)(AssetAction.SelectedItem)).Content.ToString() + "(";
 
-            bool firstParam = true;
-            foreach (TextBox parameter in Parameters.Items)
-            {
-                if (firstParam)
-                {
-                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += parameter.Text;
-                    firstParam = false;
-                }
-                else
-                {
-                    ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ", " + parameter.Text;
-                }
-            }
+			bool firstParam = true;
+			foreach (Grid holder in Parameters.Items)
+			{
+				foreach (Object val in holder.Children)
+				{
+					if (firstParam)
+					{
+						firstParam = false;
+						PrintParameterCode(val);
+					}
+					else
+					{
+						((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount - 1]).content += ", ";
+						PrintParameterCode(val);
+					}
+				}
+			}
 
-            ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ")";
+			((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ")";
         }
+
+		private void PrintParameterCode(Object obj)
+		{
+			var varType = obj.GetType();
+			if (varType == typeof(AssetFunction))
+			{
+				((AssetFunction)obj).PrintCode();
+			}
+			else if (varType == typeof(AssetAttribute))
+			{
+				((AssetAttribute)obj).PrintCode();
+			}
+			else if (varType == typeof(ConstantBoolean))
+			{
+				((ConstantBoolean)obj).PrintCode();
+			}
+			else if (varType == typeof(BooleanExpression))
+			{
+				((BooleanExpression)obj).PrintCode();
+			}
+			else if (varType == typeof(Parenthesis))
+			{
+				((Parenthesis)obj).PrintCode();
+			}
+			else if (varType == typeof(FunctionCall))
+			{
+				((FunctionCall)obj).PrintCode();
+			}
+			else if (varType == typeof(MathExpression))
+			{
+				((MathExpression)obj).PrintCode();
+			}
+			else if (varType == typeof(ConstantNumber))
+			{
+				((ConstantNumber)obj).PrintCode();
+			}
+			else if (varType == typeof(ConstantText))
+			{
+				((ConstantText)obj).PrintCode();
+			}
+			else if (varType == typeof(VariableCall))
+			{
+				((VariableCall)obj).PrintCode();
+			}
+		}
+
+		private void AssetID_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			var textBox = sender as TextBox;
+			if (textBox.Text != "")
+			{
+				if (textBox.SelectionStart == 1)
+				{
+					if (!(Char.IsLetter(textBox.Text[textBox.SelectionStart - 1]) ||
+					textBox.Text[textBox.SelectionStart - 1] == '_'))
+					{
+						int pos = textBox.SelectionStart - 1;
+						textBox.Text = textBox.Text.Remove(pos, 1);
+						textBox.SelectionStart = pos;
+					}
+				}
+				else
+				{
+					if (!(Char.IsLetterOrDigit(textBox.Text[textBox.SelectionStart - 1]) ||
+					textBox.Text[textBox.SelectionStart - 1] == '_'))
+					{
+						int pos = textBox.SelectionStart - 1;
+						textBox.Text = textBox.Text.Remove(pos, 1);
+						textBox.SelectionStart = pos;
+					}
+				}
+			}
+		}
 	}
 }
