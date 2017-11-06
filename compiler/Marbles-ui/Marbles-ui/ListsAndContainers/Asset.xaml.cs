@@ -24,12 +24,12 @@ namespace Marbles
         private string id;
         private string imageSource;
         private string label;
-        private int x, y;
+        private double x, y;
         private int width, height;
         private int number;
         private int rotation;
-        RotateTransform rot = new RotateTransform();
-        CompositeTransform ct = new CompositeTransform();
+        CompositeTransform ctImage = new CompositeTransform();
+        CompositeTransform ctUserControl = new CompositeTransform();
         Storyboard sb = new Storyboard();
         DoubleAnimation anim = new DoubleAnimation();
 
@@ -42,7 +42,7 @@ namespace Marbles
 
         public Asset(string id, string imageSource, string label, int x, int y, int number, Canvas parentCanvas)
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             cv = parentCanvas;
             
@@ -55,8 +55,8 @@ namespace Marbles
             AssetLabel.Text = label;
 
             // The point (x,y) points to the top left point of the asset's image
-            this.x = (int)AssetImage.Width; // distance to the leftmost part of the canvas
-            this.y = (int)AssetImage.Height; // distance to the top of the canvas
+            this.x = x;
+            this.y = y;
 
             this.number = number;
             AssetNumber.Text = number.ToString();
@@ -66,15 +66,13 @@ namespace Marbles
             width = (int)AssetImage.Width;
             height = (int)AssetImage.Height;
 
-            // rot is for rotations
-            rot.CenterX = width / 2;
-            rot.CenterY = height / 2;
+            // Set transform, rotate, and scaling's center point
+            ctImage.CenterX = ctUserControl.CenterX = width / 2;
+            ctImage.CenterY = ctUserControl.CenterY = height / 2;
+            AssetImage.RenderTransform = ctImage;
+            AssetUserControl.RenderTransform = ctUserControl;
 
-            // ct is for translations
-            ct.CenterX = width / 2;
-            ct.CenterY = height / 2;
-
-            sb.Duration = new Duration(TimeSpan.FromMilliseconds(500));
+            sb.Duration = new Duration(TimeSpan.FromMilliseconds(1000));
             sb.Children.Add(anim);
         }
 
@@ -103,17 +101,99 @@ namespace Marbles
             return width;
         }
 
+        public async Task SetWidth(int width)
+        {
+            int originalWidth = this.width;
+
+            double widthRatio = width / 100.0;
+
+            if (this.width * widthRatio < Utilities.assetMinimumWidth)
+            {
+                return;
+            }
+
+            AssetImage.RenderTransform = ctImage;
+            Storyboard.SetTarget(anim, AssetImage);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.ScaleX)").Path);
+
+            anim.From = 1;
+            anim.To = widthRatio;
+            anim.Duration = sb.Duration;
+
+            await sb.BeginAsync();
+            sb.Stop();
+
+            this.width = (int)(this.width * widthRatio);
+            AssetImage.Width = this.width;
+
+            int pixelsAdded = this.width - originalWidth;
+
+            double hyp = pixelsAdded / 2.0;
+            double angleInRadians = rotation * (Math.PI / 180.0);
+            double opp = Math.Sin(angleInRadians) * hyp;
+            double adj = Math.Cos(angleInRadians) * hyp;
+
+            x = x - adj;
+            y = y - opp;
+
+            Canvas.SetLeft(this, x);
+            Canvas.SetTop(this, y);
+            
+            ctImage.CenterX = ctUserControl.CenterX = this.width / 2;
+        }
+
         public int GetHeight()
         {
             return height;
         }
 
-		public int GetX()
+        public async Task SetHeight(int height)
+        {
+            int originalHeight= this.height;
+
+            double heightRatio = height / 100.0;
+
+            if (this.height * heightRatio < Utilities.assetMinimumHeight)
+            {
+                return;
+            }
+
+            AssetImage.RenderTransform = ctImage;
+            Storyboard.SetTarget(anim, AssetImage);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.ScaleY)").Path);
+
+            anim.From = 1;
+            anim.To = heightRatio;
+            anim.Duration = sb.Duration;
+
+            await sb.BeginAsync();
+            sb.Stop();
+
+            this.height = (int)(this.height * heightRatio);
+            AssetImage.Height = this.height;
+
+            int pixelsAdded = this.height - originalHeight;
+
+            double hyp = pixelsAdded / 2.0;
+            double angleInRadians = 360 - rotation * (Math.PI / 180.0);
+            double opp = Math.Sin(angleInRadians) * hyp;
+            double adj = Math.Cos(angleInRadians) * hyp;
+
+            x = x + adj;
+            y = y - opp;
+
+            Canvas.SetLeft(this, x);
+            Canvas.SetTop(this, y);
+
+            ctImage.CenterY = ctUserControl.CenterY =  this.height / 2;
+        }
+
+		public double GetX()
 		{
 			return x;
 		}
 
-		public int GetY()
+		public double GetY()
 		{
 			return y;
 		}
@@ -133,40 +213,8 @@ namespace Marbles
 			return label;
 		}
 
-		public void SetPosition(int x, int y)
+		public void SetPosition(double x, double y)
         {
-            bool outOfBounds = false;
-            if (x < 0)
-            {
-                outOfBounds = true;
-                x = 1;
-            }
-
-            if (x + (int)AssetImage.ActualWidth >= cv.ActualWidth)
-            {
-                outOfBounds = true;
-                x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
-            }
-
-            if (y < 0)
-            {
-                outOfBounds = true;
-                y = 1;
-            }
-
-            if (y + (int)AssetImage.ActualHeight >= cv.ActualHeight)
-            {
-                outOfBounds = true;
-                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 1;
-            }
-
-            if (outOfBounds)
-            {
-                Canvas.SetLeft(this, x);
-                Canvas.SetTop(this, y);
-                return;
-            }
-            
             this.x = x;
             this.y = y;
             
@@ -174,9 +222,9 @@ namespace Marbles
             Canvas.SetTop(this, y);
         }
 
-        public async Task MoveX(int displacement)
+        public async Task MoveX(double displacement)
         {
-            AssetUserControl.RenderTransform = ct;
+            AssetUserControl.RenderTransform = ctUserControl;
             Storyboard.SetTarget(anim, AssetUserControl);
             Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)").Path);
 
@@ -184,39 +232,16 @@ namespace Marbles
             anim.To = displacement;
             anim.Duration = sb.Duration;
 
-            int originalX = x;
-            int newX = x + displacement;
-
-            if (newX < 0)
-            {
-                x = 1;
-                anim.To = x - originalX;
-                await sb.BeginAsync();
-                Canvas.SetLeft(this, x);
-                sb.Stop();
-                return;
-            }
-
-            if (newX + (int)AssetImage.ActualWidth >= cv.ActualWidth)
-            {
-                x = (int)cv.ActualWidth - (int)AssetImage.ActualWidth - 1;
-                anim.To = x - originalX;
-                await sb.BeginAsync();
-                Canvas.SetLeft(this, x);
-                sb.Stop();
-                return;
-            }
-
-            x = newX;
-
+            x = x + displacement;
+            
             await sb.BeginAsync();
             Canvas.SetLeft(this, x);
             sb.Stop();
         }
 
-        public async Task MoveY(int displacement)
+        public async Task MoveY(double displacement)
         {
-            AssetUserControl.RenderTransform = ct;
+            AssetUserControl.RenderTransform = ctUserControl;
             Storyboard.SetTarget(anim, AssetUserControl);
             Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)").Path);
 
@@ -224,30 +249,7 @@ namespace Marbles
             anim.To = displacement;
             anim.Duration = sb.Duration;
 
-            int originalY = y;
-            int newY = y + displacement;
-
-            if (newY < 0)
-            {
-                y = 1;
-                anim.To = y - originalY;
-                await sb.BeginAsync();
-                Canvas.SetTop(this, y);
-                sb.Stop();
-                return;
-            }
-
-            if (newY + (int)AssetImage.ActualHeight >= cv.ActualHeight - 20)
-            {
-                y = (int)cv.ActualHeight - (int)AssetImage.ActualHeight - 20;
-                anim.To = y - originalY;
-                await sb.BeginAsync();
-                Canvas.SetTop(this, y);
-                sb.Stop();
-                return;
-            }
-
-            y = newY;
+            y = y + displacement;
 
             await sb.BeginAsync();
             Canvas.SetTop(this, y);
@@ -256,9 +258,9 @@ namespace Marbles
 
         public async Task Turn(int degrees)
         {
-            AssetImage.RenderTransform = rot;
+            AssetImage.RenderTransform = ctImage;
             Storyboard.SetTarget(anim, AssetImage);
-            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.Rotation)").Path);
 
             anim.From = rotation;
             anim.To = rotation + degrees;
@@ -266,7 +268,7 @@ namespace Marbles
             degrees = degrees % 360;
 
             rotation = (rotation + degrees) % 360;
-            rot.Angle = rotation;
+            ctImage.Rotation = rotation;
             
             anim.Duration = sb.Duration;
 
@@ -276,9 +278,9 @@ namespace Marbles
 
         public async Task Spin()
         {
-            AssetImage.RenderTransform = rot;
+            AssetImage.RenderTransform = ctImage;
             Storyboard.SetTarget(anim, AssetImage);
-            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)").Path);
+            Storyboard.SetTargetProperty(anim, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.Rotation)").Path);
 
             anim.From = rotation;
             anim.To = rotation + 360;
@@ -332,5 +334,15 @@ namespace Marbles
 		{
 			return memoryAddress;
 		}
+
+        public void SetPositionXAttribute(double newX)
+        {
+            SetPosition(newX, y);
+        }
+
+        public void SetPositionYAttribute(double newY)
+        {
+            SetPosition(x, newY);
+        }
 	}
 }

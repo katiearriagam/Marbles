@@ -12,6 +12,8 @@ namespace Marbles
     {
         public static int assetInitialHeight = 90;
         public static int assetInitialWidth = 90;
+        public static int assetMinimumWidth = 10;
+        public static int assetMinimumHeight = 10;
         public static int linesOfCodeCount = 0;
         public static ArrayList linesOfCode = new ArrayList();
 		public static ArrayList assetsInCanvas = new ArrayList();
