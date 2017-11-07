@@ -85,7 +85,8 @@ namespace Marbles
             move_y = 25,
             set_position = 26,
             rotate = 27,
-            spin = 28
+            spin = 28,
+			negative = 29
         }
 
         public enum AssetAction
@@ -134,7 +135,7 @@ namespace Marbles
             operatorToAction.Add(SemanticCubeUtilities.Operators.or, QuadrupleAction.or);
         }
 
-        public static Asset findAssetFromID(string assetID)
+        public static Asset FindAssetFromID(string assetID)
         {
             foreach (Asset a in finalAssetsInCanvas)
             {

@@ -1,5 +1,4 @@
-﻿using Marbles.MemoryManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -174,7 +173,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.set_position)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                Asset caller = Utilities.findAssetFromID(assetID);
+                Asset caller = Utilities.FindAssetFromID(assetID);
 
                 int x = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
                 int y = (int)MemoryManager.GetValueFromAddress(quadruple.GetAssignee());
@@ -184,7 +183,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.move_x)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                Asset caller = Utilities.findAssetFromID(assetID);
+                Asset caller = Utilities.FindAssetFromID(assetID);
 
                 int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
@@ -193,7 +192,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.move_y)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                Asset caller = Utilities.findAssetFromID(assetID);
+                Asset caller = Utilities.FindAssetFromID(assetID);
                 
                 int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
@@ -202,14 +201,14 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.spin)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                Asset caller = Utilities.findAssetFromID(assetID);
+                Asset caller = Utilities.FindAssetFromID(assetID);
 
                 await caller.Spin();
             }
             else if (action == Utilities.QuadrupleAction.rotate)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                Asset caller = Utilities.findAssetFromID(assetID);
+                Asset caller = Utilities.FindAssetFromID(assetID);
 
                 int degrees = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 

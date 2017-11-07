@@ -11,6 +11,7 @@ namespace Marbles
 	/// </summary>
 	public class Function
 	{
+		public FunctionMemory memory;
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
 		private int location;
@@ -21,16 +22,6 @@ namespace Marbles
 		// only used for global
 		private static Dictionary<string, Variable> globalVariables = new Dictionary<string, Variable>();
 		private static Dictionary<string, Asset> assets = new Dictionary<string, Asset>();
-
-		// number, boolean, text
-		private int[] counterLocal = new int[] {0,0,0};
-		private int[] counterTemp = new int[] {0,0,0};
-
-		public enum FunctionScope
-		{
-			local = 0,
-			temporary = 1
-		}
 
 		/// <summary>
 		/// Constructor for function
@@ -116,17 +107,28 @@ namespace Marbles
         /// </summary>
         /// <param name="variable"></param>
         /// <returns></returns>
-        public bool AddLocalVariable(Variable variable)
+        public void AddLocalVariable(Variable variable)
 		{
-			if (!localVariables.ContainsKey(variable.GetName()) 
-				&& !parameters.ContainsKey(variable.GetName())
-				&& !FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
+			if (parameters.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in the parameters.");
+			}
+			else if (localVariables.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in function's variables.");
+			}
+			else if (globalVariables.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in global variables.");
+			}
+			else if (assets.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in asset variables.");
+			}
+			else
 			{
 				localVariables.Add(variable.GetName(), variable);
-				counterLocal[(int)variable.GetDataType() - 1]++;
-				return true;
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -134,30 +136,39 @@ namespace Marbles
 		/// </summary>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public bool AddGlobalVariable(Variable variable)
+		public void AddGlobalVariable(Variable variable)
 		{
-			if (!FunctionDirectory.GlobalFunction().GetLocalVariables().ContainsKey(variable.GetName()))
+			// throw exception if variable name already exists in globals
+			if (globalVariables.ContainsKey(variable.GetName()))
 			{
-				globalVariables.Add(variable.GetName(), variable);
-				return true;
+				throw new Exception(variable.GetName() + " already exists in global variables.");
 			}
-			return false;
+			// throw exception if variable name already exists in assets
+			else if (assets.ContainsKey(variable.GetName()))
+			{
+				throw new Exception(variable.GetName() + " already exists in asset variables.");
+			}
+			globalVariables.Add(variable.GetName(), variable);
 		}
 
 		/// <summary>
-		/// Function that accounts for a new temporary variable to the function
+		/// Adds a variable to the asset directory
 		/// </summary>
-		/// <param name="dataType"></param>
+		/// <param name="asset"></param>
 		/// <returns></returns>
-		public void AddTempVariable(SemanticCubeUtilities.DataTypes dataType)
+		public void AddAssetVariable(Asset asset)
 		{
-			if (dataType == SemanticCubeUtilities.DataTypes.number){ counterTemp[(int)SemanticCubeUtilities.DataTypes.number - 1]++; }
-			if (dataType == SemanticCubeUtilities.DataTypes.text) { counterTemp[(int)SemanticCubeUtilities.DataTypes.text - 1]++; }
-			if (dataType == SemanticCubeUtilities.DataTypes.boolean) { counterTemp[(int)SemanticCubeUtilities.DataTypes.boolean - 1]++; }
-			else
+			// throw exception if variable name already exists in globals
+			if (globalVariables.ContainsKey(asset.GetID()))
 			{
-				throw new Exception("Can't add temporary. No valid type.");
+				throw new Exception("A variable named " + asset.GetID() + "already exists in global variables.");
 			}
+			// throw exception if variable name already exists in assets
+			else if (assets.ContainsKey(asset.GetID()))
+			{
+				throw new Exception("A variable named " + asset.GetID() + "already exists in asset variables.");
+			}
+			assets.Add(asset.GetID(), asset);
 		}
 
 		/// <summary>
@@ -174,15 +185,28 @@ namespace Marbles
 		/// </summary>
 		/// <param name="variable"></param>
 		/// <returns></returns>
-		public bool AddParameter(Variable variable)
+		public void AddParameter(Variable variable)
 		{
-			if (!parameters.ContainsKey(variable.GetName()))
+			if (parameters.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in already exists in the parameters.");
+			}
+			else if (localVariables.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in function's variables.");
+			}
+			else if (globalVariables.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in global variables.");
+			}
+			else if (assets.ContainsKey(variable.GetName()))
+			{
+				throw new Exception("A variable named " + variable.GetName() + "already exists in asset variables.");
+			}
+			else
 			{
 				parameters.Add(variable.GetName(), variable);
-				counterLocal[(int)variable.GetDataType() - 1]++;
-				return true;
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -235,38 +259,9 @@ namespace Marbles
 		/// <returns></returns>
 		public int GetFunctionSize()
 		{
-			return counterLocal[0] + counterLocal[1] + counterLocal[2] +
-				   counterTemp[0] + counterTemp[1] + counterTemp[2];
+			return memory.FunctionMemorySize();
 		}
 		
-		/// <summary>
-		/// Gets the data type of a memory address in the function
-		/// </summary>
-		/// <param name="address"></param>
-		/// <param name="initialAddress"></param>
-		/// <returns></returns>
-		public SemanticCubeUtilities.DataTypes GetDataTypeFromAddress(int address, int initialAddress)
-		{
-			// cumulative limits
-			int amountIntLocal = counterLocal[0];
-			int amountBooleanLocal = amountIntLocal + counterLocal[1];
-			int amountStringLocal = amountBooleanLocal + counterLocal[2];
-			int amountIntTemp = amountStringLocal + counterTemp[0];
-			int amountBooleanTemp = amountIntTemp + counterTemp[1];
-			int amountStringTemp = amountBooleanTemp + counterTemp[2];
-
-			// normalized address
-			address = -initialAddress;
-
-			if (address >= 0 && address < amountIntLocal) { return SemanticCubeUtilities.DataTypes.number; }
-			if (address >= amountIntLocal && address < amountBooleanLocal) { return SemanticCubeUtilities.DataTypes.boolean; }
-			if (address >= amountBooleanLocal && address < amountStringLocal) { return SemanticCubeUtilities.DataTypes.text; }
-			if (address >= amountStringLocal && address < amountIntTemp) { return SemanticCubeUtilities.DataTypes.number; }
-			if (address >= amountIntTemp && address < amountBooleanTemp) { return SemanticCubeUtilities.DataTypes.boolean; }
-			if (address >= amountBooleanTemp && address < amountStringTemp) { return SemanticCubeUtilities.DataTypes.text; }
-
-			return SemanticCubeUtilities.DataTypes.invalidDataType;
-		}
 
 		/// <summary>
 		/// Remove all entries from local variables
@@ -282,9 +277,8 @@ namespace Marbles
             globalVariables.Clear();
             localVariables.Clear();
             parameters.Clear();
-            
-            counterLocal = new int[] { 0, 0, 0 };
-            counterTemp = new int[] { 0, 0, 0 };
+
+			memory.Reset();
 
             assets = new Dictionary<string, Asset>();
             globalVariables = new Dictionary<string, Variable>();
