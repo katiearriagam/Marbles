@@ -12,6 +12,8 @@ namespace Marbles
     {
         public static int assetInitialHeight = 90;
         public static int assetInitialWidth = 90;
+        public static int assetMinimumWidth = 10;
+        public static int assetMinimumHeight = 10;
         public static int linesOfCodeCount = 0;
         public static ArrayList linesOfCode = new ArrayList();
 		public static ArrayList assetsInCanvas = new ArrayList();
@@ -77,13 +79,13 @@ namespace Marbles
             retorno = 19,
             era = 20,
             end = 21,
-			endProc = 22,
-			stop = 23,
-			move_x = 24,
-			move_y = 25,
-			set_position = 26,
-			rotate = 27,
-			spin = 28,
+            endProc = 22,
+            stop = 23,
+            move_x = 24,
+            move_y = 25,
+            set_position = 26,
+            rotate = 27,
+            spin = 28,
 			negative = 29
         }
 
@@ -131,6 +133,18 @@ namespace Marbles
             operatorToAction.Add(SemanticCubeUtilities.Operators.equals, QuadrupleAction.equals);
             operatorToAction.Add(SemanticCubeUtilities.Operators.and, QuadrupleAction.and);
             operatorToAction.Add(SemanticCubeUtilities.Operators.or, QuadrupleAction.or);
+        }
+
+        public static Asset FindAssetFromID(string assetID)
+        {
+            foreach (Asset a in finalAssetsInCanvas)
+            {
+                if (a.GetID() == assetID)
+                {
+                    return a;
+                }
+            }
+            return null;
         }
     }
 }

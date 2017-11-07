@@ -19,13 +19,14 @@
 			<RowDefinition Height="0.4*" />
 		</Grid.RowDefinitions>
 		<Image
-					x:Name="AssetImage"
-					Grid.Row="0"
-					Source="{Binding ImageSource}"
-					Height="90"
-					Width="90"
-					VerticalAlignment="Center" 
-					HorizontalAlignment="Center"
+			x:Name="AssetImage"
+			Grid.Row="0"
+			Source="{Binding ImageSource}"
+			Height="90"
+			Width="90"
+			VerticalAlignment="Center" 
+			HorizontalAlignment="Center"
+            Stretch="Fill"
 			/>
         <Grid Grid.Row="1" HorizontalAlignment="Center">
             <Grid.RowDefinitions>

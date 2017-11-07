@@ -229,6 +229,7 @@
     <Compile Include="InstructionBlocks\WhileBlock.xaml.cs">
       <DependentUpon>WhileBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VirtualMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

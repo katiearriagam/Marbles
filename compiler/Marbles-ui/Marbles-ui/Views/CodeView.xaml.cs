@@ -38,7 +38,6 @@ namespace Marbles
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
-            
             Utilities.linesOfCodeCount = 0;
             Utilities.linesOfCode = new ArrayList();
 			ErrorPrinter.errorCount = 0;
@@ -60,8 +59,10 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main));
             Utilities.linesOfCodeCount++;
+
             WriteCodeToFile(out string filePath);
             AnalyzeCode(filePath);
+            VirtualMachine.StartExecution();
         }
 
         private void WriteCodeToFile(out string filePath)

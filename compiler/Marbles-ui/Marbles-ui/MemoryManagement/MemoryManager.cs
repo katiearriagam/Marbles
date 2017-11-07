@@ -430,6 +430,33 @@ namespace Marbles
 			throw new Exception("Memory address not currently set");
 		}
 
+        /// <summary>
+        /// Returns a data type of an object stored in memory given a memory address.
+        /// </summary>
+        /// <param name="memAddress"></param>
+        /// <returns>A data type, or null if the memory address is invalid.</returns>
+        public static Type GetTypeFromAddress(int memAddress)
+        {
+            if (memAddress >= 0000 && memAddress <= 0999)
+            {
+                return typeof(Asset);
+            }
+            else if ((memAddress >= 1000 && memAddress <= 1999) || (memAddress >= 7000 && memAddress <= 7999) || (memAddress >= 10000 && memAddress <= 10999))
+            {
+                return typeof(int);
+            }
+            else if (memAddress >= 2000 && memAddress <= 2999 || (memAddress >= 8000 && memAddress <= 8999) || (memAddress >= 11000 && memAddress <= 11999))
+            {
+                return typeof(string);
+            }
+            else if (memAddress >= 3000 && memAddress <= 3999 || (memAddress >= 9000 && memAddress <= 9999) || (memAddress >= 12000))
+            {
+                return typeof(bool);
+            }
+
+            return null;
+        }
+        
 		/// <summary>
 		/// Adds a variable to the global directory
 		/// </summary>

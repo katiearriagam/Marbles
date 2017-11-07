@@ -31,9 +31,11 @@ namespace Marbles
 		
         public CanvasView()
         {
-            this.InitializeComponent();
-			this.NavigationCacheMode = NavigationCacheMode.Enabled;
-		}
+            InitializeComponent();
+			NavigationCacheMode = NavigationCacheMode.Enabled;
+            MainCanvas.Loaded += (s, e) => Clip(MainCanvas);
+            MainCanvas.SizeChanged += (s, e) => Clip(MainCanvas);
+        }
 
         private async void MainCanvas_Drop(object sender, DragEventArgs e)
         {
@@ -50,12 +52,6 @@ namespace Marbles
                 int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
 
                 assetDragged.SetPosition(newXPosition, newYPosition);
-
-                await assetDragged.MoveY(100);
-                await assetDragged.Turn(800);
-                await assetDragged.MoveX(100);
-                await assetDragged.MoveY(100);
-                await assetDragged.Spin();
             }
             else
             {
@@ -147,8 +143,6 @@ namespace Marbles
             }
 
             Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text), cv);
-            Canvas.SetLeft(assetToAdd, (int)lastDropPosition.X);
-            Canvas.SetTop(assetToAdd, (int)lastDropPosition.Y);
 
             assetToAdd.SetPosition((int)lastDropPosition.X, (int)lastDropPosition.Y);
 
@@ -179,19 +173,9 @@ namespace Marbles
             // x and y displacement in which we clicked on (picked up) the asset
             int xClicked = (int)(e.DataView.Properties["xClicked"]);
             int yClicked = (int)(e.DataView.Properties["yClicked"]);
-
-            // Do not accept operation if any part of the asset falls out of the canvas' bounds
-            if (xDrag + assetWidth - xClicked > canv.ActualWidth || yDrag + assetHeight - yClicked > canv.ActualHeight
-                || xDrag - xClicked < 0 || yDrag - yClicked < 0)
-            {
-                e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.None;
-                e.DragUIOverride.IsGlyphVisible = true;
-            }
-            else
-            {
-                e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
-                e.DragUIOverride.IsGlyphVisible = false;
-            }
+            
+            e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
+            e.DragUIOverride.IsGlyphVisible = false;
 
             e.DragUIOverride.IsCaptionVisible = false;
         }
@@ -253,9 +237,10 @@ namespace Marbles
 			}
 		}
 
-		private void LabelTextBox_TextChanged_1(object sender, TextChangedEventArgs e)
-		{
-
-		}
-	}
+        private new void Clip(FrameworkElement element)
+        {
+            var clip = new RectangleGeometry { Rect = new Rect(0, 0, element.ActualWidth, element.ActualHeight) };
+            element.Clip = clip;
+        }
+    }
 }

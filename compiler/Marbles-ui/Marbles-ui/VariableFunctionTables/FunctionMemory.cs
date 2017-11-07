@@ -177,12 +177,35 @@ namespace Marbles
 			throw new Exception("Memory address not currently set");
 		}
 
-		/// <summary>
-		/// Adds a variable to the global directory
-		/// </summary>
-		/// <param name="newGlobalVariable"></param>
-		/// <returns>The variable address in the global directory</returns>
-		public int AddGlobalVariable(Variable newGlobalVariable)
+        /// <summary>
+        /// Returns a data type of an object stored in memory given a memory address.
+        /// </summary>
+        /// <param name="memAddress"></param>
+        /// <returns>A data type, or null if the memory address is invalid.</returns>
+        public static Type GetTypeFromAddress(int memAddress)
+        {
+            if ((memAddress >= 0000 && memAddress <= 0999) || (memAddress >= 3000 && memAddress <= 3999))
+            {
+                return typeof(int);
+            }
+            else if (memAddress >= 1000 && memAddress <= 1999 || (memAddress >= 4000 && memAddress <= 4999))
+            {
+                return typeof(string);
+            }
+            else if (memAddress >= 2000 && memAddress <= 2999 || (memAddress >= 5000 && memAddress <= 5999))
+            {
+                return typeof(bool);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Adds a variable to the global directory
+        /// </summary>
+        /// <param name="newGlobalVariable"></param>
+        /// <returns>The variable address in the global directory</returns>
+        public int AddGlobalVariable(Variable newGlobalVariable)
 		{
 			// retrieve the memory address where the variable will live
 			int memorySpace = GetNextAvailable(FunctionMemoryScope.global, newGlobalVariable.GetDataType());

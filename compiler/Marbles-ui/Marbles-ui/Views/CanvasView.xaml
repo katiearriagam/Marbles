@@ -84,14 +84,18 @@
 							Padding="15"
 							BorderBrush="#ecf0f1"
 							Background="#ecf0f1">
-							<Canvas
+                                <Canvas
 								x:Name="MainCanvas"
 								Background="#ecf0f1"
 								AllowDrop="True"
 								Height="{Binding Path=ActualHeight,ElementName=MyBorder}"
 								Width="{Binding Path=ActualWidth,ElementName=MyBorder}"
 								Drop="MainCanvas_Drop"
-								DragOver="MainCanvas_DragOver"/>
+								DragOver="MainCanvas_DragOver">
+                                    <Canvas.Clip>
+                                        <RectangleGeometry x:Name="rect" />
+                                    </Canvas.Clip>
+                                </Canvas>
 						</Border>
 					</Viewbox>
 					</Border>

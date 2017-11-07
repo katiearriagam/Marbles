@@ -115,7 +115,6 @@ namespace Marbles
 			{
 				// Since it's empty, there cannot be operators with the selected priority pending
 				return;
-				// throw new Exception("There are no operators left on the operator stack.");
 			}
 
 			SemanticCubeUtilities.Operators op = operatorStack.Peek();
@@ -131,7 +130,7 @@ namespace Marbles
 			int addressTemp = -1;
 
 			// if we have a negative to apply to our next operand
-			// this is the only unary operato
+			// this is the only unary operator
 			if (op == SemanticCubeUtilities.Operators.negative)
 			{
 				int unaryOperand = operandStack.Pop();
