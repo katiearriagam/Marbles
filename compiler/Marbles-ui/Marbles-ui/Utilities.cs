@@ -78,7 +78,14 @@ namespace Marbles
             gosub = 18,
             retorno = 19,
             era = 20,
-            end = 21
+            end = 21,
+            endProc = 22,
+            stop = 23,
+            move_x = 24,
+            move_y = 25,
+            set_position = 26,
+            rotate = 27,
+            spin = 28
         }
 
         public enum AssetAction
@@ -125,6 +132,18 @@ namespace Marbles
             operatorToAction.Add(SemanticCubeUtilities.Operators.equals, QuadrupleAction.equals);
             operatorToAction.Add(SemanticCubeUtilities.Operators.and, QuadrupleAction.and);
             operatorToAction.Add(SemanticCubeUtilities.Operators.or, QuadrupleAction.or);
+        }
+
+        public static Asset findAssetFromID(string assetID)
+        {
+            foreach (Asset a in finalAssetsInCanvas)
+            {
+                if (a.GetID() == assetID)
+                {
+                    return a;
+                }
+            }
+            return null;
         }
     }
 }

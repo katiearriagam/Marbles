@@ -371,11 +371,8 @@ namespace Marbles
             }
 
             int param = operandStack.Pop();
-
-            int paramAddress = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.local, SemanticCubeUtilities.DataTypes.number);
-            MemoryManager.SetMemory(paramAddress, param);
-
-            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, paramAddress));
+            
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount));
             counter++;
         }
 

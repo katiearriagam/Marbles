@@ -60,8 +60,10 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main));
             Utilities.linesOfCodeCount++;
+
             WriteCodeToFile(out string filePath);
-            //AnalyzeCode(filePath);
+            AnalyzeCode(filePath);
+            VirtualMachine.StartExecution();
         }
 
         private void WriteCodeToFile(out string filePath)
