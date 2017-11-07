@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Marbles.MemoryManagement
+namespace Marbles
 {
-	static class MemoryManager
+	public static class MemoryManager
 	{
 		public enum MemoryScope
 		{
@@ -186,28 +186,46 @@ namespace Marbles.MemoryManagement
 		/// <param name="memoryAddress"></param>
 		/// <param name="asset"></param>
 		/// <returns></returns>
-		public static int SetAssetInMemory(int memoryAddress, Asset asset)
+		public static int SetAssetInMemory(Asset asset)
 		{
-			if (currentAssetAddress + Enum.GetNames(typeof(AssetAttributes)).Length <= highestAssetAddress)
+			int memoryAddress = GetNextAssetAvailable();
+			if (memoryAddress == -1) { throw new Exception("Out of asset memory"); }
+			asset.SetMemoryAddress(memoryAddress);
+
+			// try to add asset to global asset directory
+			try
 			{
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.id] = asset.GetID();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.x] = asset.GetX();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.y] = asset.GetY();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.width] = asset.GetWidth();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.height] = asset.GetHeight();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.rotation] = asset.GetRotation();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.number] = asset.GetNumber();
-				memoryGlobalAssets[memoryAddress + (int)AssetAttributes.label] = asset.GetLabel();
 
-                asset.SetMemoryAddress(memoryAddress);
+				if (currentAssetAddress + Enum.GetNames(typeof(AssetAttributes)).Length <= highestAssetAddress)
+				{
+					FunctionDirectory.GlobalFunction().AddAssetVariable(asset);
 
-				currentAssetAddress += Enum.GetNames(typeof(AssetAttributes)).Length;
+					// add attribute values to memory
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.id] = asset.GetID();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.x] = asset.GetX();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.y] = asset.GetY();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.width] = asset.GetWidth();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.height] = asset.GetHeight();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.rotation] = asset.GetRotation();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.number] = asset.GetNumber();
+					memoryGlobalAssets[memoryAddress + (int)AssetAttributes.label] = asset.GetLabel();
+
+					currentAssetAddress += Enum.GetNames(typeof(AssetAttributes)).Length;
+				}
 				return memoryAddress;
 			}
-
-			return -1;
+			catch (Exception e)
+			{
+				throw new Exception(e.Message);
+			}
 		}
 
+		/// <summary>
+		/// Loads value into a memory address
+		/// </summary>
+		/// <param name="memAddress"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
 		public static int SetMemory(int memAddress, object value)
 		{
 			// insert a global number in memory
@@ -321,7 +339,7 @@ namespace Marbles.MemoryManagement
                     return memoryConstant.Where(x => (bool)(x.Value) == (bool)value).First().Key;
 				}
 			}
-			return -1;
+			throw new Exception("Out of memory");
 		}
 
 		/// <summary>
@@ -330,7 +348,7 @@ namespace Marbles.MemoryManagement
 		/// <param name="func"></param>
 		public static void AllocateLocalMemory(Function func)
 		{
-			if (currentLocalAddress + func.GetFunctionSize() < highestLocalAddress)
+			if (currentLocalAddress + func.GetFunctionSize() <= highestLocalAddress)
 			{
 				currentLocalAddress += func.GetFunctionSize();
 			}
@@ -356,53 +374,39 @@ namespace Marbles.MemoryManagement
 			}
 		}
 
-        public static int AttributeToOffset(string attr)
+		/// <summary>
+		/// Gets the data type of an asset attribute
+		/// </summary>
+		/// <param name="attribute"></param>
+		/// <returns>A data type</returns>
+        public static SemanticCubeUtilities.DataTypes AttributeToType(AssetAttributes attribute)
         {
-            switch (attr)
+            switch (attribute)
             {
-                case "x":
-                    return (int)AssetAttributes.x;
-                case "y":
-                    return (int)AssetAttributes.y;
-                case "width":
-                    return (int)AssetAttributes.width;
-                case "height":
-                    return (int)AssetAttributes.height;
-                case "rotation":
-                    return (int)AssetAttributes.rotation;
-                case "number":
-                    return (int)AssetAttributes.number;
-                case "label":
-                    return (int)AssetAttributes.label;
-                default: // will never execute as we limit the user with a drop-down
-                    return -1;
-            }
-        }
-
-        public static SemanticCubeUtilities.DataTypes AttributeToType(string attr)
-        {
-            switch (attr)
-            {
-                case "x":
+                case AssetAttributes.x:
                     return SemanticCubeUtilities.DataTypes.number;
-                case "y":
+				case AssetAttributes.y:
                     return SemanticCubeUtilities.DataTypes.number;
-                case "width":
+				case AssetAttributes.width:
                     return SemanticCubeUtilities.DataTypes.number;
-                case "height":
+				case AssetAttributes.height:
                     return SemanticCubeUtilities.DataTypes.number;
-                case "rotation":
+				case AssetAttributes.rotation:
                     return SemanticCubeUtilities.DataTypes.number;
-                case "number":
+				case AssetAttributes.number:
                     return SemanticCubeUtilities.DataTypes.number;
-                case "label":
+				case AssetAttributes.label:
                     return SemanticCubeUtilities.DataTypes.text;
                 default: // will never execute as we limit the user with a drop-down
                     return SemanticCubeUtilities.DataTypes.invalidDataType;
             }
         }
 		
-		// TODO: Document this.
+		/// <summary>
+		/// Gets the value stored in a memory address
+		/// </summary>
+		/// <param name="memAddress"></param>
+		/// <returns>Stored value</returns>
 		public static object GetValueFromAddress(int memAddress)
 		{
 			if (memoryGlobal.ContainsKey(memAddress))
@@ -422,45 +426,64 @@ namespace Marbles.MemoryManagement
 				return memoryConstant[memAddress];
 			}
 
+			// if memory address does not exist, throw error
 			throw new Exception("Memory address not currently set");
 		}
 
-		public static void AddGlobalVariable(Variable newGlobalVariable)
+		/// <summary>
+		/// Adds a variable to the global directory
+		/// </summary>
+		/// <param name="newGlobalVariable"></param>
+		/// <returns>The variable address in the global directory</returns>
+		public static int AddGlobalVariable(Variable newGlobalVariable)
 		{
-			if (!FunctionDirectory.GlobalFunction().AddGlobalVariable(newGlobalVariable))
-			{
-				throw new ArgumentException("Name " + newGlobalVariable.GetName() + " is duplicated in global values.");
-			}
-
+			// retrieve the memory address where the variable will live
 			int memorySpace = GetNextAvailable(MemoryScope.global, newGlobalVariable.GetDataType());
 
-			if (memorySpace == -1)
-			{
-				throw new InvalidOperationException("Out of global memory");
-			}
+			// if memory space is insufficient, throw and exception
+			if (memorySpace == -1){ throw new Exception("Out of global memory"); }
 
+			// pass on the memory address meant for the variable
             newGlobalVariable.SetMemoryAddress(memorySpace);
 
-			if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+			// try to add variable to global directory
+			try
 			{
-				SetMemory(memorySpace, 0);
+				FunctionDirectory.GlobalFunction().AddGlobalVariable(newGlobalVariable);
+				if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
+				{
+					try { memorySpace = SetMemory(memorySpace, 0); }
+					catch (Exception e) { throw new Exception(e.Message); }
+				}
+				else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+				{
+					try { memorySpace = SetMemory(memorySpace, ""); }
+					catch (Exception e) { throw new Exception(e.Message); }
+				}
+				else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
+				{
+					try { memorySpace = SetMemory(memorySpace,false); }
+					catch (Exception e) { throw new Exception(e.Message); }
+				}
 			}
-			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
+			catch (Exception e)
 			{
-				SetMemory(memorySpace, "");
+				throw new Exception(e.Message);
 			}
-			else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
-			{
-				SetMemory(memorySpace, false);
-			}
+			return memorySpace;
 		}
 
+		/// <summary>
+		/// Adds a function to the global directory to save the current value
+		/// </summary>
+		/// <param name="func"></param>
 		public static void AddFunctionAsGlobalVariable(Function func)
 		{
 			Variable var = new Variable(func.GetName(), func.GetReturnType());
 			try
 			{
-				AddGlobalVariable(var);
+				int functionLocationInMemory = AddGlobalVariable(var);
+				FunctionDirectory.GetFunction(func.GetName()).SetLocation(functionLocationInMemory);
 			}
 			catch (ArgumentException e)
 			{
@@ -472,6 +495,9 @@ namespace Marbles.MemoryManagement
 			}
 		}
 
+		/// <summary>
+		/// resets memory
+		/// </summary>
         public static void Reset()
         {
             memoryGlobalAssets.Clear();

@@ -13,6 +13,11 @@ namespace Marbles
 
 		static SemanticCube()
 		{
+			// negative
+			Cube.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.DataTypes.invalidDataType, SemanticCubeUtilities.Operators.negative), SemanticCubeUtilities.DataTypes.number);
+			Cube.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.DataTypes.invalidDataType, SemanticCubeUtilities.Operators.negative), SemanticCubeUtilities.DataTypes.invalidDataType);
+			Cube.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.invalidDataType, SemanticCubeUtilities.Operators.negative), SemanticCubeUtilities.DataTypes.invalidDataType);
+
 			// number - number
 			Cube.Add(new TypeTypeOperator(
 				SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.Operators.plus),
@@ -379,6 +384,19 @@ namespace Marbles
 
 		public static SemanticCubeUtilities.DataTypes AnalyzeSemantics(TypeTypeOperator tto)
 		{
+			if (tto.GetOperator() == SemanticCubeUtilities.Operators.negative)
+			{
+				if (Cube.TryGetValue(tto, out SemanticCubeUtilities.DataTypes resultType))
+				{
+					return resultType;
+				}
+				else
+				{
+					throw new Exception(String.Format("The specified key <{0},{1},{2}> was not found in the Semantic Cube",
+						tto.GetDataTypeOne(), tto.GetDataTypeTwo(), tto.GetOperator()));
+				}
+			}
+
 			if (tto.GetDataTypeOne().Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
 				tto.GetDataTypeTwo().Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
 				tto.GetOperator().Equals(SemanticCubeUtilities.Operators.invalidOperator))
@@ -400,6 +418,19 @@ namespace Marbles
 
 		public static SemanticCubeUtilities.DataTypes AnalyzeSemantics(SemanticCubeUtilities.DataTypes typeOne, SemanticCubeUtilities.DataTypes typeTwo, SemanticCubeUtilities.Operators op)
 		{
+			if (op == SemanticCubeUtilities.Operators.negative)
+			{
+				if (Cube.TryGetValue(new TypeTypeOperator(typeOne, typeTwo, op), out SemanticCubeUtilities.DataTypes resultType))
+				{
+					return resultType;
+				}
+				else
+				{
+					throw new Exception(String.Format("The specified key <{0},{1},{2}> was not found in the Semantic Cube",
+						typeOne, typeTwo, op));
+				}
+			}
+
 			if (typeOne.Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
 				typeTwo.Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
 				op.Equals(SemanticCubeUtilities.Operators.invalidOperator))
@@ -424,6 +455,19 @@ namespace Marbles
 			SemanticCubeUtilities.DataTypes DataTypeOne = SemanticCubeUtilities.GetDataTypeFromType(typeOne);
 			SemanticCubeUtilities.DataTypes DataTypeTwo = SemanticCubeUtilities.GetDataTypeFromType(typeTwo);
 			SemanticCubeUtilities.Operators Operator = SemanticCubeUtilities.GetOperatorFromString(op);
+
+			if (Operator == SemanticCubeUtilities.Operators.negative)
+			{
+				if (Cube.TryGetValue(new TypeTypeOperator(DataTypeOne, DataTypeTwo, Operator), out SemanticCubeUtilities.DataTypes resultType))
+				{
+					return resultType;
+				}
+				else
+				{
+					throw new Exception(String.Format("The specified key <{0},{1},{2}> was not found in the Semantic Cube",
+						DataTypeOne, DataTypeTwo, Operator));
+				}
+			}
 
 			if (DataTypeOne.Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||
 				DataTypeTwo.Equals(SemanticCubeUtilities.DataTypes.invalidDataType) ||

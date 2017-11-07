@@ -76,7 +76,15 @@ namespace Marbles
             gosub = 18,
             retorno = 19,
             era = 20,
-            end = 21
+            end = 21,
+			endProc = 22,
+			stop = 23,
+			move_x = 24,
+			move_y = 25,
+			set_position = 26,
+			rotate = 27,
+			spin = 28,
+			negative = 29
         }
 
         public enum AssetAction
