@@ -27,7 +27,6 @@ Coco/R itself) does not fall under the GNU General Public License.
 
 using Marbles;
 using Marbles.Analysis;
-using Marbles.MemoryManagement;
 using System;
 
 
@@ -119,28 +118,17 @@ public class Parser {
 	void PROGRAM() {
 		while (la.kind == 18) { // "asset"
 			int index = CREATE_ASSET();
-			int memoryAddress = MemoryManager.GetNextAssetAvailable();
-			if (memoryAddress != -1)
-			{
-				MemoryManager.SetAssetInMemory(memoryAddress, (Asset)Utilities.finalAssetsInCanvas[index]);
-			}
+			try { MemoryManager.SetAssetInMemory((Asset)Utilities.finalAssetsInCanvas[index]); }
+			catch (Exception e) { SemErr(e.Message); }
 		}
 		AssetIndex = 0;
 		while (la.kind == 16) { // "var"
+			// receive new variable to be created
 			Variable newGlobalVariable = CREATE_VAR();
 
-			try
-			{
-				MemoryManager.AddGlobalVariable(newGlobalVariable);
-			}
-			catch (ArgumentException e)
-			{
-				SemErr(e.Message);
-			}
-			catch (InvalidOperationException e)
-			{
-				SemErr(e.Message);
-			}
+			// try to add it to globals
+			try { MemoryManager.AddGlobalVariable(newGlobalVariable);}
+			catch (Exception e) { SemErr(e.Message); }
 		}
 		while (la.kind == 9) { // "function"
 			CREATE_FUNCTION();
@@ -156,7 +144,7 @@ public class Parser {
 	/// <summary>
 	/// Action called when a creat asset block is found
 	/// </summary>
-	/// <returns> Returns the index of the asset being 
+	/// <returns> The index of the asset being 
 	/// created in Utilities.finalAssetsInCanvas </returns>
 	int CREATE_ASSET() {
 		Expect(18); // "asset"
@@ -182,7 +170,8 @@ public class Parser {
 		Expect(1); // id
 		string functionName = t.val;
 		Function newFunction = new Function(functionName, functionType);
-		QuadrupleManager.EnterFunction(functionName);
+		try { QuadrupleManager.EnterFunction(newFunction); }
+		catch (Exception e) { SemErr(e.Message); }
 
 		Expect(10); // '('
 
@@ -190,58 +179,39 @@ public class Parser {
 			SemanticCubeUtilities.DataTypes parameterType = TYPE_VAR();
 			Expect(1); // id
 			string parameterName = t.val;
-			newFunction.AddParameter(new Variable(parameterName, parameterType));
+			try { QuadrupleManager.CreateFunction_LoadParameter(functionName, new Variable(parameterName, parameterType)); }
+			catch (Exception e) { SemErr(e.Message); }
 			while (la.kind == 11) { // ','
 				Get();
 				parameterType = TYPE_VAR();
 				Expect(1); // id
 				parameterName = t.val;
-				newFunction.AddParameter(new Variable(parameterName, parameterType));
+				try { QuadrupleManager.CreateFunction_LoadParameter(functionName, new Variable(parameterName, parameterType)); }
+				catch (Exception e) { SemErr(e.Message); }
 			}
 		}
-
 		Expect(12); // ')'
 		Expect(7); // '{'
-
         while (la.kind == 16) { // "var"
 			// add variables to the local variables directory
 			var localVariable = CREATE_VAR();
-			newFunction.AddLocalVariable(localVariable);
+			try { QuadrupleManager.CreateFunction_LoadLocalVariable(functionName, localVariable); }
+			catch (Exception e) { SemErr(e.Message); }
 		}
 
-        newFunction.SetQuadrupleStart(QuadrupleManager.GetCounter());
+		try { FunctionDirectory.GetFunction(newFunction.GetName()).SetQuadrupleStart(QuadrupleManager.GetCounter()); }
+		catch (Exception e) { SemErr(e.Message); }
 
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
 
 		Expect(8); // '}'
-
-        // if function name already exists, throw a semantic error.
-		if (FunctionDirectory.FunctionExists(newFunction))
+		try
 		{
-			SemErr("Function named " + newFunction.GetName() + " already exists.");
+			QuadrupleManager.ExitFunction(); // releases local variable and generates quadruple 'endProc'
 		}
-		else
-		{
-			try
-			{
-                FunctionDirectory.InsertFunction(newFunction);
-				MemoryManager.AddFunctionAsGlobalVariable(newFunction);
-			}
-			catch (ArgumentException e)
-			{
-				SemErr(e.Message);
-			}
-			catch (InvalidOperationException e)
-			{
-				SemErr(e.Message);
-			}
-		}
-
-		//TODO: Add actual memory address
-
-		QuadrupleManager.ExitFunction(0); // releases local variable and generates quadruple 'retorno'
+		catch (Exception e) { SemErr(e.Message); }
 	}
 
 	void INSTRUCTION() {
@@ -308,21 +278,29 @@ public class Parser {
 	void CALL_TO_FUNCTION() {
 		Expect(19); // "call"
 		Expect(1); // id
+		string functionId = t.val;
 		Expect(10); // '('
+		QuadrupleManager.CallFunctionOpeningParenthesis();
 		if (StartOf(3)) {
-			EXP();
+			EXP(); // result of parameter
+			QuadrupleManager.CallFunctionParameter();
 			while (la.kind == 11) { // ','
 				Get();
-				EXP();
+				QuadrupleManager.CallFunctionComma();
+				EXP(); // result of parameter
+				QuadrupleManager.CallFunctionParameter();
 			}
 		}
 		Expect(12); // ')'
+		QuadrupleManager.CallFunctionClosingParenthesis();
+		QuadrupleManager.CallFunctionEnd();
 	}
-
-    // DONE
+	
 	void EXP() {
 		TERM();
-        QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus));
+		try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus)); }
+		// TODO: add handling for out of memory
+		catch (Exception e) { /**/ }
 		while (la.kind == 36 || la.kind == 37) { // '+' or '-'
 			if (la.kind == 36) { // '+'
 				Get();
@@ -332,17 +310,22 @@ public class Parser {
                 QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.minus);
 			}
 			TERM();
-            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus));
-        }
+			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus)); }
+			// TODO: add handling for out of memory
+			catch (Exception e) { /**/ }
+		}
 	}
 
 	void STOP() {
 		Expect(20); // "stop"
+		QuadrupleManager.ReadStop();
 	}
 
 	void DO() {
 		Expect(21); // "do"
 		Expect(1); // id
+		try { QuadrupleManager.ReadAssetId(t.val); }
+		catch (Exception e) { SemErr(e.Message); }
 		Expect(22); // '.'
 		ACTION();
 	}
@@ -354,52 +337,36 @@ public class Parser {
         string id = t.val;
         if (la.kind == 22) // '.'
         {
-            int assetMemoryAddress = -1;
             try
-            {
-                QuadrupleManager.ReadIDAsset(id, out assetMemoryAddress);
-            }
+			{
+				QuadrupleManager.ReadAssetId(id);
+				Get();
+				ATTRIBUTE(); // we don't need to verify the attribute as the UI forces the user to select a valid one
+			}
             catch (Exception e)
             {
-                // TODO: create semantic error: Use of undeclared identifier
+				SemErr(e.Message);
             }
-
-            Get();
-			ATTRIBUTE(); // we don't need to verify the attribute as the UI forces the user to select a valid one
-
-            string assetAttribute = t.val;
-            int attributeOffset = MemoryManager.AttributeToOffset(assetAttribute);
-            SemanticCubeUtilities.DataTypes attributeType = MemoryManager.AttributeToType(assetAttribute);
-            QuadrupleManager.PushOperand(assetMemoryAddress + attributeOffset, attributeType);
         }
         else
         {
-            try
-            {
-                QuadrupleManager.ReadIDVariable(id);
-            }
-            catch (Exception e)
-            {
-                ErrorPrinter.AddError(e.Message);
-            }
-        }
+			try { QuadrupleManager.ReadIDVariable(id); }
+			catch (Exception e) { SemErr(e.Message); }
+		}
 
         Expect(33); // '='
 		SUPER_EXP();
 
-        try
-        {
-            QuadrupleManager.AssignEnd();
-        }
-        catch (Exception e)
-        {
-            ErrorPrinter.AddError(e.Message);
-        }
+        try { QuadrupleManager.AssignEnd(); }
+        catch (Exception e) { SemErr(e.Message); }
     }
 
 	void RETURN() {
 		Expect(52); // "return"
 		SUPER_EXP();
+		try { QuadrupleManager.ReturnEnd(); }
+		// TODO: fatal error
+		catch (Exception e) { /* Fatal error */}
 	}
 
 	void FOR() {
@@ -407,7 +374,9 @@ public class Parser {
 		Expect(10); // '('
 		EXP();
 		Expect(12); // ')'
-        QuadrupleManager.ForAfterCondition();
+		try { QuadrupleManager.ForAfterCondition(); }
+		// TODO: handle out of memory error
+		catch (Exception e) { /**/ }
 		Expect(29); // "loops"
 		Expect(7); // '{'
 		while (StartOf(1)) {
@@ -470,11 +439,15 @@ public class Parser {
 			}
 			EXP();
 			Expect(12); // ')'
+			try { QuadrupleManager.DoBlock_ReadAssetAction(action); }
+			catch (Exception e) { SemErr(e.Message); }
 		} else if (la.kind == 27) { // "spin"
             action = Utilities.AssetAction.spin;
 			Get();
 			Expect(10); // (
 			Expect(12); // )
+			try { QuadrupleManager.DoBlock_ReadAssetAction(action); }
+			catch (Exception e) { SemErr(e.Message); }
 		} else SynErr(57);
 	}
 
@@ -484,7 +457,9 @@ public class Parser {
 			Get();
             QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.or);
             EXP_L();
-            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.or)); // not sure about this one here
+			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.or)); }
+			// TODO: add handling for out of memory
+			catch (Exception e) { /**/ }
 		}
 	}
 
@@ -492,26 +467,32 @@ public class Parser {
 		switch (la.kind) {
 		case 46: { // "value"
 			Get();
+			QuadrupleManager.ReadAssetAttribute(MemoryManager.AssetAttributes.number);
 			break;
 		}
 		case 47: { // "label"
 			Get();
+			QuadrupleManager.ReadAssetAttribute(MemoryManager.AssetAttributes.label);
 			break;
 		}
 		case 48: { // "position_x"
 			Get();
+			QuadrupleManager.ReadAssetAttribute(MemoryManager.AssetAttributes.x);
 			break;
 		}
 		case 49: { // "position_y"
 			Get();
+			QuadrupleManager.ReadAssetAttribute(MemoryManager.AssetAttributes.y);
 			break;
 		}
 		case 50: { // "width"
 			Get();
+			QuadrupleManager.ReadAssetAttribute(MemoryManager.AssetAttributes.width);
 			break;
 		}
 		case 51: { // "height"
 			Get();
+			QuadrupleManager.ReadAssetAttribute(MemoryManager.AssetAttributes.height);
 			break;
 		}
 		default: SynErr(58); break;
@@ -524,7 +505,9 @@ public class Parser {
 			Get();
             QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.and);
 			EXP_R();
-            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.and)); // not sure about this one here
+			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.and)); }
+			// TODO: add handling for out of memory
+			catch (Exception e) { /**/ }
 		}
 	}
 
@@ -536,7 +519,9 @@ public class Parser {
             SemanticCubeUtilities.Operators op = SemanticCubeUtilities.GetOperatorFromString(t.val);
             QuadrupleManager.PushOperator(op);
 			EXP();
-            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(op));
+			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(op)); }
+			// TODO: add handling for out of memory
+			catch (Exception e){ /**/ }
 		}
 	}
 
@@ -573,8 +558,10 @@ public class Parser {
     // DONE
 	void TERM() {
 		FACTOR();
-        QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply));
-        while (la.kind == 38 || la.kind == 39) { // '*' or '/'
+		try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply)); }
+		// TODO: add handling for out of memory
+		catch (Exception e) { /**/ }
+		while (la.kind == 38 || la.kind == 39) { // '*' or '/'
 			if (la.kind == 38) { // '*'
 				Get();
                 QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.multiply);
@@ -583,8 +570,10 @@ public class Parser {
                 QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.divide);
             }
 			FACTOR();
-            QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply));
-        }
+			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply)); }
+			// TODO: add handling for out of memory
+			catch (Exception e) { /**/ }
+		}
 	}
 
     // Done
@@ -600,44 +589,31 @@ public class Parser {
 		} else if (StartOf(6)) {
 			if (la.kind == 37) { // negative sign
 				Get();
+				QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.negative);
 			}
 			if (la.kind == 4) { // number constant
 				Get();
-                QuadrupleManager.ReadConstantNumber(Int32.Parse(t.val));
+				try { QuadrupleManager.ReadConstantNumber(Int32.Parse(t.val)); }
+				// TODO: fatal error
+				catch (Exception e) { /* Fatal error */}
 
             } else if (la.kind == 1) { // id
 				Get();
                 string id = t.val;
                 if (la.kind == 22) // '.' character
                 {
-                    int assetMemoryAddress = -1;
-                    try
-                    {
-                        QuadrupleManager.ReadIDAsset(id, out assetMemoryAddress);
-                    }
-                    catch (Exception e)
-                    {
-                        // TODO: create semantic error: Use of undeclared identifier
-                    }
-
-                    Get();
-                    ATTRIBUTE(); // we don't need to validate the attribute as the UI forces the user to select a valid one
-
-                    string assetAttribute = t.val;
-                    int attributeOffset = MemoryManager.AttributeToOffset(assetAttribute);
-                    SemanticCubeUtilities.DataTypes attributeType = MemoryManager.AttributeToType(assetAttribute);
-                    QuadrupleManager.PushOperand(assetMemoryAddress + attributeOffset, attributeType);
-                }
+					try
+					{
+						QuadrupleManager.ReadAssetId(id);
+						Get();
+						ATTRIBUTE(); // we don't need to verify the attribute as the UI forces the user to select a valid one
+					}
+					catch (Exception e) { SemErr(e.Message); }
+				}
                 else
                 {
-                    try
-                    {
-                        QuadrupleManager.ReadIDVariable(id);
-                    }
-                    catch (Exception e)
-                    {
-                        // TODO: create semantic error: Use of undeclared identifier
-                    }
+					try { QuadrupleManager.ReadIDVariable(id); }
+					catch (Exception e) { SemErr(e.Message); }
                 }
 			} else if (la.kind == 19) { // "call"
 				CALL_TO_FUNCTION();
@@ -645,9 +621,10 @@ public class Parser {
 				BOOL();
 			} else if (la.kind == 5) { // string constant
 				Get();
-                QuadrupleManager.ReadConstantText(t.val);
-
-            } else SynErr(60); // invalid FACTOR
+				try { QuadrupleManager.ReadConstantText(t.val); }
+				// TODO: fatal error
+				catch (Exception e) { /* Fatal error */}
+			} else SynErr(60); // invalid FACTOR
 		} else SynErr(61); // invalid FACTOR
 	}
 
@@ -655,11 +632,15 @@ public class Parser {
 	void BOOL() {
 		if (la.kind == 2) { // true
 			Get();
-            QuadrupleManager.ReadConstantBool(true);
+			try { QuadrupleManager.ReadConstantBool(true); }
+			// TODO: fatal error
+			catch (Exception e) { /* Fatal error */}
 		} else if (la.kind == 3) { // false
 			Get();
-            QuadrupleManager.ReadConstantBool(false);
-        } else SynErr(62);
+			try { QuadrupleManager.ReadConstantBool(false); }
+			// TODO: fatal error
+			catch (Exception e) { /* Fatal error */}
+		} else SynErr(62);
 	}
 
 
