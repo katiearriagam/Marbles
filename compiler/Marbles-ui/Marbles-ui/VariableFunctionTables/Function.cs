@@ -11,7 +11,7 @@ namespace Marbles
 	/// </summary>
 	public class Function
 	{
-		public FunctionMemory memory;
+		public FunctionMemory memory = new FunctionMemory();
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
 		private int location;

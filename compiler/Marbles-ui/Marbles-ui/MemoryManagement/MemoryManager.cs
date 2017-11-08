@@ -293,7 +293,7 @@ namespace Marbles
 				}
 				else
 				{
-                    return memoryConstant.Where(x => (int)(x.Value) == (int)value).First().Key;
+                    return memoryConstant.Where(x => x.Value.GetType() == typeof(int) && (int)(x.Value) == (int)value).First().Key;
                 }
             }
 
@@ -314,7 +314,7 @@ namespace Marbles
 				}
 				else
 				{
-                    return memoryConstant.Where(x => (string)(x.Value) == (string)value).First().Key;
+                    return memoryConstant.Where(x => x.Value.GetType() == typeof(string) && (string)(x.Value) == (string)value).First().Key;
                 }
             }
 
@@ -336,7 +336,7 @@ namespace Marbles
 				}
 				else
 				{
-                    return memoryConstant.Where(x => (bool)(x.Value) == (bool)value).First().Key;
+                    return memoryConstant.Where(x => x.Value.GetType() == typeof(bool) && (bool)(x.Value) == (bool)value).First().Key;
 				}
 			}
 			throw new Exception("Out of memory");
@@ -409,7 +409,11 @@ namespace Marbles
 		/// <returns>Stored value</returns>
 		public static object GetValueFromAddress(int memAddress)
 		{
-			if (memoryGlobal.ContainsKey(memAddress))
+            if (memoryGlobalAssets.ContainsKey(memAddress))
+            {
+                return memoryGlobalAssets[memAddress];
+            }
+			else if (memoryGlobal.ContainsKey(memAddress))
 			{
 				return memoryGlobal[memAddress];
 			}
@@ -454,7 +458,32 @@ namespace Marbles
                 return typeof(bool);
             }
 
-            return null;
+            throw new Exception("Memory address does not have a type.");
+        }
+
+        /// <summary>
+        /// Returns a memory scope given a memory address.
+        /// </summary>
+        public static MemoryScope GetScopeFromAddress(int memAddress)
+        {
+            if (memAddress >= lowestAssetAddress && memAddress <= highestGlobalBoolAddress)
+            {
+                return MemoryScope.global;
+            }
+            else if (memAddress >= lowestLocalAddress && memAddress <= highestLocalAddress)
+            {
+                return MemoryScope.local;
+            }
+            else if (memAddress >= lowestTempIntAddress && memAddress <= highestTempBoolAddress)
+            {
+                return MemoryScope.temporary;
+            }
+            else if (memAddress >= lowestConstantIntAddress && memAddress <= highestConstantBoolAddress)
+            {
+                return MemoryScope.constant;
+            }
+
+            throw new Exception("Invalid memory address.");
         }
         
 		/// <summary>
@@ -510,7 +539,7 @@ namespace Marbles
 			try
 			{
 				int functionLocationInMemory = AddGlobalVariable(var);
-				FunctionDirectory.GetFunction(func.GetName()).SetLocation(functionLocationInMemory);
+				func.SetLocation(functionLocationInMemory);
 			}
 			catch (ArgumentException e)
 			{
