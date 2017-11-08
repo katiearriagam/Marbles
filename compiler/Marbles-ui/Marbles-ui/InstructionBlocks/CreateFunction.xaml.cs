@@ -87,7 +87,10 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Utilities.linesOfCode.Add(new CodeLine("function " + ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString() + " " + functionID.Text + "(", this));
+            string funcType = ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString();
+            if (funcType == "boolean") funcType = "bool";
+
+            Utilities.linesOfCode.Add(new CodeLine("function " + funcType  + " " + functionID.Text + "(", this));
             Utilities.linesOfCodeCount++;
             bool firstParam = true;
             foreach (var item in Parameters.Items)

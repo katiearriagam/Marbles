@@ -91,8 +91,7 @@ namespace Marbles
 		/// <param name="type"></param>
 		public static void PushConstant(int constant, SemanticCubeUtilities.DataTypes type)
 		{
-			operandStack.Push(constant);
-			typeStack.Push(type);
+            PushOperand(constant, type);
 		}
 
 		/// <summary>
@@ -182,37 +181,40 @@ namespace Marbles
 				{
 					if (inFunction)
 					{
-						addressTemp = LastFunctionCalled.memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-					}
+						addressTemp = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                        addressTemp = FunctionDirectory.GetFunction(functionId).memory.SetMemory(addressTemp, 0);
+                    }
 					else
 					{
 						addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-					}
-					addressTemp = MemoryManager.SetMemory(addressTemp, 0);
+                        addressTemp = MemoryManager.SetMemory(addressTemp, 0);
+                    }
 				}
 				else if (resultingDataType == SemanticCubeUtilities.DataTypes.boolean)
 				{
 					if (inFunction)
 					{
-						addressTemp = LastFunctionCalled.memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
-					}
-					else
+						addressTemp = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
+                        addressTemp = FunctionDirectory.GetFunction(functionId).memory.SetMemory(addressTemp, false);
+                    }
+                    else
 					{
 						addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
-					}
-					addressTemp = MemoryManager.SetMemory(addressTemp, false);
+                        addressTemp = MemoryManager.SetMemory(addressTemp, false);
+                    }
 				}
 				else
 				{
 					if (inFunction)
 					{
-						addressTemp = LastFunctionCalled.memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
-					}
-					else
+						addressTemp = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
+                        addressTemp = FunctionDirectory.GetFunction(functionId).memory.SetMemory(addressTemp, "");
+                    }
+                    else
 					{
 						addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.text);
-					}
-					addressTemp = MemoryManager.SetMemory(addressTemp, "");
+                        addressTemp = MemoryManager.SetMemory(addressTemp, "");
+                    }
 				}
 
 				PushOperand(addressTemp, resultingDataType);
@@ -356,8 +358,8 @@ namespace Marbles
 
 			if (inFunction)
 			{
-				conditionMem = LastFunctionCalled.memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
-				conditionMem = LastFunctionCalled.memory.SetMemory(conditionMem, condition);
+				conditionMem = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
+				conditionMem = FunctionDirectory.GetFunction(functionId).memory.SetMemory(conditionMem, condition);
 			}
 			else
 			{
@@ -460,6 +462,10 @@ namespace Marbles
 		public static void CallFunctionEnd()
 		{
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, LastFunctionCalled.GetQuadrupleStart(), -1, -1));
+            int memAddressWhereFunctionLives = FunctionDirectory.GlobalFunction().GetGlobalVariables()[LastFunctionCalled.GetName()].GetMemoryAddress();
+            int tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.GetReturnType());
+            MemoryManager.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
+            PushOperand(tempGlobal, LastFunctionCalled.GetReturnType());
 			counter++;
 		}
 
@@ -486,7 +492,8 @@ namespace Marbles
 			}
 			else
 			{
-				try
+                FunctionDirectory.InsertFunction(func);
+                try
 				{
 					MemoryManager.AddFunctionAsGlobalVariable(func);
 				}
@@ -494,7 +501,6 @@ namespace Marbles
 				{
 					throw new Exception(e.Message);
 				}
-				FunctionDirectory.InsertFunction(func);
 			}
 		}
 
@@ -509,7 +515,7 @@ namespace Marbles
 			{
 				try
 				{
-					FunctionDirectory.GetFunction(functionID).AddLocalVariable(var);
+					FunctionDirectory.GetFunction(functionID).AddParameter(var);
 					int address = FunctionDirectory.GetFunction(functionID).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.global, var.GetDataType());
 					if (var.GetDataType() == SemanticCubeUtilities.DataTypes.number)
 					{
@@ -628,7 +634,14 @@ namespace Marbles
 					type = current.GetParameters()[id].GetDataType();
 					idMemoryAddress = current.GetParameters()[id].GetMemoryAddress();
 				}
-			}
+
+                existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
+                if (existsGlobal)
+                {
+                    type = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetDataType();
+                    idMemoryAddress = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetMemoryAddress();
+                }
+            }
 			else
 			{
 				existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
@@ -681,8 +694,6 @@ namespace Marbles
 			PushOperand(idMemoryAddress, idType);
 		}
 
-
-
 		/// <summary>
 		/// Called after reading the expression in an assign instruction. Verifies that the assignation
 		/// matches both data types and generates a new quadruple with this instruction.
@@ -720,7 +731,7 @@ namespace Marbles
 			int constMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
 			
 			try {
-				if (operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
+				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 				{
 					operatorStack.Pop();
 					constMem = MemoryManager.SetMemory(constMem, num * -1);
@@ -750,7 +761,7 @@ namespace Marbles
 			// of retrieves it it was already set
 			try
 			{
-				if (operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
+				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 				{
 					throw new Exception("Invalid operand: negative to constant text." );
 				}
@@ -774,7 +785,7 @@ namespace Marbles
 
 			try
 			{
-				if (operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
+				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 				{
 					throw new Exception("Invalid operand: negative to constant boolean.");
 				}
@@ -834,9 +845,10 @@ namespace Marbles
 					counter++;
 					break;
 				case Utilities.AssetAction.move_x:
-					if (typeStack.Pop() == SemanticCubeUtilities.DataTypes.number)
+					if (typeStack.Peek() == SemanticCubeUtilities.DataTypes.number)
 					{
 						parameter1 = operandStack.Pop();
+                        typeStack.Pop();
 					}
 					else
 					{
@@ -846,9 +858,10 @@ namespace Marbles
 					counter++;
 					break;
 				case Utilities.AssetAction.move_y:
-					if (typeStack.Pop() == SemanticCubeUtilities.DataTypes.number)
+					if (typeStack.Peek() == SemanticCubeUtilities.DataTypes.number)
 					{
 						parameter1 = operandStack.Pop();
+                        typeStack.Pop();
 					}
 					else
 					{
@@ -858,9 +871,10 @@ namespace Marbles
 					counter++;
 					break;
 				case Utilities.AssetAction.rotate:
-					if (typeStack.Pop() == SemanticCubeUtilities.DataTypes.number)
+					if (typeStack.Peek() == SemanticCubeUtilities.DataTypes.number)
 					{
 						parameter1 = operandStack.Pop();
+                        typeStack.Pop();
 					}
 					else
 					{
@@ -870,18 +884,20 @@ namespace Marbles
 					counter++;
 					break;
 				case Utilities.AssetAction.set_position:
-					if (typeStack.Pop() == SemanticCubeUtilities.DataTypes.number)
+					if (typeStack.Peek() == SemanticCubeUtilities.DataTypes.number)
 					{
 						parameter2 = operandStack.Pop();
+                        typeStack.Pop();
 					}
 					else
 					{
 						throw new Exception("Expected two numeric values for set_position");
 					}
 
-					if (typeStack.Pop() == SemanticCubeUtilities.DataTypes.number)
+					if (typeStack.Peek() == SemanticCubeUtilities.DataTypes.number)
 					{
 						parameter1 = operandStack.Pop();
+                        typeStack.Pop();
 					}
 					else
 					{
@@ -904,27 +920,34 @@ namespace Marbles
 
 		public static void ReturnEnd()
 		{
+            SemanticCubeUtilities.DataTypes type = typeStack.Peek();
+            SemanticCubeUtilities.DataTypes expectedType = FunctionDirectory.GetFunction(functionId).GetReturnType();
+            if (type != expectedType)
+            {
+                throw new Exception("Expected return type " + expectedType + ". Found " + type + ".");
+            }
+
 			int result = operandStack.Pop();
-			// save result in global memory
-			try { MemoryManager.SetMemory(LastFunctionCalled.GetLocation(), MemoryManager.GetValueFromAddress(result)); }
+            typeStack.Pop();
+
+            object resultValue;
+
+            if (result >= 100000)
+            {
+                resultValue = FunctionDirectory.GetFunction(functionId).memory.GetValueFromAddress(result);
+            }
+            else // the function returned a global memory address (stored outside its own function memory)
+            {
+                resultValue = MemoryManager.GetValueFromAddress(result);
+            }
+
+            // save result in global memory
+            try { MemoryManager.SetMemory(FunctionDirectory.GetFunction(functionId).GetLocation(), resultValue); }
 			catch (Exception e) { throw new Exception(e.Message); }
 
 			// generate quadruple
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, result));
 			counter++;
-			
-			if (MemoryManager.GetValueFromAddress(result).GetType() == typeof(int))
-			{
-				MemoryManager.SetMemory(MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number), MemoryManager.GetValueFromAddress(result));
-			}
-			else if (MemoryManager.GetValueFromAddress(result).GetType() == typeof(bool))
-			{
-				MemoryManager.SetMemory(MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean), MemoryManager.GetValueFromAddress(result));
-			}
-			else if (MemoryManager.GetValueFromAddress(result).GetType() == typeof(string))
-			{
-				MemoryManager.SetMemory(MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.text), MemoryManager.GetValueFromAddress(result));
-			}
 		}
 
 		public static int GetCounter()
