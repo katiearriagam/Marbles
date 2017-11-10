@@ -111,6 +111,7 @@ public class Parser {
 	}
 	
 	void Marbles() {
+        QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.Goto));
 		PROGRAM();
         QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.end, -1, -1, -1));
     }
@@ -135,6 +136,7 @@ public class Parser {
 		}
 		Expect(6); // "instructions"
 		Expect(7); // '{'
+        QuadrupleManager.UpdateBeginQuadruple();
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
@@ -276,32 +278,37 @@ public class Parser {
 	}
 
 	void CALL_TO_FUNCTION() {
-		Expect(19); // "call"
+        Expect(19); // "call"
 		Expect(1); // id
 		string functionId = t.val;
-        QuadrupleManager.CallFunctionBeforeParameters(functionId);
-		Expect(10); // '('
-		QuadrupleManager.CallFunctionOpeningParenthesis();
-		if (StartOf(3)) {
-			EXP(); // result of parameter
-			QuadrupleManager.CallFunctionParameter();
-			while (la.kind == 11) { // ','
-				Get();
-				QuadrupleManager.CallFunctionComma();
-				EXP(); // result of parameter
-				QuadrupleManager.CallFunctionParameter();
-			}
-		}
+        try { QuadrupleManager.CallFunctionBeforeParameters(functionId); }
+        catch (Exception e) { SemErr(e.Message); }
+        Expect(10); // '('
+        try { QuadrupleManager.CallFunctionOpeningParenthesis(); }
+        catch (Exception e) { SemErr(e.Message); }
+        if (StartOf(3)) {
+			SUPER_EXP(); // result of parameter
+            try {
+                QuadrupleManager.CallFunctionParameter(); 
+                while (la.kind == 11) { // ','
+				    Get();
+                    SUPER_EXP(); // result of parameter
+                    QuadrupleManager.CallFunctionParameter();
+                }
+            }
+            catch (Exception e) { SemErr(e.Message); }
+        }
 		Expect(12); // ')'
-		QuadrupleManager.CallFunctionClosingParenthesis();
-		QuadrupleManager.CallFunctionEnd();
-	}
+        try { QuadrupleManager.CallFunctionClosingParenthesis(); }
+        catch (Exception e) { SemErr(e.Message); }
+        try { QuadrupleManager.CallFunctionEnd(); }
+        catch (Exception e) { SemErr(e.Message); }
+    }
 	
 	void EXP() {
 		TERM();
 		try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus)); }
-		// TODO: add handling for out of memory
-		catch (Exception e) { /**/ }
+		catch (Exception e) { SemErr(e.Message); }
 		while (la.kind == 36 || la.kind == 37) { // '+' or '-'
 			if (la.kind == 36) { // '+'
 				Get();
@@ -312,8 +319,7 @@ public class Parser {
 			}
 			TERM();
 			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.plus)); }
-			// TODO: add handling for out of memory
-			catch (Exception e) { /**/ }
+			catch (Exception e) { SemErr(e.Message); }
 		}
 	}
 
@@ -344,10 +350,7 @@ public class Parser {
 				Get();
 				ATTRIBUTE(); // we don't need to verify the attribute as the UI forces the user to select a valid one
 			}
-            catch (Exception e)
-            {
-				SemErr(e.Message);
-            }
+            catch (Exception e) { SemErr(e.Message); }
         }
         else
         {
@@ -367,17 +370,16 @@ public class Parser {
 		SUPER_EXP();
 		try { QuadrupleManager.ReturnEnd(); }
 		// TODO: fatal error
-		catch (Exception e) { /* Fatal error */}
+		catch (Exception e) { SemErr(e.Message); }
 	}
 
 	void FOR() {
 		Expect(28); // "for"
 		Expect(10); // '('
-		EXP();
+		SUPER_EXP();
 		Expect(12); // ')'
 		try { QuadrupleManager.ForAfterCondition(); }
-		// TODO: handle out of memory error
-		catch (Exception e) { /**/ }
+		catch (Exception e) { SemErr(e.Message); }
 		Expect(29); // "loops"
 		Expect(7); // '{'
 		while (StartOf(1)) {
@@ -435,10 +437,10 @@ public class Parser {
                 action = Utilities.AssetAction.set_position;
 				Get();
 				Expect(10); // '('
-				EXP();
+				SUPER_EXP();
 				Expect(11); // ','
 			}
-			EXP();
+			SUPER_EXP();
 			Expect(12); // ')'
 			try { QuadrupleManager.DoBlock_ReadAssetAction(action); }
 			catch (Exception e) { SemErr(e.Message); }
@@ -459,8 +461,7 @@ public class Parser {
             QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.or);
             EXP_L();
 			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.or)); }
-			// TODO: add handling for out of memory
-			catch (Exception e) { /**/ }
+			catch (Exception e) { SemErr(e.Message); }
 		}
 	}
 
@@ -507,8 +508,7 @@ public class Parser {
             QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.and);
 			EXP_R();
 			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.and)); }
-			// TODO: add handling for out of memory
-			catch (Exception e) { /**/ }
+			catch (Exception e) { SemErr(e.Message); }
 		}
 	}
 
@@ -521,8 +521,7 @@ public class Parser {
             QuadrupleManager.PushOperator(op);
 			EXP();
 			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(op)); }
-			// TODO: add handling for out of memory
-			catch (Exception e){ /**/ }
+			catch (Exception e){ SemErr(e.Message); }
 		}
 	}
 
@@ -560,8 +559,7 @@ public class Parser {
 	void TERM() {
 		FACTOR();
 		try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply)); }
-		// TODO: add handling for out of memory
-		catch (Exception e) { /**/ }
+		catch (Exception e) { SemErr(e.Message); }
 		while (la.kind == 38 || la.kind == 39) { // '*' or '/'
 			if (la.kind == 38) { // '*'
 				Get();
@@ -572,8 +570,7 @@ public class Parser {
             }
 			FACTOR();
 			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.multiply)); }
-			// TODO: add handling for out of memory
-			catch (Exception e) { /**/ }
+			catch (Exception e) { SemErr(e.Message); }
 		}
 	}
 
@@ -595,8 +592,7 @@ public class Parser {
 			if (la.kind == 4) { // number constant
 				Get();
 				try { QuadrupleManager.ReadConstantNumber(Int32.Parse(t.val)); }
-				// TODO: fatal error
-				catch (Exception e) { /* Fatal error */}
+				catch (Exception e) { SemErr(e.Message); }
 
             } else if (la.kind == 1) { // id
 				Get();
@@ -623,8 +619,7 @@ public class Parser {
 			} else if (la.kind == 5) { // string constant
 				Get();
 				try { QuadrupleManager.ReadConstantText(t.val); }
-				// TODO: fatal error
-				catch (Exception e) { /* Fatal error */}
+				catch (Exception e) { SemErr(e.Message); }
 			} else SynErr(60); // invalid FACTOR
 		} else SynErr(61); // invalid FACTOR
 	}
@@ -634,13 +629,11 @@ public class Parser {
 		if (la.kind == 2) { // true
 			Get();
 			try { QuadrupleManager.ReadConstantBool(true); }
-			// TODO: fatal error
-			catch (Exception e) { /* Fatal error */}
+			catch (Exception e) { SemErr(e.Message); }
 		} else if (la.kind == 3) { // false
 			Get();
 			try { QuadrupleManager.ReadConstantBool(false); }
-			// TODO: fatal error
-			catch (Exception e) { /* Fatal error */}
+			catch (Exception e) { SemErr(e.Message); }
 		} else SynErr(62);
 	}
 
@@ -749,12 +742,14 @@ public class Errors {
 	public virtual void SemErr (int line, int col, string s) {
 		ErrorPrinter.AddError(line, s);
 		count++;
+        throw new Exception(s);
 	}
 	
 	public virtual void SemErr (string s) {
 		ErrorPrinter.AddError(s);
 		count++;
-	}
+        throw new Exception(s);
+    }
 	
 	public virtual void Warning (int line, int col, string s) {
 		ErrorPrinter.AddWarning(line, s);

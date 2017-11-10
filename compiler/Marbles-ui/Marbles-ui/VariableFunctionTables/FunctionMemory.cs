@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Marbles
 {
@@ -37,6 +38,9 @@ namespace Marbles
         int currentTempIntAddress = 103000;
         int currentTempStringAddress = 104000;
         int currentTempBoolAddress = 105000;
+
+        // Stores the total size of the function
+        int totalSize = 0;
 
         public enum FunctionMemoryScope
 		{
@@ -110,6 +114,7 @@ namespace Marbles
 			// insert a global number in memory
 			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
 			{
+                if (!memoryGlobal.ContainsKey(memAddress)) { totalSize++; }
 				memoryGlobal[memAddress] = (int)value;
 				currentGlobalIntAddress++;
 				return memAddress;
@@ -118,7 +123,8 @@ namespace Marbles
 			// insert a temporary number in memory
 			else if (memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress)
 			{
-				memoryTemporary[memAddress] = (int)value;
+                if (!memoryTemporary.ContainsKey(memAddress)) { totalSize++; }
+                memoryTemporary[memAddress] = (int)value;
 				currentTempIntAddress++;
 				return memAddress;
 			}
@@ -126,7 +132,8 @@ namespace Marbles
 			// insert a global string in memory
 			else if (memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress)
 			{
-				memoryGlobal[memAddress] = (string)value;
+                if (!memoryGlobal.ContainsKey(memAddress)) { totalSize++; }
+                memoryGlobal[memAddress] = (string)value;
 				currentGlobalStringAddress++;
 				return memAddress;
 			}
@@ -134,7 +141,8 @@ namespace Marbles
 			// insert a temporary string in memory
 			else if (memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress)
 			{
-				memoryTemporary[memAddress] = (string)value;
+                if (!memoryTemporary.ContainsKey(memAddress)) { totalSize++; }
+                memoryTemporary[memAddress] = (string)value;
 				currentTempStringAddress++;
 				return memAddress;
 			}
@@ -142,7 +150,8 @@ namespace Marbles
 			// insert a global boolean in memory
 			else if (memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress)
 			{
-				memoryGlobal[memAddress] = (bool)value;
+                if (!memoryGlobal.ContainsKey(memAddress)) { totalSize++; }
+                memoryGlobal[memAddress] = (bool)value;
 				currentGlobalBoolAddress++;
 				return memAddress;
 			}
@@ -150,7 +159,8 @@ namespace Marbles
 			// insert temporary boolean in memory
 			else if (memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress)
 			{
-				memoryTemporary[memAddress] = (bool)value;
+                if (!memoryTemporary.ContainsKey(memAddress)) { totalSize++; }
+                memoryTemporary[memAddress] = (bool)value;
 				currentTempBoolAddress++;
 				return memAddress;
 			}
@@ -237,6 +247,7 @@ namespace Marbles
 					try { memorySpace = SetMemory(memorySpace, false); }
 					catch (Exception e) { throw new Exception(e.Message); }
 				}
+                totalSize++;
 			}
 			catch (Exception e)
 			{
@@ -248,7 +259,7 @@ namespace Marbles
 
 		public int FunctionMemorySize()
 		{
-			return memoryGlobal.Count + memoryTemporary.Count;
+			return totalSize;
 		}
 
 		/// <summary>
@@ -258,7 +269,7 @@ namespace Marbles
 		{
 			memoryGlobal.Clear();
 			memoryTemporary.Clear();
-
+  
 			// Global Current Indexes
 			currentGlobalIntAddress = lowestGlobalIntAddress;
 			currentGlobalStringAddress = lowestGlobalStringAddress;
@@ -269,5 +280,22 @@ namespace Marbles
 			currentTempStringAddress = lowestTempStringAddress;
 			currentTempBoolAddress = lowestTempBoolAddress;
 		}
-	}
+
+        public void PrintMemory(string id)
+        {
+            Debug.WriteLine("--- START LOCAL MEMORY [" + id + "] --- ");
+            Debug.WriteLine("\t>--- GLOBAL ---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryGlobal)
+            {
+                Debug.WriteLine("\t" + kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+
+            Debug.WriteLine("\n\t>--- TEMPORARY ---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryTemporary)
+            {
+                Debug.WriteLine("\t" + kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+            Debug.WriteLine("--- END LOCAL MEMORY [" + id + "] --- \n");
+        }
+    }
 }

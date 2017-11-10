@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace Marbles
 		/// Stores line numbers (within the quadruples list) to which control will jump.
 		/// </summary>
 		private static Stack<int> jumpStack = new Stack<int>();
+
 		/// <summary>
 		/// Maintains the current quadruple line which we are processing.
 		/// </summary>
@@ -61,6 +63,16 @@ namespace Marbles
 		/// Counter used to compare a called function's parameters against the actual called function's parameters
 		/// </summary>
 		private static int parameterCount = 0;
+
+        /// <summary>
+        /// Boolean used to to determine if a function call is recursive
+        /// </summary>
+        private static bool recursive = false;
+
+        /// <summary>
+        /// Stack that stores the era quadruples for recursive calls
+        /// </summary>
+        public static Stack<int> recursiveCalls = new Stack<int>();
 
 		/// <summary>
 		/// Returns the list of all quadruples generated.
@@ -367,10 +379,22 @@ namespace Marbles
 				conditionMem = MemoryManager.SetMemory(conditionMem, condition);
 			}
 
+            int tempNumericExpAddress;
+            if (inFunction)
+            {
+                tempNumericExpAddress = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempNumericExpAddress, numericExpValue);
+            }
+            else
+            {
+                tempNumericExpAddress = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                MemoryManager.SetMemory(tempNumericExpAddress, numericExpValue);
+            }
+
 			// This is where we will jump back to at the end of every FOR loop iteration
 			jumpStack.Push(counter);
 
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, numericExpAddress, zeroMem, conditionMem));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, tempNumericExpAddress, zeroMem, conditionMem));
 			counter++;
 
 			// we will have to set this jump's position at the end of the FOR statement
@@ -379,8 +403,11 @@ namespace Marbles
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
 			counter++;
 
+            int oneMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
+            oneMem = MemoryManager.SetMemory(oneMem, 1);
+            
 			// After checking the condition, we can safely substract one from the numeric expression on the FOR condition
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, numericExpAddress, 1, numericExpAddress));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, tempNumericExpAddress, oneMem, tempNumericExpAddress));
 			counter++;
 		}
 
@@ -401,27 +428,36 @@ namespace Marbles
 			quadruples[jumpToOnFalse].SetAssignee(counter);
 		}
 
-		public static void CreateFunctionBeforeParameters()
+		public static void CallFunctionBeforeParameters(string functionBeingCalledId)
 		{
-
-		}
-
-		public static void CallFunctionBeforeParameters(string functionId)
-		{
-			if (!FunctionDirectory.FunctionExists(functionId))
+			if (!FunctionDirectory.FunctionExists(functionBeingCalledId))
 			{
 				// make this a semantic error
-				throw new Exception("Use of undeclared function " + functionId);
+				throw new Exception("Use of undeclared function " + functionBeingCalledId);
 			}
-			LastFunctionCalled = FunctionDirectory.GetFunction(functionId);
-		}
+			LastFunctionCalled = FunctionDirectory.GetFunction(functionBeingCalledId);
+
+            // if we are inside a function, and a function call matches the name
+            // of such function, assume it's recursive
+            if (functionId == LastFunctionCalled.GetName()) { recursive = true; }
+        }
 
 		public static void CallFunctionOpeningParenthesis()
 		{
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), -1, -1));
-			counter++;
+            if (recursive)
+            {
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, -1, -1, -1));
+                recursiveCalls.Push(counter);
+            }
+            else
+            {
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), -1, -1));
+            }
+
+            counter++;
 			parameterCount = 0;
-		}
+            PushFakeBottom();
+        }
 
 		/// <summary>
 		/// Compare the current parameter's type against the called functions's parameter type.
@@ -430,7 +466,13 @@ namespace Marbles
 		public static void CallFunctionParameter()
 		{
 			SemanticCubeUtilities.DataTypes type = typeStack.Pop();
-			if (type != LastFunctionCalled.GetParameters().Values.ToList()[parameterCount].GetDataType())
+            int op = operandStack.Peek();
+            parameterCount++;
+            if (parameterCount > LastFunctionCalled.GetParameters().Count)
+            {
+                throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.GetParameters().Count + ".");
+            }
+            if (type != LastFunctionCalled.GetParameters().Values.ToList()[parameterCount - 1].GetDataType())
 			{
 				throw new Exception("Parameter types do not match.");
 			}
@@ -441,32 +483,37 @@ namespace Marbles
 			// and pass on the address of its value
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount));
 			counter++;
-		}
-
-		/// <summary>
-		/// Increase the current parameter counter, since we are now expecting another parameter.
-		/// </summary>
-		public static void CallFunctionComma()
-		{
-			parameterCount++;
-		}
-
+        }
+        
 		public static void CallFunctionClosingParenthesis()
 		{
-			if (parameterCount != LastFunctionCalled.GetParameters().Count - 1)
+			if (parameterCount < LastFunctionCalled.GetParameters().Count)
 			{
-				throw new Exception("Number of arguments on function call do not match.");
+				throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.GetParameters().Count + ".");
 			}
+            PopFakeBottom();
+            parameterCount = 0;
 		}
 
 		public static void CallFunctionEnd()
 		{
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, LastFunctionCalled.GetQuadrupleStart(), -1, -1));
+
             int memAddressWhereFunctionLives = FunctionDirectory.GlobalFunction().GetGlobalVariables()[LastFunctionCalled.GetName()].GetMemoryAddress();
-            int tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.GetReturnType());
-            MemoryManager.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
+            int tempGlobal;
+            if (inFunction)
+            {
+                tempGlobal = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, LastFunctionCalled.GetReturnType());
+                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
+            }
+            else
+            {
+                tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.GetReturnType());
+                MemoryManager.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
+            }
             PushOperand(tempGlobal, LastFunctionCalled.GetReturnType());
 			counter++;
+            recursive = false;
 		}
 
 
@@ -595,8 +642,16 @@ namespace Marbles
 		/// </summary>
 		public static void ExitFunction()
 		{
-			FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.endProc, -1, -1, -1));
+            // if the function was recursive, fill all pending era quadruples with size 
+            while (recursiveCalls.Count > 0)
+            {
+                quadruples[recursiveCalls.Pop()] = new Quadruple(Utilities.QuadrupleAction.era, FunctionDirectory.GetFunction(functionId).GetFunctionSize(), -1, -1);
+            }
+
+            FunctionDirectory.GetFunction(functionId).memory.PrintMemory(functionId);
+            FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
+            FunctionDirectory.GetFunction(functionId).ReleaseMemory();
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.endProc, -1, -1, -1));
 			counter++;
 			inFunction = false;
 			functionId = "";
@@ -958,12 +1013,20 @@ namespace Marbles
         public static void AddQuadruple(Quadruple q)
         {
             quadruples.Add(q);
+            counter++;
+        }
+
+        public static void UpdateBeginQuadruple()
+        {
+            quadruples[0].SetAssignee(counter);
         }
 
         public static void PrintQuadruples()
         {
+            int counterP = 0;
             foreach (Quadruple quad in quadruples)
             {
+                Debug.Write(counterP++ + ". ");
                 quad.Print();
             }
         }

@@ -583,5 +583,46 @@ namespace Marbles
             currentConstantStringAddress = 11000;
             currentConstantBoolAddress = 12000;
         }
-	}
+
+        public static void PrintMemory()
+        {
+            Debug.WriteLine("--- START GLOBAL MEMORY ---");
+
+            Debug.WriteLine("\n");
+            Debug.WriteLine(">--- GLOBAL ASSETS---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryGlobalAssets)
+            {
+                Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+
+            Debug.WriteLine("\n");
+            Debug.WriteLine(">--- GLOBAL VARIABLES---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryGlobal)
+            {
+                Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+
+            Debug.WriteLine("\n");
+            Debug.WriteLine(">--- LOCAL ---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryLocal)
+            {
+                Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+
+            Debug.WriteLine("\n");
+            Debug.WriteLine(">--- TEMPORARY ---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryTemporary)
+            {
+                Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+
+            Debug.WriteLine("\n");
+            Debug.WriteLine(">--- CONSTANT ---< ");
+            foreach (KeyValuePair<int, object> kvp in memoryConstant)
+            {
+                Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+            }
+            Debug.WriteLine("--- END GLOBAL MEMORY ---");
+        }
+    }
 }
