@@ -34,14 +34,16 @@ namespace UnitTests
 			validTypesAndExpected.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.Operators.equals), SemanticCubeUtilities.DataTypes.boolean);
 			validTypesAndExpected.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.Operators.equalEqual), SemanticCubeUtilities.DataTypes.boolean);
 			validTypesAndExpected.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.Operators.notEqual), SemanticCubeUtilities.DataTypes.boolean);
-		}
+            validTypesAndExpected.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.DataTypes.invalidDataType, SemanticCubeUtilities.Operators.negative), SemanticCubeUtilities.DataTypes.number);
+            validTypesAndExpected.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.invalidDataType, SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.Operators.negative), SemanticCubeUtilities.DataTypes.number);
+        }
 
-		[TestMethod]
+        [TestMethod]
 		public void ValidTypes()
 		{
 			foreach (KeyValuePair<TypeTypeOperator, SemanticCubeUtilities.DataTypes> validEntry in validTypesAndExpected)
 			{
-				Assert.AreEqual(Marbles.SemanticCube.AnalyzeSemantics(validEntry.Key), validEntry.Value);
+				Assert.AreEqual(SemanticCube.AnalyzeSemantics(validEntry.Key), validEntry.Value);
 			}
 		}
 
@@ -59,9 +61,11 @@ namespace UnitTests
 					foreach (SemanticCubeUtilities.Operators op in OperatorsList)
 					{
 						tto = new TypeTypeOperator(typeOne, typeTwo, op);
-						if (!validTypesAndExpected.ContainsKey(tto))
+
+                        if (!validTypesAndExpected.ContainsKey(tto))
 						{
-							Assert.AreEqual(Marbles.SemanticCube.AnalyzeSemantics(tto), SemanticCubeUtilities.DataTypes.invalidDataType);
+                            if (op == SemanticCubeUtilities.Operators.fakeBottom) continue; // not an actual operator
+							Assert.AreEqual(SemanticCube.AnalyzeSemantics(tto), SemanticCubeUtilities.DataTypes.invalidDataType);
 						}
 					}
 				}

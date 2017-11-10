@@ -8,37 +8,37 @@ namespace Marbles
 		public Dictionary<int, object> memoryGlobal = new Dictionary<int, object>();
 		public Dictionary<int, object> memoryTemporary = new Dictionary<int, object>();
 
-		// Global Lower Limits
-		const int lowestGlobalIntAddress = 0000;
-		const int lowestGlobalStringAddress = 1000;
-		const int lowestGlobalBoolAddress = 2000;
+        // Global Lower Limits
+        const int lowestGlobalIntAddress = 100000;
+        const int lowestGlobalStringAddress = 101000;
+        const int lowestGlobalBoolAddress = 102000;
 
-		// Global Upper Limits
-		const int highestGlobalIntAddress = 0999;
-		const int highestGlobalStringAddress = 1999;
-		const int highestGlobalBoolAddress = 2999;
+        // Global Upper Limits
+        const int highestGlobalIntAddress = 100999;
+        const int highestGlobalStringAddress = 101999;
+        const int highestGlobalBoolAddress = 102999;
 
-		// Global Current Indexes
-		int currentGlobalIntAddress = 0000;
-		int currentGlobalStringAddress = 1000;
-		int currentGlobalBoolAddress = 2000;
+        // Global Current Indexes
+        int currentGlobalIntAddress = 100000;
+        int currentGlobalStringAddress = 101000;
+        int currentGlobalBoolAddress = 102000;
 
-		// Temporary Lower Limits
-		const int lowestTempIntAddress = 3000;
-		const int lowestTempStringAddress = 4000;
-		const int lowestTempBoolAddress = 5000;
+        // Temporary Lower Limits
+        const int lowestTempIntAddress = 103000;
+        const int lowestTempStringAddress = 104000;
+        const int lowestTempBoolAddress = 105000;
 
-		// Temporary Upper Limits
-		const int highestTempIntAddress = 3999;
-		const int highestTempStringAddress = 4999;
-		const int highestTempBoolAddress = 5999;
+        // Temporary Upper Limits
+        const int highestTempIntAddress = 103999;
+        const int highestTempStringAddress = 104999;
+        const int highestTempBoolAddress = 105999;
 
-		// Temporary Current Indexes
-		int currentTempIntAddress = 3000;
-		int currentTempStringAddress = 4000;
-		int currentTempBoolAddress = 5000;
+        // Temporary Current Indexes
+        int currentTempIntAddress = 103000;
+        int currentTempStringAddress = 104000;
+        int currentTempBoolAddress = 105000;
 
-		public enum FunctionMemoryScope
+        public enum FunctionMemoryScope
 		{
 			global = 0,
 			temporary = 1
@@ -177,12 +177,38 @@ namespace Marbles
 			throw new Exception("Memory address not currently set");
 		}
 
-		/// <summary>
-		/// Adds a variable to the global directory
-		/// </summary>
-		/// <param name="newGlobalVariable"></param>
-		/// <returns>The variable address in the global directory</returns>
-		public int AddGlobalVariable(Variable newGlobalVariable)
+        /// <summary>
+        /// Returns a data type of an object stored in memory given a memory address.
+        /// </summary>
+        /// <param name="memAddress"></param>
+        /// <returns>A data type, or null if the memory address is invalid.</returns>
+        public static Type GetTypeFromAddress(int memAddress)
+        {
+            if ((memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
+                || (memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress))
+            {
+                return typeof(int);
+            }
+            else if (memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress
+                || (memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress))
+            {
+                return typeof(string);
+            }
+            else if (memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress
+                || (memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress))
+            {
+                return typeof(bool);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Adds a variable to the global directory
+        /// </summary>
+        /// <param name="newGlobalVariable"></param>
+        /// <returns>The variable address in the global directory</returns>
+        public int AddGlobalVariable(Variable newGlobalVariable)
 		{
 			// retrieve the memory address where the variable will live
 			int memorySpace = GetNextAvailable(FunctionMemoryScope.global, newGlobalVariable.GetDataType());
@@ -234,14 +260,14 @@ namespace Marbles
 			memoryTemporary.Clear();
 
 			// Global Current Indexes
-			currentGlobalIntAddress = 0000;
-			currentGlobalStringAddress = 1000;
-			currentGlobalBoolAddress = 2000;
+			currentGlobalIntAddress = lowestGlobalIntAddress;
+			currentGlobalStringAddress = lowestGlobalStringAddress;
+			currentGlobalBoolAddress = lowestGlobalBoolAddress;
 
 			// Temporary Current Indexes
-			currentTempIntAddress = 3000;
-			currentTempStringAddress = 4000;
-			currentTempBoolAddress = 5000;
+			currentTempIntAddress = lowestTempIntAddress;
+			currentTempStringAddress = lowestTempStringAddress;
+			currentTempBoolAddress = lowestTempBoolAddress;
 		}
 	}
 }

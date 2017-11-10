@@ -279,6 +279,7 @@ public class Parser {
 		Expect(19); // "call"
 		Expect(1); // id
 		string functionId = t.val;
+        QuadrupleManager.CallFunctionBeforeParameters(functionId);
 		Expect(10); // '('
 		QuadrupleManager.CallFunctionOpeningParenthesis();
 		if (StartOf(3)) {

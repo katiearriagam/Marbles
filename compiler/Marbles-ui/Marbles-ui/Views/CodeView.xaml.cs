@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Navigation;
 namespace Marbles
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// View with graphical input blocks for the user to drag and drop into instructions.
     /// </summary>
     public sealed partial class CodeView : Page
     {
@@ -38,7 +38,6 @@ namespace Marbles
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
-            
             Utilities.linesOfCodeCount = 0;
             Utilities.linesOfCode = new ArrayList();
 			ErrorPrinter.errorCount = 0;
@@ -49,10 +48,11 @@ namespace Marbles
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
 
+            /*
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
-
+            
             Utilities.linesOfCode.Add(new CodeLine("instructions {", main));
             Utilities.linesOfCodeCount++;
 
@@ -60,8 +60,23 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main));
             Utilities.linesOfCodeCount++;
-            WriteCodeToFile(out string filePath);
+            */
+            //WriteCodeToFile(out string filePath);
+            string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
+            Directory.CreateDirectory(directoryPath);
+            string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
+
             AnalyzeCode(filePath);
+
+            Debug.WriteLine("---- QUADRUPLES START ----");
+            QuadrupleManager.PrintQuadruples();
+            Debug.WriteLine("---- QUADRUPLES END ----");
+
+            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
+            ErrorPrinter.PrintWarnings();
+            ErrorPrinter.PrintErrors();
+
+            /*VirtualMachine.StartExecution();*/
         }
 
         private void WriteCodeToFile(out string filePath)
@@ -91,14 +106,6 @@ namespace Marbles
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
 			parser.Parse();
-
-            Debug.WriteLine("---- QUADRUPLES START ----");
-            QuadrupleManager.PrintQuadruples();
-            Debug.WriteLine("---- QUADRUPLES END ----");
-
-			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
-            ErrorPrinter.PrintWarnings();
-            ErrorPrinter.PrintErrors();
 		}
     }
 }

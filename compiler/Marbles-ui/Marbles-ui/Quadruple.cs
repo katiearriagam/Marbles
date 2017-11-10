@@ -9,44 +9,44 @@ namespace Marbles
 {
     public class Quadruple
     {
-        private Utilities.QuadrupleAction op;
+        private Utilities.QuadrupleAction action;
         private int operandOne, operandTwo, assignee;
 
-        public Quadruple(Utilities.QuadrupleAction op, int operandOne, int operandTwo, int assignee)
+        public Quadruple(Utilities.QuadrupleAction action, int operandOne, int operandTwo, int assignee)
         {
-            this.op = op;
+            this.action = action;
             this.operandOne = operandOne;
             this.operandTwo = operandTwo;
             this.assignee = assignee;
         }
 
-        public Quadruple(Utilities.QuadrupleAction op, int operandOne, int assignee)
+        public Quadruple(Utilities.QuadrupleAction action, int operandOne, int assignee)
         {
-            this.op = op;
+            this.action = action;
             this.operandOne = operandOne;
             this.operandTwo = -1;
             this.assignee = assignee;
         }
 
-        public Quadruple(Utilities.QuadrupleAction op, int operandOne)
+        public Quadruple(Utilities.QuadrupleAction action, int operandOne)
         {
-            this.op = op;
+            this.action = action;
             this.operandOne = operandOne;
             this.operandTwo = -1;
             this.assignee = -1;
         }
 
-        public Quadruple(Utilities.QuadrupleAction op)
+        public Quadruple(Utilities.QuadrupleAction action)
         {
-            this.op = op;
+            this.action = action;
             this.operandOne = -1;
             this.operandTwo = -1;
             this.assignee = -1;
         }
 
-        public Utilities.QuadrupleAction GetOperator()
+        public Utilities.QuadrupleAction GetAction()
         {
-            return op;
+            return action;
         }
 
         public int GetOperandOne()
@@ -64,9 +64,9 @@ namespace Marbles
             return assignee;
         }
 
-        public void SetOperator(Utilities.QuadrupleAction op)
+        public void SetAction(Utilities.QuadrupleAction action)
         {
-            this.op = op;
+            this.action = action;
         }
 
         public void SetOperandOne(int operandOne)
@@ -86,12 +86,12 @@ namespace Marbles
 
         public void Print()
         {
-            Debug.WriteLine(op.ToString() + ", " + operandOne + ", " + operandTwo + ", " + assignee);
+            Debug.WriteLine(action.ToString() + ", " + operandOne + ", " + operandTwo + ", " + assignee);
         }
 
         public void PrintValues()
         {
-            Debug.WriteLine(op.ToString() + ", " + (operandOne == -1 ? "_" : MemoryManager.GetValueFromAddress(operandOne)) + ", " + (operandTwo == -1 ? "_" : MemoryManager.GetValueFromAddress(operandTwo)) + ", " + (assignee == -1 ? "_" : MemoryManager.GetValueFromAddress(assignee)));
+            Debug.WriteLine(action.ToString() + ", " + (operandOne == -1 ? "_" : MemoryManager.GetValueFromAddress(operandOne)) + ", " + (operandTwo == -1 ? "_" : MemoryManager.GetValueFromAddress(operandTwo)) + ", " + (assignee == -1 ? "_" : MemoryManager.GetValueFromAddress(assignee)));
         }
     }
 }
