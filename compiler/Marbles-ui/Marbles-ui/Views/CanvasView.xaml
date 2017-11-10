@@ -100,7 +100,8 @@
 						Grid.Row="2"
 						PrimaryButtonText="Create"
 						SecondaryButtonText="Cancel"
-						PrimaryButtonClick="Modal_PrimaryButtonClick">
+						PrimaryButtonClick="Modal_PrimaryButtonClick"
+						SecondaryButtonClick="Modal_SecondaryButtonClick">
 						<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="*" />

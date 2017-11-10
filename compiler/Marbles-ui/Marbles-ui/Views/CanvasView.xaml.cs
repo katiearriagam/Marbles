@@ -257,5 +257,15 @@ namespace Marbles
 		{
 
 		}
+
+		private void Modal_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+		{
+			IDTextBox.Text = "";
+			LabelTextBox.Text = "";
+			NumberTextBox.Text = "";
+			IDTextBoxBorder.BorderThickness = new Thickness(0.0);
+			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
+			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
+		}
 	}
 }
