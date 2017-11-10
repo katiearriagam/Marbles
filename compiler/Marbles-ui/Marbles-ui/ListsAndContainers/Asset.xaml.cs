@@ -24,7 +24,7 @@ namespace Marbles
         private string id;
         private string imageSource;
         private string label;
-        private double x, y;
+        private int x, y;
         private int width, height;
         private int number;
         private int rotation;
@@ -133,8 +133,8 @@ namespace Marbles
             double opp = Math.Sin(angleInRadians) * hyp;
             double adj = Math.Cos(angleInRadians) * hyp;
 
-            x = x - adj;
-            y = y - opp;
+            x = x - (int)adj;
+            y = y - (int)opp;
 
             Canvas.SetLeft(this, x);
             Canvas.SetTop(this, y);
@@ -179,8 +179,8 @@ namespace Marbles
             double opp = Math.Sin(angleInRadians) * hyp;
             double adj = Math.Cos(angleInRadians) * hyp;
 
-            x = x + adj;
-            y = y - opp;
+            x = x + (int)adj;
+            y = y - (int)opp;
 
             Canvas.SetLeft(this, x);
             Canvas.SetTop(this, y);
@@ -188,12 +188,12 @@ namespace Marbles
             ctImage.CenterY = ctUserControl.CenterY =  this.height / 2;
         }
 
-		public double GetX()
+		public int GetX()
 		{
 			return x;
 		}
 
-		public double GetY()
+		public int GetY()
 		{
 			return y;
 		}
@@ -213,7 +213,7 @@ namespace Marbles
 			return label;
 		}
 
-		public void SetPosition(double x, double y)
+		public void SetPosition(int x, int y)
         {
             this.x = x;
             this.y = y;
@@ -222,7 +222,7 @@ namespace Marbles
             Canvas.SetTop(this, y);
         }
 
-        public async Task MoveX(double displacement)
+        public async Task MoveX(int displacement)
         {
             AssetUserControl.RenderTransform = ctUserControl;
             Storyboard.SetTarget(anim, AssetUserControl);
@@ -239,7 +239,7 @@ namespace Marbles
             sb.Stop();
         }
 
-        public async Task MoveY(double displacement)
+        public async Task MoveY(int displacement)
         {
             AssetUserControl.RenderTransform = ctUserControl;
             Storyboard.SetTarget(anim, AssetUserControl);
@@ -335,12 +335,12 @@ namespace Marbles
 			return memoryAddress;
 		}
 
-        public void SetPositionXAttribute(double newX)
+        public void SetPositionXAttribute(int newX)
         {
             SetPosition(newX, y);
         }
 
-        public void SetPositionYAttribute(double newY)
+        public void SetPositionYAttribute(int newY)
         {
             SetPosition(x, newY);
         }

@@ -271,6 +271,17 @@ namespace Marbles
 			localVariables.Clear();
 		}
 
+        /// <summary>
+        /// Remove all entries from the memory simulation
+        /// </summary>
+        public void ReleaseMemory()
+        {
+            memory.Reset();
+        }
+
+        /// <summary>
+        /// Clean memory
+        /// </summary>
         public void Reset()
         {
             assets.Clear();
