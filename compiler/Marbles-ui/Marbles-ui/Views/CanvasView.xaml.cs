@@ -236,11 +236,20 @@ namespace Marbles
 				}
 			}
 		}
-
-        private new void Clip(FrameworkElement element)
+		private new void Clip(FrameworkElement element)
         {
             var clip = new RectangleGeometry { Rect = new Rect(0, 0, element.ActualWidth, element.ActualHeight) };
             element.Clip = clip;
         }
-    }
+
+		private void Modal_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+		{
+			IDTextBox.Text = "";
+			LabelTextBox.Text = "";
+			NumberTextBox.Text = "";
+			IDTextBoxBorder.BorderThickness = new Thickness(0.0);
+			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
+			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
+		}
+	}
 }
