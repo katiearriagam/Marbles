@@ -238,7 +238,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\circle.png" />
+    <Content Include="Assets\heart.png" />
+    <Content Include="Assets\hexagon.png" />
+    <Content Include="Assets\polygon.png" />
+    <Content Include="Assets\rhombus.png" />
     <Content Include="Assets\square.png" />
+    <Content Include="Assets\star.png" />
     <Content Include="Assets\triangle.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

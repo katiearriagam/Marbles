@@ -60,7 +60,7 @@ namespace Marbles
 		const int highestLocalAddress = 6999;
 
 		// Local Current Index
-		static int currentLocalAddress = 6000;
+		static int currentLocalAddress = 4000;
 
 		// Temporary Lower Limits
 		const int lowestTempIntAddress = 7000;
@@ -346,11 +346,11 @@ namespace Marbles
 		/// Allocates the memory for a new function (in locals)
 		/// </summary>
 		/// <param name="func"></param>
-		public static void AllocateLocalMemory(Function func)
+		public static void AllocateLocalMemory(int funcSize)
 		{
-			if (currentLocalAddress + func.GetFunctionSize() <= highestLocalAddress)
+			if (currentLocalAddress + funcSize <= highestLocalAddress)
 			{
-				currentLocalAddress += func.GetFunctionSize();
+				currentLocalAddress += funcSize;
 			}
 			else
 			{
@@ -362,11 +362,11 @@ namespace Marbles
 		/// Removes a function from local memory mapping
 		/// </summary>
 		/// <param name="func"></param>
-		public static void DeallocateLocalMemory(Function func)
+		public static void DeallocateLocalMemory(int funcSize)
 		{
-			if (currentLocalAddress + func.GetFunctionSize() >= 6000)
+			if (currentLocalAddress - funcSize >= lowestLocalAddress)
 			{
-				currentLocalAddress -= func.GetFunctionSize();
+				currentLocalAddress -= funcSize;
 			}
 			else
 			{

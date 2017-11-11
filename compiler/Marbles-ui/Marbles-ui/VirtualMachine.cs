@@ -11,7 +11,9 @@ namespace Marbles
         private static List<Quadruple> quadruples = new List<Quadruple>();
         private static int currentInstruction = 0;
         private static bool endExecution = false;
-        private static int savedMemoryPointer = 0;
+        private static int savedInstructionPointer = 0;
+        private static Stack<int> localMemoryAllocations = new Stack<int>();
+        public static Function LastFunctionCalled; 
 
         public static void StartExecution()
         {
@@ -148,10 +150,16 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.era)
             {
-                //TODO
-                savedMemoryPointer = currentInstruction;
-                // set currentInstruction = Function's quadrupleStart
-                // question: how to get the function we are going to??
+                int functionSize = quadruple.GetOperandOne();
+                int functionMemAddress = quadruple.GetOperandTwo();
+
+                LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
+
+                // TODO: load memory from LastFunctionCalled to Global Local Memory
+
+                MemoryManager.AllocateLocalMemory(functionSize); // this can throw - but VM caller will catch it
+
+                localMemoryAllocations.Push(functionSize);
             }
             else if (action == Utilities.QuadrupleAction.param)
             {
@@ -159,16 +167,23 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.gosub)
             {
-                //TODO
+                savedInstructionPointer = currentInstruction;
+                currentInstruction = quadruple.GetOperandOne();
             }
             else if (action == Utilities.QuadrupleAction.retorno)
             {
                 //TODO
-                currentInstruction = savedMemoryPointer;
             }
             else if (action == Utilities.QuadrupleAction.endProc)
             {
-                //TODO
+                currentInstruction = savedInstructionPointer;
+
+                if (localMemoryAllocations.Count == 0)
+                {
+                    throw new Exception("Trying to deallocate memory that was never allocated."); // this can throw - but VM caller will catch it
+                }
+
+                MemoryManager.DeallocateLocalMemory(localMemoryAllocations.Pop());
             }
             else if (action == Utilities.QuadrupleAction.set_position)
             {
@@ -193,7 +208,7 @@ namespace Marbles
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
                 Asset caller = Utilities.FindAssetFromID(assetID);
-                
+
                 int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
                 await caller.MoveX(displacement);
@@ -222,6 +237,10 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.end)
             {
                 endExecution = true;
+            }
+            else
+            {
+                throw new Exception("Invalid quadruple action: " + action.ToString());
             }
         }
     }

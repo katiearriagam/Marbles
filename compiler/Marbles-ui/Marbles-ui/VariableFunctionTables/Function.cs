@@ -14,7 +14,12 @@ namespace Marbles
 		public FunctionMemory memory = new FunctionMemory();
 		private SemanticCubeUtilities.DataTypes returnType;
 		private string name;
+
+        /// <summary>
+        /// Location in global memory of the variable that represents the function.
+        /// </summary>
 		private int location;
+
         private int quadrupleStart;
 		private Dictionary<string, Variable> parameters = new Dictionary<string, Variable>();
 		private Dictionary<string, Variable> localVariables = new Dictionary<string, Variable>();

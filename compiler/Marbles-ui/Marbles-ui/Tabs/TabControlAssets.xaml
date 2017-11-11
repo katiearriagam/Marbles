@@ -67,7 +67,12 @@
                             <local:TabControlAssetsButton ImageSource="/Assets/circle.png" Label="Circle" Group="Shapes" DragStartingId="CircleInstantiator" HorizontalAlignment="Center" />
 							<local:TabControlAssetsButton ImageSource="/Assets/triangle.png" Label="Triangle" Group="Shapes" DragStartingId="TriangleInstantiator" HorizontalAlignment="Center"/>
 							<local:TabControlAssetsButton ImageSource="/Assets/square.png" Label="Square" Group="Shapes" DragStartingId="SquareInstantiator" HorizontalAlignment="Center"/>
-						</ListView>
+                            <local:TabControlAssetsButton ImageSource="/Assets/star.png" Label="Star" Group="Shapes" DragStartingId="StarInstantiator" HorizontalAlignment="Center"/>
+                            <local:TabControlAssetsButton ImageSource="/Assets/heart.png" Label="Heart" Group="Shapes" DragStartingId="HeartInstantiator" HorizontalAlignment="Center"/>
+                            <local:TabControlAssetsButton ImageSource="/Assets/polygon.png" Label="Polygon" Group="Shapes" DragStartingId="PolygonInstantiator" HorizontalAlignment="Center"/>
+                            <local:TabControlAssetsButton ImageSource="/Assets/rhombus.png" Label="Rhombus" Group="Shapes" DragStartingId="RhombusInstantiator" HorizontalAlignment="Center"/>
+                            <local:TabControlAssetsButton ImageSource="/Assets/hexagon.png" Label="Hexagon" Group="Shapes" DragStartingId="HexagonInstantiator" HorizontalAlignment="Center"/>
+                        </ListView>
                     </Grid>
                 </PivotItem>
 

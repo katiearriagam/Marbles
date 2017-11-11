@@ -446,7 +446,7 @@ namespace Marbles
 		{
             if (recursive)
             {
-                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, -1, -1, -1));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, -1, LastFunctionCalled.GetLocation(), -1));
                 recursiveCalls.Push(counter);
             }
             else
@@ -645,7 +645,7 @@ namespace Marbles
             // if the function was recursive, fill all pending era quadruples with size 
             while (recursiveCalls.Count > 0)
             {
-                quadruples[recursiveCalls.Pop()] = new Quadruple(Utilities.QuadrupleAction.era, FunctionDirectory.GetFunction(functionId).GetFunctionSize(), -1, -1);
+                quadruples[recursiveCalls.Pop()].SetOperandOne(FunctionDirectory.GetFunction(functionId).GetFunctionSize());
             }
 
             FunctionDirectory.GetFunction(functionId).memory.PrintMemory(functionId);

@@ -79,7 +79,10 @@ namespace Marbles
             ErrorPrinter.PrintWarnings();
             ErrorPrinter.PrintErrors();
 
-            /*VirtualMachine.StartExecution();*/
+            /*
+            try { VirtualMachine.StartExecution(); }
+            catch (Exception e) { /* show error in some way, these errors are not on ErrorPrinter :( *//* }
+            */
         }
 
         private void WriteCodeToFile(out string filePath)
