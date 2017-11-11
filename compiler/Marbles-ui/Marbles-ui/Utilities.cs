@@ -23,7 +23,12 @@ namespace Marbles
         {
             Circle,
             Triangle,
-            Square
+            Square,
+            Star,
+            Heart,
+            Polygon,
+            Rhombus,
+            Hexagon
         }
         
         public enum BlockTypes
@@ -115,10 +120,20 @@ namespace Marbles
             shapeToImagePath.Add(ShapeTypes.Circle,   "/Assets/circle.png");
             shapeToImagePath.Add(ShapeTypes.Triangle, "/Assets/triangle.png");
             shapeToImagePath.Add(ShapeTypes.Square,   "/Assets/square.png");
+            shapeToImagePath.Add(ShapeTypes.Star,     "/Assets/star.png");
+            shapeToImagePath.Add(ShapeTypes.Heart,    "/Assets/heart.png");
+            shapeToImagePath.Add(ShapeTypes.Polygon,  "/Assets/polygon.png");
+            shapeToImagePath.Add(ShapeTypes.Rhombus,  "/Assets/rhombus.png");
+            shapeToImagePath.Add(ShapeTypes.Hexagon,  "/Assets/hexagon.png");
 
-            actionToShapeType.Add("CircleInstantiator", ShapeTypes.Circle);
+            actionToShapeType.Add("CircleInstantiator",   ShapeTypes.Circle);
             actionToShapeType.Add("TriangleInstantiator", ShapeTypes.Triangle);
-            actionToShapeType.Add("SquareInstantiator", ShapeTypes.Square);
+            actionToShapeType.Add("SquareInstantiator",   ShapeTypes.Square);
+            actionToShapeType.Add("StarInstantiator",     ShapeTypes.Star);
+            actionToShapeType.Add("HeartInstantiator",    ShapeTypes.Heart);
+            actionToShapeType.Add("PolygonInstantiator",  ShapeTypes.Polygon);
+            actionToShapeType.Add("RhombusInstantiator",  ShapeTypes.Rhombus);
+            actionToShapeType.Add("HexagonInstantiator",  ShapeTypes.Hexagon);
 
             operatorToAction.Add(SemanticCubeUtilities.Operators.plus, QuadrupleAction.plus);
             operatorToAction.Add(SemanticCubeUtilities.Operators.minus, QuadrupleAction.minus);

@@ -46,6 +46,24 @@ namespace Marbles
         }
 
         /// <summary>
+        /// Returns a Function object given the function's memory address.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public static Function GetFunctionWithAddress(int address)
+        {
+            foreach (Function func in FunctionDictionary.Values)
+            {
+                if (func.GetLocation() == address)
+                {
+                    return func;
+                }
+            }
+
+            throw new Exception("Function with memory address " + address + " does not exist.");
+        }
+
+        /// <summary>
         /// Inserts a new function into the Function Directory.
         /// </summary>
         /// <param name="funcID"></param>
