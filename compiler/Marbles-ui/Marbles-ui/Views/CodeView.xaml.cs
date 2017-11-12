@@ -75,11 +75,29 @@ namespace Marbles
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
-
-            Debug.WriteLine("---- QUADRUPLES START ----");
             QuadrupleManager.PrintQuadruples();
-			Debug.WriteLine("---- QUADRUPLES END ----");
-		}
+
+            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
+            ErrorPrinter.PrintWarnings();
+            ErrorPrinter.PrintErrors();
+
+            if (ErrorPrinter.errorCount == 0)
+            {
+                Utilities.GreenCompile();
+                Utilities.EnableRunButton();
+                CompileButton.Background = Utilities.CompileButtonColor;
+                CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
+            }
+            else
+            {
+                Utilities.RedCompile();
+                Utilities.DisableRunButton();
+                
+                // TODO: Pass errors here
+                CompileButton.Background = Utilities.CompileButtonColor;
+                CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
+            }
+        }
 
         private void WriteCodeToFile(out string filePath)
         {
