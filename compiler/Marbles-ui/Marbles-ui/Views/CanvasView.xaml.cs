@@ -272,10 +272,6 @@ namespace Marbles
 		{
 			try { await VirtualMachine.StartExecution(); }
 			catch (Exception ex) { ErrorPrinter.AddError(ex.Message); }
-
-			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
-			ErrorPrinter.PrintWarnings();
-			ErrorPrinter.PrintErrors();
 		}
 	}
 }

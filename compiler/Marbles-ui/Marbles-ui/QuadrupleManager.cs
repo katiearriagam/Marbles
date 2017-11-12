@@ -1015,12 +1015,14 @@ namespace Marbles
 
         public static void PrintQuadruples()
         {
+            Debug.WriteLine("---- QUADRUPLES START ----");
             int counterP = 0;
             foreach (Quadruple quad in quadruples)
             {
                 Debug.Write(counterP++ + ". ");
                 quad.Print();
             }
+            Debug.WriteLine("---- QUADRUPLES END ----");
         }
 
         public static void Reset()
