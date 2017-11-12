@@ -24,7 +24,9 @@ namespace Marbles
 		ScrollViewer scrollViewer;
 		public static bool dropped;
 
-		public FunctionInstructionList()
+        public static event EventHandler SomethingChanged;
+
+        public FunctionInstructionList()
 		{
 			this.InitializeComponent();
 			dropped = false;
@@ -89,7 +91,8 @@ namespace Marbles
 
 				if (e.DataView.Properties.ContainsKey("CreateFunction"))
 				{
-					lv.Items.Insert(index, new Marbles.CreateFunction());
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                    lv.Items.Insert(index, new Marbles.CreateFunction());
 				}
 				ListView_SuspendDragAndDrop();
 				dropped = true;
@@ -125,6 +128,11 @@ namespace Marbles
                 function.PrintCode();
             }
         }
-	}
+
+        private void TargetListView_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }
 

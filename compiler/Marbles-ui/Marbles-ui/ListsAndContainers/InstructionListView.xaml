@@ -23,7 +23,9 @@
 				CanReorderItems="True"
 				AllowDrop="True"
 				Drop="TargetListView_Drop"
+                DragItemsStarting="TargetListView_DragItemsStarting"
 				DragOver="TargetListView_DragOver"
+                SelectionMode="None"
 				ReorderMode="Enabled">
 		<ListView.ItemsPanel>
 			<ItemsPanelTemplate>

@@ -32,5 +32,12 @@ namespace Marbles
 			((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount - 1]).content += boolOperatorSelected;
 			operandB.PrintCode();
         }
-	}
+
+        public static event EventHandler SomethingChanged;
+
+        private void mathOperator_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

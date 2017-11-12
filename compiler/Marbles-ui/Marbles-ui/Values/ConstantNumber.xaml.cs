@@ -32,9 +32,13 @@ namespace Marbles
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " " + ConstantNumberTextBox.Text;
         }
 
-		private void ConstantNumber_TextChanged(object sender, TextChangedEventArgs e)
+        public static event EventHandler SomethingChanged;
+
+        private void ConstantNumber_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var textBox = sender as TextBox;
+
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+            var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
 				if (textBox.SelectionStart == 1)

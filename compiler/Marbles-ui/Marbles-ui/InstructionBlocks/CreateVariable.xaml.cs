@@ -38,7 +38,8 @@ namespace Marbles
 
 		private void VariableName_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var textBox = sender as TextBox;
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+            var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
 				if (textBox.SelectionStart == 1)
@@ -63,5 +64,12 @@ namespace Marbles
 				}
 			}
 		}
-	}
+
+        public static event EventHandler SomethingChanged;
+
+        private void VariableType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

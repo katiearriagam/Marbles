@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Marbles
@@ -19,7 +20,46 @@ namespace Marbles
 		public static ArrayList assetsInCanvas = new ArrayList();
 		public static ArrayList finalAssetsInCanvas = new ArrayList();
 
-		public enum ShapeTypes
+        /// <summary>
+        /// Helpers for front-end navigation
+        /// </summary>
+        public static bool RunButtonEnabled = false;
+        public static bool CompileButtonEnabled = true;
+        public static SolidColorBrush RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
+        public static SolidColorBrush CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
+
+        public static void EnableRunButton()
+        {
+            RunButtonEnabled = true;
+            RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
+        }
+
+        public static void DisableRunButton()
+        {
+            RunButtonEnabled = false;
+            RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 189, 195, 199));
+        }
+
+        public static void BlueCompile()
+        {
+            DisableRunButton();
+            CompileButtonEnabled = true;
+            CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
+        }
+
+        public static void RedCompile()
+        {
+            CompileButtonEnabled = true;
+            CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 231, 76, 60));
+        }
+
+        public static void GreenCompile()
+        {
+            CompileButtonEnabled = true;
+            CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
+        }
+
+        public enum ShapeTypes
         {
             Circle,
             Triangle,
