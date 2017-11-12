@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Marbles.Analysis;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -266,5 +267,15 @@ namespace Marbles
 			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
 			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
 		}
-    }
+    
+		private async void Run_Button_Click(object sender, RoutedEventArgs e)
+		{
+			try { await VirtualMachine.StartExecution(); }
+			catch (Exception ex) { ErrorPrinter.AddError(ex.Message); }
+
+			Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
+			ErrorPrinter.PrintWarnings();
+			ErrorPrinter.PrintErrors();
+		}
+	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Marbles
 {
@@ -256,12 +257,43 @@ namespace Marbles
 			return memorySpace;
 		}
 
+		public Dictionary<int, object> GetMemoryGlobal()
+		{
+			return memoryGlobal;
+		}
+
+		public Dictionary<int, object> GetMemoryTemporary()
+		{
+			return memoryTemporary;
+		}
 
 		public int FunctionMemorySize()
 		{
 			return totalSize;
 		}
 
+		public int GetIndexFromMemoryList(int address)
+		{
+			List<int> memoryList = MemoryKeysToList();
+			int counter = -1; 
+			foreach (int key in memoryList)
+			{
+				counter++;
+				if (key == address)
+				{
+					break;
+				}
+			}
+			return counter;
+		}
+
+		public List<int> MemoryKeysToList()
+		{
+			List<int> keys = memoryGlobal.Keys.ToList();
+			keys.Concat(memoryGlobal.Keys.ToList());
+			keys.Sort();
+			return keys;
+		}
 		/// <summary>
 		/// resets memory
 		/// </summary>
