@@ -23,6 +23,7 @@ namespace Marbles
 	{
 		ScrollViewer scrollViewer;
 		public static bool dropped;
+        public static event EventHandler SomethingChanged;
 
         public VariableList()
         {
@@ -90,7 +91,8 @@ namespace Marbles
 				if (e.DataView.Properties.ContainsKey("CreateVariable"))
 				{
 					lv.Items.Insert(index, new Marbles.CreateVariable() );
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
@@ -125,6 +127,11 @@ namespace Marbles
             {
                 item.PrintCode();
             }
+        }
+
+        private void VariableListView_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

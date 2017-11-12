@@ -42,7 +42,8 @@
 					VerticalAlignment="Center"
 					HorizontalContentAlignment="Center"
 					Width="Auto"
-					SelectedIndex="0">	
+					SelectedIndex="0"
+                    SelectionChanged="VariableType_SelectionChanged">	
 					<ComboBoxItem>number</ComboBoxItem>
 					<ComboBoxItem>text</ComboBoxItem>
 					<ComboBoxItem>boolean</ComboBoxItem>

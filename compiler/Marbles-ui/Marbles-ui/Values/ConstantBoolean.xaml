@@ -19,6 +19,7 @@
 			HorizontalContentAlignment="Center"
 			VerticalContentAlignment="Center"
 			Width="Auto"
+            SelectionChanged="BooleanConstantComboBox_SelectionChanged"
 			SelectedIndex="0"
 			Margin="2,0">
 			<ComboBoxItem>TRUE</ComboBoxItem>

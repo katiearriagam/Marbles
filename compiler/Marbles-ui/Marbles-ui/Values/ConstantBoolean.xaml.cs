@@ -29,5 +29,12 @@ namespace Marbles
         {
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " " + ((ComboBoxItem)(BooleanConstantComboBox.SelectedItem)).Content.ToString();
         }
-	}
+
+        public static event EventHandler SomethingChanged;
+
+        private void BooleanConstantComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

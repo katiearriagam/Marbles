@@ -25,6 +25,8 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
+        public static event EventHandler SomethingChanged;
+
         public void PrintCode()
         {
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " " + AssetNameTextBox.Text + "." + ((ComboBoxItem)(AssetAttributeComboBox.SelectedItem)).Content.ToString();
@@ -32,7 +34,8 @@ namespace Marbles
 
 		private void AssetNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var textBox = sender as TextBox;
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+            var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
 				if (textBox.SelectionStart == 1)
@@ -57,5 +60,10 @@ namespace Marbles
 				}
 			}
 		}
-	}
+
+        private void AssetAttributeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

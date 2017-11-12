@@ -35,10 +35,12 @@
 				ItemsSource="{Binding Collection}"
 				CanDrag="False"
 				CanDragItems="True"
+                DragStarting="VariableListView_DragStarting"
 				CanReorderItems="True"
 				AllowDrop="True"
 				Drop="TargetListView_Drop"
 				DragOver="TargetListView_DragOver"
+                SelectionMode="None"
 				ReorderMode="Enabled">
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
