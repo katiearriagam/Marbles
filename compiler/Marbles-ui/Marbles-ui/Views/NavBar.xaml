@@ -25,6 +25,11 @@
 					<FontIcon Glyph="&#xE99A;"/>
 				</NavigationViewItem.Icon>
 			</NavigationViewItem>
+			<NavigationViewItem Content="Errors" Tag="Erros">
+				<NavigationViewItem.Icon>
+					<FontIcon Glyph="&#xEA39;"/>
+				</NavigationViewItem.Icon>
+			</NavigationViewItem>
 		</NavigationView.MenuItems>
 
 		<NavigationView.HeaderTemplate>
