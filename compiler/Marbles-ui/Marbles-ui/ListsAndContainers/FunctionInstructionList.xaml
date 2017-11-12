@@ -18,11 +18,13 @@
 				ScrollViewer.VerticalScrollMode="Enabled"
 				ItemsSource="{Binding Collection}"
 				CanDrag="False"
+                DragStarting="TargetListView_DragStarting"
 				CanDragItems="True"
 				CanReorderItems="True"
 				AllowDrop="True"
 				Drop="TargetListView_Drop"
 				DragOver="TargetListView_DragOver"
+                SelectionMode="None"
 				ReorderMode="Enabled">
 		<ListView.ItemsPanel>
 			<ItemsPanelTemplate>

@@ -55,6 +55,7 @@
 			VerticalContentAlignment="Center"
 			Width="Auto"
 			SelectedIndex="0"
+            SelectionChanged="AssetAttributeComboBox_SelectionChanged"
 			Margin="2,0">
 			<ComboBoxItem>value</ComboBoxItem>
 			<ComboBoxItem>label</ComboBoxItem>

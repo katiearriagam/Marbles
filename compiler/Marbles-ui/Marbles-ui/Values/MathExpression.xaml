@@ -30,6 +30,7 @@
 			HorizontalContentAlignment="Stretch"
 			Width="Auto"
 			Margin="2,0"
+            SelectionChanged="mathOperator_SelectionChanged"
 			SelectedIndex="0">
 			<ComboBoxItem> + </ComboBoxItem>
 			<ComboBoxItem> - </ComboBoxItem>

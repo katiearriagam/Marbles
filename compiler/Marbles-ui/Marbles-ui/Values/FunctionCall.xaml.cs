@@ -26,9 +26,14 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
-		private void AddParameter(object sender, RoutedEventArgs e)
+        public static event EventHandler SomethingChanged;
+
+
+        private void AddParameter(object sender, RoutedEventArgs e)
 		{
-			Grid containerGrid = new Grid();
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+
+            Grid containerGrid = new Grid();
 			Values newValue = new Values();
 			containerGrid.Children.Add(newValue);
 
@@ -105,7 +110,9 @@ namespace Marbles
 
 		private void FunctionNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var textBox = sender as TextBox;
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+
+            var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
 				if (textBox.SelectionStart == 1)

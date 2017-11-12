@@ -26,8 +26,9 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
-		private void AddParameter(object sender, RoutedEventArgs e)
+        private void AddParameter(object sender, RoutedEventArgs e)
 		{
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
             var DataType = new ComboBox
             {
                 FontFamily = new FontFamily("Segoe UI Light"),
@@ -36,8 +37,10 @@ namespace Marbles
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, -10, 0),
-                Width = double.NaN
+                Width = double.NaN,
             };
+
+            DataType.SelectionChanged += DataType_SelectionChanged;
 
             ComboBoxItem number = new ComboBoxItem
             {
@@ -82,8 +85,20 @@ namespace Marbles
                 }
             };
 
+            ParameterName.TextChanged += ParameterName_TextChanged;
+
             Parameters.Items.Add(ParameterName);
 		}
+
+        private void ParameterName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DataType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         public void PrintCode()
         {
@@ -130,7 +145,8 @@ namespace Marbles
 
 		private void functionID_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var textBox = sender as TextBox;
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+            var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
 				if (textBox.SelectionStart == 1)
@@ -155,5 +171,14 @@ namespace Marbles
 				}
 			}
 		}
-	}
+
+        public static event EventHandler SomethingChanged;
+
+        private void functionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+
+    }
 }

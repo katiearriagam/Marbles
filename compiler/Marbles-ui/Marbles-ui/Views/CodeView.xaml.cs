@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -29,12 +30,17 @@ namespace Marbles
         {
             this.InitializeComponent();
 			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            Utilities.BlueCompile();
 		}
+
+
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			AssetListViewContainer.UpdateAssets();
-		}
+            CompileButton.Background = Utilities.CompileButtonColor;
+            CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
+        }
 
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -104,5 +110,31 @@ namespace Marbles
             try { parser.Parse(); }
             catch (Exception e) { ErrorPrinter.AddError(e.Message); }
 		}
+
+        private void CodeViewPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            CreateFunction.SomethingChanged += new EventHandler(SomethingChanged);
+            CreateVariable.SomethingChanged += new EventHandler(SomethingChanged);
+            DeleteBlockButton.SomethingChanged += new EventHandler(SomethingChanged);
+            FunctionInstructionList.SomethingChanged += new EventHandler(SomethingChanged);
+            InstructionListView.SomethingChanged += new EventHandler(SomethingChanged);
+            VariableList.SomethingChanged += new EventHandler(SomethingChanged);
+            AssetAttribute.SomethingChanged += new EventHandler(SomethingChanged);
+            AssetFunction.SomethingChanged += new EventHandler(SomethingChanged);
+            BooleanExpression.SomethingChanged += new EventHandler(SomethingChanged);
+            ConstantNumber.SomethingChanged += new EventHandler(SomethingChanged);
+            ConstantText.SomethingChanged += new EventHandler(SomethingChanged);
+            FunctionCall.SomethingChanged += new EventHandler(SomethingChanged);
+            MathExpression.SomethingChanged += new EventHandler(SomethingChanged);
+            Values.SomethingChanged += new EventHandler(SomethingChanged);
+            VariableCall.SomethingChanged += new EventHandler(SomethingChanged);
+        }
+
+        private void SomethingChanged(object sender, EventArgs e)
+        {
+            Utilities.BlueCompile();
+            CompileButton.Background = Utilities.CompileButtonColor;
+            CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
+        }
     }
 }

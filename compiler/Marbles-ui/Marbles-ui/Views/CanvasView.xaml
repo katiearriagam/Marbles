@@ -37,7 +37,8 @@
 							Margin="10,0,0,0"
 							FontFamily="Segoe UI Light"
 							VerticalAlignment="Center"/>
-						<Button x:Name="Run_Button" 
+						<Button x:Name="Run_Button"
+                            x:FieldModifier="public"
 							Grid.Column="1"
 							Foreground="White" 
 							VerticalAlignment="Center" 

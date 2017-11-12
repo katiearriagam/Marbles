@@ -21,8 +21,9 @@ namespace Marbles
     {
 		ScrollViewer scrollViewer;
 		public static bool dropped;
+        public static event EventHandler SomethingChanged;
 
-		public InstructionListView()
+        public InstructionListView()
         {
             this.InitializeComponent();
 			dropped = false;
@@ -88,31 +89,38 @@ namespace Marbles
 				if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.AssignBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.DoBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.ForBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.WhileBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.IfBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
 				{
 					lv.Items.Insert(index, new Marbles.StopBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				else if (e.DataView.Properties.ContainsKey("ReturnStatement"))
 				{
 					lv.Items.Insert(index, new Marbles.ReturnBlock());
-				}
+                    SomethingChanged?.Invoke(this, EventArgs.Empty);
+                }
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
@@ -192,5 +200,10 @@ namespace Marbles
                 }
             }
         }
-	}
+
+        private void TargetListView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 }

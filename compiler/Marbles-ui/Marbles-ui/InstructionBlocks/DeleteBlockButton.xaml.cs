@@ -22,8 +22,11 @@ namespace Marbles
             this.InitializeComponent();
         }
 
+        public static event EventHandler SomethingChanged;
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
             var parent = VisualTreeHelper.GetParent(sender as Button);
             while (parent.GetType() != typeof(ListViewItem))
             {

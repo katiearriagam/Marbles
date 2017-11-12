@@ -26,8 +26,12 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
-		private void MethodChosenChanged(object sender, SelectionChangedEventArgs e)
+        public static event EventHandler SomethingChanged;
+
+        private void MethodChosenChanged(object sender, SelectionChangedEventArgs e)
 		{
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+
             var list = sender as ComboBox;
 			var parametersList = Parameters as ListView;
 			Grid containerGrid = new Grid();
@@ -144,7 +148,9 @@ namespace Marbles
 
 		private void AssetID_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var textBox = sender as TextBox;
+            SomethingChanged?.Invoke(this, EventArgs.Empty);
+
+            var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
 				if (textBox.SelectionStart == 1)

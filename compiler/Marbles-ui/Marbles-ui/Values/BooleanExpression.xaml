@@ -30,6 +30,7 @@
 			HorizontalContentAlignment="Stretch"
 			Width="Auto"
 			Margin="2,0"
+            SelectionChanged="boolOperator_SelectionChanged"
 			SelectedIndex="0">
 			<ComboBoxItem>and</ComboBoxItem>
 			<ComboBoxItem>or</ComboBoxItem>

@@ -52,6 +52,7 @@
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Center"
 					HorizontalContentAlignment="Center"
+                    SelectionChanged="functionType_SelectionChanged"
 					Width="Auto">
 				<ComboBoxItem>number</ComboBoxItem>
 				<ComboBoxItem>text</ComboBoxItem>

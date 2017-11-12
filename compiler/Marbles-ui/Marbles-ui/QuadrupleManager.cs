@@ -359,8 +359,15 @@ namespace Marbles
 			}
 
 			int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-			int numericExpValue = (int)(MemoryManager.GetValueFromAddress(numericExpAddress));
-			bool condition = numericExpValue > 0;
+            int numericExpValue;
+            if (inFunction)
+            {
+                numericExpValue = (int)(FunctionDirectory.GetFunction(functionId).memory.GetValueFromAddress(numericExpAddress));
+            }
+            else
+            {
+                numericExpValue = (int)(MemoryManager.GetValueFromAddress(numericExpAddress));
+            }
 
 			int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
 			try { zeroMem = MemoryManager.SetMemory(zeroMem, 0); }
@@ -371,12 +378,12 @@ namespace Marbles
 			if (inFunction)
 			{
 				conditionMem = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
-				conditionMem = FunctionDirectory.GetFunction(functionId).memory.SetMemory(conditionMem, condition);
+				conditionMem = FunctionDirectory.GetFunction(functionId).memory.SetMemory(conditionMem, false);
 			}
 			else
 			{
 				conditionMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
-				conditionMem = MemoryManager.SetMemory(conditionMem, condition);
+				conditionMem = MemoryManager.SetMemory(conditionMem, false);
 			}
 
             int tempNumericExpAddress;

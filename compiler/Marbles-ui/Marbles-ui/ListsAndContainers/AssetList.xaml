@@ -32,6 +32,7 @@
 				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				ScrollViewer.HorizontalScrollMode="Disabled"                  
 				ScrollViewer.VerticalScrollMode="Enabled"
+                SelectionMode="None"
 				ItemsSource="{Binding Collection}"
 				CanDrag="False"
 				CanDragItems="False"

@@ -28,13 +28,16 @@ namespace Marbles
             this.InitializeComponent();
         }
 
-		private void Values_OnDrop(object sender, DragEventArgs e)
+        public static event EventHandler SomethingChanged;
+
+        private void Values_OnDrop(object sender, DragEventArgs e)
 		{
 			e.AcceptedOperation = DataPackageOperation.Copy;
 
 			if (e.DataView.Properties.ContainsKey("ValueTemplate"))
 			{
-				if (e.DataView.Properties.ContainsKey("Variable"))
+                SomethingChanged?.Invoke(this, EventArgs.Empty);
+                if (e.DataView.Properties.ContainsKey("Variable"))
 				{
                     selectedValueType = Utilities.ValueTypes.VariableCall;
                     var vari = new VariableCall();

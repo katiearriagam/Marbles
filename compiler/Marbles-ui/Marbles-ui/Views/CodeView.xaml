@@ -8,7 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local1="using:Marbles"
 	NavigationCacheMode="Required"
-	mc:Ignorable="d">
+	mc:Ignorable="d"
+    Loaded="CodeViewPage_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 		<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -18,26 +19,26 @@
 				<ColumnDefinition Width="0.33*"/>
 			</Grid.ColumnDefinitions>
 
-			<Grid Grid.Column="0">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="10" />
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-				<Grid Grid.Row="0">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="*" />
-					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" 
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" 
 							Text="Drag code blocks here to start coding!" 
 							Foreground="Gray"
 							FontWeight="Light"
 							Margin="10,0,0,0"
 							FontFamily="Segoe UI Light"
 							VerticalAlignment="Center"/>
-					<Button x:Name="CompileButton"
+                    <Button x:Name="CompileButton"
                             Click="CompileButton_Click"
 							Grid.Column="1"
 							Foreground="White" 
@@ -47,12 +48,12 @@
 							Width="150"
 							IsEnabled="True"
 							Background="#0078D7">
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="30"/>
-							</Grid.ColumnDefinitions>
-							<TextBlock
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
 								Grid.Column="0"
 								FontFamily="Segoe UI Light"
 								FontWeight="Light"
@@ -64,7 +65,7 @@
 								TextAlignment="Center"
 								HorizontalAlignment="Center"
 								VerticalAlignment="Center"/>
-							<FontIcon
+                            <FontIcon
 								Grid.Column="1"
 								HorizontalAlignment="Right"
 								Glyph="&#xE713;"
@@ -72,29 +73,29 @@
 								FontSize="15"
 								FontWeight="Light"
 								/>
-						</Grid>
-					</Button>
-				</Grid>
+                        </Grid>
+                    </Button>
+                </Grid>
 
-				<ListView x:Name="MainListView" Grid.Row="2">
-					<ListView.ItemsPanel>
-						<ItemsPanelTemplate>
-							<StackPanel Background="Transparent" Orientation="Vertical" />
-						</ItemsPanelTemplate>
-					</ListView.ItemsPanel>
-					<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-						</Style>
-					</ListView.ItemContainerStyle>
-					<local:AssetList x:Name="AssetListViewContainer" VerticalAlignment="Stretch"></local:AssetList>
-					<local:VariableList x:Name="VariableListViewContainer" VerticalAlignment="Stretch"></local:VariableList>
-					<local:FunctionList x:Name="FunctionListViewContainer" VerticalAlignment="Stretch"></local:FunctionList>
-					<local:InstructionListViewContainer x:Name="InstructionListViewContainer" VerticalAlignment="Stretch"></local:InstructionListViewContainer>
-				</ListView>
-			</Grid>
-
-			<local:TabControlCode Grid.Column="2"></local:TabControlCode>
+                <ListView x:Name="MainListView" Grid.Row="2"
+                    SelectionMode="None">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Background="Transparent" Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <local:AssetList x:Name="AssetListViewContainer" VerticalAlignment="Stretch"></local:AssetList>
+                    <local:VariableList x:Name="VariableListViewContainer" VerticalAlignment="Stretch"></local:VariableList>
+                    <local:FunctionList x:Name="FunctionListViewContainer" VerticalAlignment="Stretch"></local:FunctionList>
+                    <local:InstructionListViewContainer x:Name="InstructionListViewContainer" VerticalAlignment="Stretch"></local:InstructionListViewContainer>
+                </ListView>
+            </Grid>
+            <local:TabControlCode Grid.Column="2"></local:TabControlCode>
 		</Grid>
 	</Grid>
 </Page>

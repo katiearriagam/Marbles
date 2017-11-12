@@ -38,6 +38,12 @@ namespace Marbles
             MainCanvas.SizeChanged += (s, e) => Clip(MainCanvas);
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            Run_Button.Background = Utilities.RunButtonColor;
+            Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+        }
+
         private async void MainCanvas_Drop(object sender, DragEventArgs e)
         {
             cv = sender as Canvas;
@@ -53,6 +59,10 @@ namespace Marbles
                 int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
 
                 assetDragged.SetPosition(newXPosition, newYPosition);
+                Utilities.DisableRunButton();
+                Run_Button.Background = Utilities.RunButtonColor;
+                Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+                Utilities.BlueCompile();
             }
             else
             {
@@ -156,7 +166,12 @@ namespace Marbles
 			IDTextBoxBorder.BorderThickness = new Thickness(0.0);
 			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
 			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
-		}
+
+            Utilities.DisableRunButton();
+            Utilities.BlueCompile();
+            Run_Button.Background = Utilities.RunButtonColor;
+            Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+        }
 
         private void MainCanvas_DragOver(object sender, DragEventArgs e)
         {
@@ -252,7 +267,7 @@ namespace Marbles
 			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
 			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
 		}
-
+    
 		private async void Run_Button_Click(object sender, RoutedEventArgs e)
 		{
 			try { await VirtualMachine.StartExecution(); }
