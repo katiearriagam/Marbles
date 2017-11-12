@@ -11,17 +11,21 @@ namespace Marbles
         private static List<Quadruple> quadruples = new List<Quadruple>();
         private static int currentInstruction = 0;
         private static bool endExecution = false;
-        private static int savedInstructionPointer = 0;
+        private static Stack<int> savedInstructionPointer = new Stack<int>();
         private static Stack<int> localMemoryAllocations = new Stack<int>();
+		private static Stack<Tuple<string, int>> CallStack = new Stack<Tuple<string, int>>(); 
         public static Function LastFunctionCalled; 
 
-        public static void StartExecution()
+		/// <summary>
+		/// Starts executing all quadruples until it reaches the end.
+		/// </summary>
+        public static async Task StartExecution()
         {
             quadruples = QuadrupleManager.GetQuadruples();
             while (!endExecution)
             {
                 int instructionToExecute = currentInstruction;
-                ExecuteInstruction();
+                await ExecuteInstruction();
 
                 // increment current instruction counter only if we didn't do a jump
                 if (instructionToExecute == currentInstruction)
@@ -29,106 +33,174 @@ namespace Marbles
                     currentInstruction++;
                 }
             }
-        }
 
-        private static async void ExecuteInstruction()
+			quadruples = new List<Quadruple>();
+			currentInstruction = 0;
+			endExecution = false;
+			savedInstructionPointer = new Stack<int>();
+			localMemoryAllocations = new Stack<int>();
+			CallStack = new Stack<Tuple<string, int>>();
+			LastFunctionCalled = null;
+		}
+
+		/// <summary>
+		/// Executes the instruction at position currentInstruction.
+		/// </summary>
+        private static async Task ExecuteInstruction()
         {
             Quadruple quadruple = quadruples[currentInstruction];
             Utilities.QuadrupleAction action = quadruple.GetAction();
 
             if (action == Utilities.QuadrupleAction.plus)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				
                 int result = num1 + num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
+
+                MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
             }
             else if (action == Utilities.QuadrupleAction.minus)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                int result = num1 - num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				int result = num1 - num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.multiply)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                int result = num1 * num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				int result = num1 * num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.divide)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
 
-                if (num2 == 0)
-                {
-                    throw new DivideByZeroException();
-                }
+				if (num2 == 0)
+				{
+					throw new DivideByZeroException();
+				}
 
-                int result = num1 / num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int result = num1 / num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.greaterThan)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = num1 > num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = num1 > num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.lessThan)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = num1 < num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = num1 < num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.greaterThanOrEqualTo)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = num1 >= num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = num1 >= num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.lessThanOrEqualTo)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = num1 <= num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = num1 <= num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.equalEqual)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = num1 == num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = num1 == num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.notEqual)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                int num2 = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = num1 != num2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = num1 != num2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.and)
             {
-                bool cond1 = (bool)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                bool cond2 = (bool)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = cond1 && cond2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				bool cond1 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				bool cond2 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = cond1 && cond2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.or)
             {
-                bool cond1 = (bool)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                bool cond2 = (bool)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
-                bool result = cond1 || cond2;
-                MemoryManager.SetMemory(quadruple.GetAssignee(), result);
-            }
+				bool cond1 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				bool cond2 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+
+				bool result = cond1 || cond2;
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
+			}
             else if (action == Utilities.QuadrupleAction.equals)
             {
-                MemoryManager.SetMemory(quadruple.GetAssignee(), MemoryManager.GetValueFromAddress(quadruple.GetOperandOne()));
+				int targetAddress = quadruple.GetAssignee();
+				object value = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				if (targetAddress < 1000) // assignment was to an asset attribute
+				{
+					int assetAttributesCount = Enum.GetNames(typeof(MemoryManager.AssetAttributes)).Length;
+					string assetID = (string)MemoryManager.GetValueFromAddress(targetAddress - (targetAddress % assetAttributesCount));
+					Asset caller = Utilities.FindAssetFromID(assetID);
+
+					if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.width)
+					{
+						await caller.SetWidth((int)value);
+					}
+					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.height)
+					{
+						await caller.SetHeight((int)value);
+					}
+					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.x)
+					{
+						caller.SetPositionXAttribute((int)value);
+					}
+					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.y)
+					{
+						caller.SetPositionYAttribute((int)value);
+					}
+					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.number)
+					{
+						caller.SetNumber((int)value);
+					}
+					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.label)
+					{
+						caller.SetLabel((string)value);
+					}
+				}
+
+                MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), value);
             }
             else if (action == Utilities.QuadrupleAction.Goto)
             {
@@ -136,14 +208,14 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.GotoV)
             {
-                if ((bool)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne()))
+                if ((bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne())))
                 {
                     currentInstruction = quadruple.GetAssignee();
                 }
             }
             else if (action == Utilities.QuadrupleAction.GotoF)
             {
-                if (!((bool)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne())))
+                if (!((bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()))))
                 {
                     currentInstruction = quadruple.GetAssignee();
                 }
@@ -154,36 +226,57 @@ namespace Marbles
                 int functionMemAddress = quadruple.GetOperandTwo();
 
                 LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
-
-                // TODO: load memory from LastFunctionCalled to Global Local Memory
-
-                MemoryManager.AllocateLocalMemory(functionSize); // this can throw - but VM caller will catch it
-
-                localMemoryAllocations.Push(functionSize);
+				
+				// Indicates the address in local memory where the function is loaded.
+				int functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled); // this can throw - but VM caller will catch it
+				
+				CallStack.Push(new Tuple<string, int>(LastFunctionCalled.GetName(), functionAddressInMemory));
             }
             else if (action == Utilities.QuadrupleAction.param)
             {
-                //TODO
+				int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
+				int paramIndex = quadruple.GetAssignee();
+				
+				int destinationAddress = FunctionDirectory.GetFunction(CallStack.Peek().Item1).GetParameters()[paramIndex].GetMemoryAddress();
+
+				MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
             }
             else if (action == Utilities.QuadrupleAction.gosub)
             {
-                savedInstructionPointer = currentInstruction;
+                savedInstructionPointer.Push(currentInstruction);
                 currentInstruction = quadruple.GetOperandOne();
             }
             else if (action == Utilities.QuadrupleAction.retorno)
             {
-                //TODO
-            }
+				int resultValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
+				int functionAddressInGlobalMemory = quadruple.GetAssignee();
+				int localResultValueAddress = MapAddressToLocalMemory(resultValueAddress);
+
+				object resultValue = MemoryManager.GetValueFromAddress(localResultValueAddress);
+
+				// save result in global memory
+				try { MemoryManager.SetMemory(functionAddressInGlobalMemory, resultValue); }
+				catch (Exception e) { throw new Exception(e.Message); }
+
+				currentInstruction = savedInstructionPointer.Pop();
+
+				if (CallStack.Count == 0)
+				{
+					throw new Exception("Call stack is empty.");
+				}
+
+				MemoryManager.DeallocateLocalMemory(FunctionDirectory.GetFunction(CallStack.Pop().Item1).GetFunctionSize());
+			}
             else if (action == Utilities.QuadrupleAction.endProc)
             {
-                currentInstruction = savedInstructionPointer;
+                currentInstruction = savedInstructionPointer.Pop();
 
-                if (localMemoryAllocations.Count == 0)
+                if (CallStack.Count == 0)
                 {
-                    throw new Exception("Trying to deallocate memory that was never allocated."); // this can throw - but VM caller will catch it
+                    throw new Exception("Call stack is empty.");
                 }
 
-                MemoryManager.DeallocateLocalMemory(localMemoryAllocations.Pop());
+                MemoryManager.DeallocateLocalMemory(FunctionDirectory.GetFunction(CallStack.Pop().Item1).GetFunctionSize());
             }
             else if (action == Utilities.QuadrupleAction.set_position)
             {
@@ -194,7 +287,13 @@ namespace Marbles
                 int y = (int)MemoryManager.GetValueFromAddress(quadruple.GetAssignee());
 
                 caller.SetPosition(x, y);
-            }
+
+				int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
+				MemoryManager.SetMemory(xAttrAddress, x);
+
+				int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
+				MemoryManager.SetMemory(yAttrAddress, y);
+			}
             else if (action == Utilities.QuadrupleAction.move_x)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
@@ -203,6 +302,9 @@ namespace Marbles
                 int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
                 await caller.MoveX(displacement);
+
+				int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
+				MemoryManager.SetMemory(xAttrAddress, (int)MemoryManager.GetValueFromAddress(xAttrAddress) + displacement);
             }
             else if (action == Utilities.QuadrupleAction.move_y)
             {
@@ -212,7 +314,10 @@ namespace Marbles
                 int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
                 await caller.MoveX(displacement);
-            }
+
+				int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
+				MemoryManager.SetMemory(yAttrAddress, (int)MemoryManager.GetValueFromAddress(yAttrAddress) + displacement);
+			}
             else if (action == Utilities.QuadrupleAction.spin)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
@@ -228,7 +333,10 @@ namespace Marbles
                 int degrees = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
                 await caller.Turn(degrees);
-            }
+
+				int rotationAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.rotation;
+				MemoryManager.SetMemory(rotationAttrAddress, ((int)MemoryManager.GetValueFromAddress(rotationAttrAddress) + degrees) % 360);
+			}
             else if (action == Utilities.QuadrupleAction.stop)
             {
                 // Go to the end of execution
@@ -243,5 +351,17 @@ namespace Marbles
                 throw new Exception("Invalid quadruple action: " + action.ToString());
             }
         }
+
+		/// <summary>
+		/// Given a memory address belonging to a function, returns its corresponding
+		/// memory address in the Local section of global scope memory.
+		/// </summary>
+		/// <param name="address"></param>
+		/// <returns></returns>
+		public static int MapAddressToLocalMemory(int address)
+		{
+			if (address < 100000) { return address; } 
+			return CallStack.Peek().Item2 + MemoryManager.FunctionMemoryToMemoryManager(CallStack.Peek().Item1, address); 
+		}
     }
 }

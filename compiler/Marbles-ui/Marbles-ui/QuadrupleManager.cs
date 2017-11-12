@@ -472,7 +472,7 @@ namespace Marbles
             {
                 throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.GetParameters().Count + ".");
             }
-            if (type != LastFunctionCalled.GetParameters().Values.ToList()[parameterCount - 1].GetDataType())
+            if (type != LastFunctionCalled.GetParameters()[parameterCount - 1].GetDataType())
 			{
 				throw new Exception("Parameter types do not match.");
 			}
@@ -509,7 +509,7 @@ namespace Marbles
             else
             {
                 tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.GetReturnType());
-                MemoryManager.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
+				quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
             }
             PushOperand(tempGlobal, LastFunctionCalled.GetReturnType());
 			counter++;
@@ -683,11 +683,11 @@ namespace Marbles
 					idMemoryAddress = current.GetLocalVariables()[id].GetMemoryAddress();
 				}
 
-				existsLocalParam = current.GetParameters().ContainsKey(id);
+				existsLocalParam = current.GetParameters().Any((p) => p.GetName() == id);
 				if (existsLocalParam)
 				{
-					type = current.GetParameters()[id].GetDataType();
-					idMemoryAddress = current.GetParameters()[id].GetMemoryAddress();
+					type = current.GetParameter(id).GetDataType();
+					idMemoryAddress = current.GetParameter(id).GetMemoryAddress();
 				}
 
                 existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
@@ -985,23 +985,8 @@ namespace Marbles
 			int result = operandStack.Pop();
             typeStack.Pop();
 
-            object resultValue;
-
-            if (result >= 100000)
-            {
-                resultValue = FunctionDirectory.GetFunction(functionId).memory.GetValueFromAddress(result);
-            }
-            else // the function returned a global memory address (stored outside its own function memory)
-            {
-                resultValue = MemoryManager.GetValueFromAddress(result);
-            }
-
-            // save result in global memory
-            try { MemoryManager.SetMemory(FunctionDirectory.GetFunction(functionId).GetLocation(), resultValue); }
-			catch (Exception e) { throw new Exception(e.Message); }
-
 			// generate quadruple
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, result));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.retorno, result, FunctionDirectory.GetFunction(functionId).GetLocation()));
 			counter++;
 		}
 

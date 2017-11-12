@@ -161,6 +161,11 @@ namespace Marbles
 					}
 					break;
 
+				case MemoryScope.local:
+					if (currentLocalAddress <= highestLocalAddress)
+						return currentLocalAddress;
+					break;
+
 				default:
 					break;
 			}
@@ -228,6 +233,12 @@ namespace Marbles
 		/// <returns></returns>
 		public static int SetMemory(int memAddress, object value)
 		{
+			// insert an asset attribute in memory
+			if (memAddress >= lowestAssetAddress && memAddress <= highestAssetAddress)
+			{
+				memoryGlobalAssets[memAddress] = value;
+				return memAddress;
+			}
 			// insert a global number in memory
 			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
 			{
@@ -339,18 +350,64 @@ namespace Marbles
                     return memoryConstant.Where(x => x.Value.GetType() == typeof(bool) && (bool)(x.Value) == (bool)value).First().Key;
 				}
 			}
+			
+			// insert a local object in memory
+			else if (memAddress >= lowestLocalAddress && memAddress <= highestLocalAddress)
+			{
+				memoryLocal[memAddress] = value;
+				currentLocalAddress++;
+				return memAddress;
+			}
 			throw new Exception("Out of memory");
 		}
 
 		/// <summary>
+		/// Retrieves the offset we try to access in local memory
+		/// </summary>
+		/// <param name="functionId"></param>
+		/// <param name="address"></param>
+		/// <returns></returns>
+		public static int FunctionMemoryToMemoryManager(string functionId, int address)
+		{
+			Function currentFunctionInCallStack = FunctionDirectory.GetFunction(functionId);
+			return currentFunctionInCallStack.memory.GetIndexFromMemoryList(address) - 1;
+		}
+		/// <summary>
 		/// Allocates the memory for a new function (in locals)
 		/// </summary>
 		/// <param name="func"></param>
-		public static void AllocateLocalMemory(int funcSize)
+		public static int AllocateLocalMemory(Function func)
 		{
-			if (currentLocalAddress + funcSize <= highestLocalAddress)
+			if (currentLocalAddress + func.GetFunctionSize() <= highestLocalAddress)
 			{
-				currentLocalAddress += funcSize;
+				int startingLocalAddress = currentLocalAddress;
+
+				// get global memory
+				List<int> GlobalKeyList = func.memory.GetMemoryGlobal().Keys.ToList();
+
+				// sort keys (they are ordered by addition and type)
+				GlobalKeyList.Sort();
+
+				// load global memory
+				foreach (int address in GlobalKeyList)
+				{
+					SetMemory(currentLocalAddress, func.memory.GetValueFromAddress(address));
+				}
+
+				// get temp memory
+				List<int> TempKeyList = func.memory.GetMemoryTemporary().Keys.ToList();
+
+				// sort keys (they are ordered by addition and type)
+				TempKeyList.Sort();
+
+				// load temp memory
+				foreach (int address in TempKeyList)
+				{
+					SetMemory(currentLocalAddress, func.memory.GetValueFromAddress(address));
+				}
+
+				// return memory address where the function is loaded
+				return startingLocalAddress;
 			}
 			else
 			{
@@ -366,6 +423,10 @@ namespace Marbles
 		{
 			if (currentLocalAddress - funcSize >= lowestLocalAddress)
 			{
+				for (int i = currentLocalAddress - 1; i >= currentLocalAddress - funcSize; i--)
+				{
+					memoryLocal[i] = null;
+				}
 				currentLocalAddress -= funcSize;
 			}
 			else

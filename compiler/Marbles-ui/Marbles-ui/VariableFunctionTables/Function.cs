@@ -20,9 +20,16 @@ namespace Marbles
         /// </summary>
 		private int location;
 
-        private int quadrupleStart;
-		private Dictionary<string, Variable> parameters = new Dictionary<string, Variable>();
+		private int paramCount = 0;
+		private int quadrupleStart;
+
 		private Dictionary<string, Variable> localVariables = new Dictionary<string, Variable>();
+		
+		/// <summary>
+		/// Dictionary of parameters with the parameter name as the ky and a tuple containing
+		/// the index of the parameter and a Variable object with the parameter's information.
+		/// </summary>
+		private List<Variable> parameters = new List<Variable>();
 
 		// only used for global
 		private static Dictionary<string, Variable> globalVariables = new Dictionary<string, Variable>();
@@ -58,7 +65,7 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Getter for the function name/ID
+		/// Getter for the function's name
 		/// </summary>
 		/// <returns></returns>
 		public string GetName()
@@ -67,12 +74,12 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Getter for the function parameters
+		/// Getter for the function's parameters
 		/// </summary>
 		/// <returns></returns>
-		public Dictionary<string, Variable> GetParameters()
+		public List<Variable> GetParameters()
 		{
-			return this.parameters;
+			return parameters;
 		}
 
 		/// <summary>
@@ -84,13 +91,29 @@ namespace Marbles
 			return this.localVariables;
 		}
 
+		/// <summary>
+		/// Returns a Variable object found in the function's parameters with a given name.
+		/// </summary>
+		/// <param name="varId"></param>
+		/// <returns></returns>
 		public Variable GetParameter(string varId)
 		{
-			if (parameters.ContainsKey(varId)) { return parameters[varId]; }
+			foreach (Variable param in parameters)
+			{
+				if (param.GetName() == varId)
+				{
+					return param;
+				}
+			}
 
 			throw new ArgumentException();
 		}
 
+		/// <summary>
+		/// Returns a Variable object found in the function's variables table with a given name.
+		/// </summary>
+		/// <param name="varId"></param>
+		/// <returns></returns>
 		public Variable GetLocalVariable(string varId)
 		{
 			if (localVariables.ContainsKey(varId)) { return localVariables[varId]; }
@@ -114,7 +137,7 @@ namespace Marbles
         /// <returns></returns>
         public void AddLocalVariable(Variable variable)
 		{
-			if (parameters.ContainsKey(variable.GetName()))
+			if (parameters.Any((p) => p.GetName() == variable.GetName()))
 			{
 				throw new Exception("A variable named " + variable.GetName() + "already exists in the parameters.");
 			}
@@ -192,7 +215,7 @@ namespace Marbles
 		/// <returns></returns>
 		public void AddParameter(Variable variable)
 		{
-			if (parameters.ContainsKey(variable.GetName()))
+			if (parameters.Any((p) => p.GetName() == variable.GetName()))
 			{
 				throw new Exception("A variable named " + variable.GetName() + "already exists in already exists in the parameters.");
 			}
@@ -210,7 +233,7 @@ namespace Marbles
 			}
 			else
 			{
-				parameters.Add(variable.GetName(), variable);
+				parameters.Add(variable);
 			}
 		}
 
@@ -299,7 +322,7 @@ namespace Marbles
             assets = new Dictionary<string, Asset>();
             globalVariables = new Dictionary<string, Variable>();
             localVariables = new Dictionary<string, Variable>();
-            parameters = new Dictionary<string, Variable>();
+            parameters = new List<Variable>();
         }
 	}
 }

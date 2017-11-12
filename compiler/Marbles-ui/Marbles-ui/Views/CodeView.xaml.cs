@@ -48,7 +48,6 @@ namespace Marbles
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
 
-            /*
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
@@ -62,28 +61,19 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
             
             WriteCodeToFile(out string filePath);
-            */
+            /*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-
+			*/
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
 
             Debug.WriteLine("---- QUADRUPLES START ----");
             QuadrupleManager.PrintQuadruples();
-            Debug.WriteLine("---- QUADRUPLES END ----");
-
-            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
-            ErrorPrinter.PrintWarnings();
-            ErrorPrinter.PrintErrors();
-
-            /*
-            try { VirtualMachine.StartExecution(); }
-            catch (Exception e) { /* show error in some way, these errors are not on ErrorPrinter :( *//* }
-            */
-        }
+			Debug.WriteLine("---- QUADRUPLES END ----");
+		}
 
         private void WriteCodeToFile(out string filePath)
         {
@@ -112,7 +102,7 @@ namespace Marbles
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
             try { parser.Parse(); }
-            catch (Exception e) { };
+            catch (Exception e) { ErrorPrinter.AddError(e.Message); }
 		}
     }
 }

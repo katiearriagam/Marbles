@@ -44,7 +44,8 @@
 							HorizontalAlignment="Right" 
 							Height="30" 
 							Width="150"
-							IsEnabled="False"
+							IsEnabled="True"
+							Click="Run_Button_Click"
 							Background="#2ecc71">
 							<Grid>
 								<Grid.ColumnDefinitions>
