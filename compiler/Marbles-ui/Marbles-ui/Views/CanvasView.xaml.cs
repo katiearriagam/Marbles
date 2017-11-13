@@ -40,7 +40,7 @@ namespace Marbles
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Run_Button.Background = Utilities.RunButtonColor;
+			Run_Button.Background = Utilities.RunButtonColor;
             Run_Button.IsEnabled = Utilities.RunButtonEnabled;
         }
 
@@ -55,8 +55,8 @@ namespace Marbles
                 int xClicked = (int)e.DataView.Properties["xClicked"];
                 int yClicked = (int)e.DataView.Properties["yClicked"];
 
-                int newXPosition = (int)e.GetPosition(relativeTo: cv).X - xClicked;
-                int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
+                int newXPosition = (int)e.GetPosition(relativeTo: MainCanvas).X - xClicked;
+                int newYPosition = (int)e.GetPosition(relativeTo: MainCanvas).Y - yClicked;
 
                 assetDragged.SetPositionNoAwait(newXPosition, newYPosition);
                 Utilities.DisableRunButton();
@@ -67,8 +67,8 @@ namespace Marbles
             else
             {
                 // The asset was dragged from the menu, create a new one
-                int lastDropX = (int)e.GetPosition(relativeTo: cv).X - (int)e.DataView.Properties["xClicked"];
-                int lastDropY = (int)e.GetPosition(relativeTo: cv).Y - (int)e.DataView.Properties["yClicked"];
+                int lastDropX = (int)e.GetPosition(relativeTo: MainCanvas).X - (int)e.DataView.Properties["xClicked"];
+                int lastDropY = (int)e.GetPosition(relativeTo: MainCanvas).Y - (int)e.DataView.Properties["yClicked"];
                 lastDropPosition = new Point(lastDropX, lastDropY);
 
                 assetToAddType = Utilities.actionToShapeType[e.DataView.Properties["action"] as string];
@@ -153,11 +153,11 @@ namespace Marbles
 				}
             }
 
-            Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text), cv);
+            Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text), MainCanvas);
 
             assetToAdd.SetPositionNoAwait((int)lastDropPosition.X, (int)lastDropPosition.Y);
 
-            cv.Children.Add(assetToAdd);
+			MainCanvas.Children.Add(assetToAdd);
 			Utilities.assetsInCanvas.Add(assetToAdd);
 
             IDTextBox.Text = "";
@@ -205,7 +205,7 @@ namespace Marbles
 
             // Delete the asset dropped
             Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
-            cv.Children.Remove(assetDragged);
+			MainCanvas.Children.Remove(assetDragged);
 			      Utilities.assetsInCanvas.Remove(assetDragged);
         }
 
@@ -277,7 +277,7 @@ namespace Marbles
 		{
             List<Tuple<int, int, int, int, int, int, string>> assetValues = new List<Tuple<int, int, int, int, int, int, string>>();
 
-            foreach (UIElement child in cv.Children)
+            foreach (UIElement child in MainCanvas.Children)
             {
                 Asset c = child as Asset;
                 assetValues.Add(new Tuple<int, int, int, int, int, int, string>(
@@ -285,7 +285,23 @@ namespace Marbles
             }
 
             try { await VirtualMachine.Execute(); }
-			catch (Exception ex) { ErrorPrinter.AddError(ex.Message); }
+			catch (Exception ex)
+			{
+				var errorTemplate = new ErrorTemplate();
+				List<string> pseudoList = new List<string>();
+				pseudoList.Add(ex.Message);
+				
+				// add error to error list
+				errorTemplate.FillTemplate(null, pseudoList, Utilities.GetRandomBrushForErrors());
+
+				Utilities.errorsInLines.Add(errorTemplate);
+
+				Utilities.vmExecuting = false;
+				Utilities.BlueCompile();
+
+				Utilities.ChangePageHeader("Errors");
+				this.Frame.Navigate((typeof(ErrorView)));
+			}
 
             MemoryManager.PrintMemory(); // Print memory with all of its values set
             MemoryManager.RunReset(); // Reset memory to its original state before execution
@@ -293,9 +309,9 @@ namespace Marbles
             int attrCount = Enum.GetNames(typeof(MemoryManager.AssetAttributes)).Length;
 
             // Return assets in canvas to their original state before execution
-            for (int i = 0; i < cv.Children.ToList().Count; i++)
+            for (int i = 0; i < MainCanvas.Children.ToList().Count; i++)
             {
-                Asset c = cv.Children[i] as Asset;
+                Asset c = MainCanvas.Children[i] as Asset;
 
                 MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.x + (i * attrCount), assetValues[i].Item1);
                 MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.y + (i * attrCount), assetValues[i].Item2);
