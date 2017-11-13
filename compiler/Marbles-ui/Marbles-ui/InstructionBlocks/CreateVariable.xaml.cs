@@ -32,7 +32,7 @@ namespace Marbles
             {
                 dataTypeSelected = "bool";
             }
-            Utilities.linesOfCode.Add(new CodeLine("var " + dataTypeSelected  + " " + VariableName.Text.ToString() + ";", this));
+            Utilities.linesOfCode.Add(new CodeLine("var " + dataTypeSelected  + " " + VariableName.Text.ToString() + ";", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
         }
 

@@ -105,7 +105,7 @@ namespace Marbles
             string funcType = ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString();
             if (funcType == "boolean") funcType = "bool";
 
-            Utilities.linesOfCode.Add(new CodeLine("function " + funcType  + " " + functionID.Text + "(", this));
+            Utilities.linesOfCode.Add(new CodeLine("function " + funcType  + " " + functionID.Text + "(", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
             bool firstParam = true;
             foreach (var item in Parameters.Items)
@@ -139,7 +139,7 @@ namespace Marbles
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ") {";
             VariableListViewContainer.PrintCode();
             InstructionListViewContainer.PrintCode();
-            Utilities.linesOfCode.Add(new CodeLine("}", this));
+            Utilities.linesOfCode.Add(new CodeLine("}", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
         }
 

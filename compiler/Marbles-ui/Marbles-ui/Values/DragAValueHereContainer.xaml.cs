@@ -28,5 +28,10 @@ namespace Marbles
 		{
 			values.PrintCode();
 		}
+
+		public Values GetValuesList()
+		{
+			return values;
+		}
 	}
 }

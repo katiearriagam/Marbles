@@ -33,12 +33,12 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Utilities.linesOfCode.Add(new CodeLine("while (", this));
+            Utilities.linesOfCode.Add(new CodeLine("while (", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
             ValuesInput.PrintCode();
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ") {";
             instructions.PrintCode();
-            Utilities.linesOfCode.Add(new CodeLine("}", this));
+            Utilities.linesOfCode.Add(new CodeLine("}", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
         }
     }

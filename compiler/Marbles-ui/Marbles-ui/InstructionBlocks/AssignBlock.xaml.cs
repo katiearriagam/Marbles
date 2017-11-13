@@ -29,7 +29,7 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Utilities.linesOfCode.Add(new CodeLine("set ", this));
+            Utilities.linesOfCode.Add(new CodeLine("set ", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
             ValuesInputThis.PrintCode();
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += " = ";

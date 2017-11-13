@@ -27,7 +27,7 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Utilities.linesOfCode.Add(new CodeLine("stop;", this));
+            Utilities.linesOfCode.Add(new CodeLine("stop;", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
         }
     }
