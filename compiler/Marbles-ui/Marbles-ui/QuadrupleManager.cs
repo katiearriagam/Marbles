@@ -358,9 +358,25 @@ namespace Marbles
 				throw new Exception("FOR loop conditions must contain a numeric data type.");
 			}
 
-			int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-            
-			int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
+			int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored
+
+            int tempAddressWithNumericExp = 0;
+
+            if (inFunction)
+            {
+                tempAddressWithNumericExp = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                tempAddressWithNumericExp = FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempAddressWithNumericExp, 0);
+            }
+            else
+            {
+                tempAddressWithNumericExp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                tempAddressWithNumericExp = MemoryManager.SetMemory(tempAddressWithNumericExp, 0);
+            }
+
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, numericExpAddress, tempAddressWithNumericExp));
+            counter++;
+
+            int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
 			try { zeroMem = MemoryManager.SetMemory(zeroMem, 0); }
 			catch (Exception e) { throw new Exception(e.Message); }
 
@@ -380,7 +396,7 @@ namespace Marbles
 			// This is where we will jump back to at the end of every FOR loop iteration
 			jumpStack.Push(counter);
 
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, numericExpAddress, zeroMem, conditionMem));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, tempAddressWithNumericExp, zeroMem, conditionMem));
 			counter++;
 
 			// we will have to set this jump's position at the end of the FOR statement
@@ -393,7 +409,7 @@ namespace Marbles
             oneMem = MemoryManager.SetMemory(oneMem, 1);
             
 			// After checking the condition, we can safely substract one from the numeric expression on the FOR condition
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, numericExpAddress, oneMem, numericExpAddress));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, tempAddressWithNumericExp, oneMem, tempAddressWithNumericExp));
 			counter++;
 		}
 

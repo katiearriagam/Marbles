@@ -283,6 +283,7 @@ namespace Marbles
             Canvas.SetLeft(this, x);
             Canvas.SetTop(this, y);
 
+            sb.Stop(); // stop the storyboard in case it is running
             await Turn(0); // necessary for the SetPosition action to wait sb.Duration milliseconds afte completion
         }
 
@@ -372,6 +373,7 @@ namespace Marbles
             this.number = number;
             AssetNumber.Text = number.ToString();
 
+            sb.Stop(); // stop the storyboard in case it is running
             await Turn(0); // necessary for the SetNumber action to wait sb.Duration milliseconds afte completion
         }
 
@@ -386,6 +388,7 @@ namespace Marbles
             this.label = label;
             AssetLabel.Text = label;
 
+            sb.Stop(); // stop the storyboard in case it is running
             await Turn(0); // necessary for the SetLabel action to wait sb.Duration milliseconds afte completion
         }
 
