@@ -9,7 +9,13 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Name="Container" Background="#F7630C" Padding="10" Width="Auto" Margin="0,5">
+	<Grid Background="White">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+		
+		<Grid Grid.Column="0" Name="Container" Background="#F7630C" Padding="10" Width="Auto" Margin="0,5">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="0.10*" />
 			<RowDefinition Height="10" />
@@ -42,6 +48,17 @@
 			<local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right" />
 		</Grid>
 		<Grid Grid.Row="2" Background="White" MinHeight="100">
+		</Grid>
+	</Grid>
+
+		<Grid x:Name="ErrorEllipseGrid" Grid.Column="1" Background="White" Padding="0" Width="Auto">
+			<Ellipse
+					x:Name="ErrorEllipse"
+					Fill="Red"
+					Height="0"
+					Width="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"/>
 		</Grid>
 	</Grid>
 </UserControl>

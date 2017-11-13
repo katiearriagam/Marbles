@@ -53,6 +53,11 @@ namespace Marbles
 						sender.Header = "Code";
 						ContentFrame.Navigate(typeof(CodeView));
 						break;
+
+					case "Errors":
+						sender.Header = "Errors";
+						ContentFrame.Navigate(typeof(ErrorView));
+						break;
 			}
 
 		}
@@ -71,6 +76,11 @@ namespace Marbles
 					case "Code":
 						sender.Header = "Code";
 						ContentFrame.Navigate(typeof(CodeView));
+						break;
+
+					case "Errors":
+						sender.Header = "Errors";
+						ContentFrame.Navigate(typeof(ErrorView));
 						break;
 			}
 		}

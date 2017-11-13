@@ -198,8 +198,13 @@ namespace Marbles
 
         private void DeleteIcon_Drop(object sender, DragEventArgs e)
         {
-            // Delete the asset dropped
-            Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
+			Utilities.BlueCompile();
+			Utilities.DisableRunButton();
+			Run_Button.Background = Utilities.RunButtonColor;
+			Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+
+			// Delete the asset dropped
+			Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
             cv.Children.Remove(assetDragged);
 			Utilities.assetsInCanvas.Remove(assetDragged);
         }

@@ -27,10 +27,26 @@ namespace Marbles
 
         public void PrintCode()
         {
-            Utilities.linesOfCode.Add(new CodeLine("return ", this));
+			CleanPossibleError();
+			Utilities.linesOfCode.Add(new CodeLine("return ", this, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
             ValuesInput.PrintCode();
             ((CodeLine)Utilities.linesOfCode[Utilities.linesOfCodeCount-1]).content += ";";
         }
+
+		public void SetError(Brush errorColor)
+		{
+			ErrorEllipseGrid.Padding = new Thickness(5.0);
+			ErrorEllipse.Height = 10;
+			ErrorEllipse.Width = 10;
+			ErrorEllipse.Fill = errorColor;
+		}
+
+		public void CleanPossibleError()
+		{
+			ErrorEllipseGrid.Padding = new Thickness(0.0);
+			ErrorEllipse.Height = 0;
+			ErrorEllipse.Width = 0;
+		}
 	}
 }

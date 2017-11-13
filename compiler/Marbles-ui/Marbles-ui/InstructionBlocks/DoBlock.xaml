@@ -9,14 +9,19 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#FFB900" Padding="10" Width="Auto" Margin="0,5">
-		<Grid>
+	<Grid Background="White">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+		
+		<Grid Grid.Column="0" Background="#FFB900" Padding="10,10,5,10" Width="Auto" Margin="0,5" HorizontalAlignment="Stretch">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
-			
+
 			<TextBlock Grid.Column="0" 
 						 Foreground="White" 
 						 FontSize="20" 
@@ -27,9 +32,19 @@
 						 VerticalAlignment="Center"
 						 HorizontalAlignment="Left">
                        do
-				</TextBlock>
-				<local:Values Grid.Column="1" x:Name="ValuesInput"></local:Values>
-                <local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right"/>
-			</Grid>
+			</TextBlock>
+			<local:DragAValueHereContainer Grid.Column="1" x:Name="ValuesInputThis"></local:DragAValueHereContainer>
+			<local:DeleteBlockButton x:Name="DeleteButton" Grid.Column="2" HorizontalAlignment="Right"/>
 		</Grid>
+
+		<Grid x:Name="ErrorEllipseGrid" Grid.Column="1" Background="White" Padding="0" Width="Auto">
+			<Ellipse
+					x:Name="ErrorEllipse"
+					Fill="Red"
+					Height="0"
+					Width="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"/>
+		</Grid>
+	</Grid>
 </UserControl>

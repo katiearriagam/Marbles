@@ -152,7 +152,8 @@ namespace Marbles
 
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
 				{
-					throw new Exception("Invalid operation: " + unaryOperand + " " + op + " ");
+					throw new Exception("Invalid operation: " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) +
+						SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(unaryOperand)).ToString());
 				}
 
 				// at this point, the only acceptable DT is number
@@ -186,7 +187,9 @@ namespace Marbles
 
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
 				{
-					throw new Exception("Invalid operation: " + operandOne + " " + op + " " + operandTwo);
+					throw new Exception("Invalid operation: " + SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(operandOne)).ToString() 
+								+ " " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) + " " + 
+								SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(operandTwo)).ToString());
 				}
 				
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
