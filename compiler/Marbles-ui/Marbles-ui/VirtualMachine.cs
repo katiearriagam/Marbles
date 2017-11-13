@@ -19,7 +19,7 @@ namespace Marbles
 		/// <summary>
 		/// Starts executing all quadruples until it reaches the end.
 		/// </summary>
-        public static async Task StartExecution()
+        public static async Task Execute()
         {
             quadruples = QuadrupleManager.GetQuadruples();
             while (!endExecution)
@@ -184,19 +184,19 @@ namespace Marbles
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.x)
 					{
-						caller.SetPositionXAttribute((int)value);
+						await caller.SetPositionXAttribute((int)value);
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.y)
 					{
-						caller.SetPositionYAttribute((int)value);
+						await caller.SetPositionYAttribute((int)value);
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.number)
 					{
-						caller.SetNumber((int)value);
+						await caller.SetNumber((int)value);
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.label)
 					{
-						caller.SetLabel((string)value);
+						await caller.SetLabel((string)value);
 					}
 				}
 
@@ -286,7 +286,7 @@ namespace Marbles
                 int x = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
                 int y = (int)MemoryManager.GetValueFromAddress(quadruple.GetAssignee());
 
-                caller.SetPosition(x, y);
+                await caller.SetPosition(x, y);
 
 				int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
 				MemoryManager.SetMemory(xAttrAddress, x);

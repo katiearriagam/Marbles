@@ -152,7 +152,7 @@ namespace Marbles
 
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
 				{
-					throw new Exception("Invalid operation: " + unaryOperand + " " + op + " ");
+					throw new Exception("Invalid operation: " + unaryOperand + " " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) + " ");
 				}
 
 				// at this point, the only acceptable DT is number
@@ -186,7 +186,7 @@ namespace Marbles
 
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
 				{
-					throw new Exception("Invalid operation: " + operandOne + " " + op + " " + operandTwo);
+					throw new Exception("Invalid operation: " + operandOne + " " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) + " " + operandTwo);
 				}
 				
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
@@ -359,16 +359,7 @@ namespace Marbles
 			}
 
 			int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-            int numericExpValue;
-            if (inFunction)
-            {
-                numericExpValue = (int)(FunctionDirectory.GetFunction(functionId).memory.GetValueFromAddress(numericExpAddress));
-            }
-            else
-            {
-                numericExpValue = (int)(MemoryManager.GetValueFromAddress(numericExpAddress));
-            }
-
+            
 			int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
 			try { zeroMem = MemoryManager.SetMemory(zeroMem, 0); }
 			catch (Exception e) { throw new Exception(e.Message); }
@@ -386,22 +377,10 @@ namespace Marbles
 				conditionMem = MemoryManager.SetMemory(conditionMem, false);
 			}
 
-            int tempNumericExpAddress;
-            if (inFunction)
-            {
-                tempNumericExpAddress = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempNumericExpAddress, numericExpValue);
-            }
-            else
-            {
-                tempNumericExpAddress = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-                MemoryManager.SetMemory(tempNumericExpAddress, numericExpValue);
-            }
-
 			// This is where we will jump back to at the end of every FOR loop iteration
 			jumpStack.Push(counter);
 
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, tempNumericExpAddress, zeroMem, conditionMem));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, numericExpAddress, zeroMem, conditionMem));
 			counter++;
 
 			// we will have to set this jump's position at the end of the FOR statement
@@ -414,7 +393,7 @@ namespace Marbles
             oneMem = MemoryManager.SetMemory(oneMem, 1);
             
 			// After checking the condition, we can safely substract one from the numeric expression on the FOR condition
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, tempNumericExpAddress, oneMem, tempNumericExpAddress));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, numericExpAddress, oneMem, numericExpAddress));
 			counter++;
 		}
 
@@ -819,8 +798,7 @@ namespace Marbles
 			// we read a constant string, so we add it to global constant memory
 			int constMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.text);
 
-			// gets the new memory of the constant
-			// of retrieves it it was already set
+			// gets the new memory of the constant or retrieves if it was already set
 			try
 			{
 				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)

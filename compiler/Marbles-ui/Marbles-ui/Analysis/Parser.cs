@@ -409,14 +409,16 @@ public class Parser {
 		Expect(10); // '('
 		SUPER_EXP();
 		Expect(12); // ')'
-        QuadrupleManager.IfAfterCondition();
+        try { QuadrupleManager.IfAfterCondition(); }
+        catch (Exception e) { SemErr(e.Message); }
 		Expect(7); // '{'
 		while (StartOf(1)) {
 			INSTRUCTION();
 		}
 		Expect(8); // '}'
-        QuadrupleManager.IfEnd();
-	}
+        try { QuadrupleManager.IfEnd(); }
+        catch (Exception e) { SemErr(e.Message); }
+    }
 
 	void ACTION() {
         Utilities.AssetAction action;

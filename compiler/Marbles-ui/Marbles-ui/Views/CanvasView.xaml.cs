@@ -58,7 +58,7 @@ namespace Marbles
                 int newXPosition = (int)e.GetPosition(relativeTo: cv).X - xClicked;
                 int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
 
-                assetDragged.SetPosition(newXPosition, newYPosition);
+                assetDragged.SetPositionNoAwait(newXPosition, newYPosition);
                 Utilities.DisableRunButton();
                 Run_Button.Background = Utilities.RunButtonColor;
                 Run_Button.IsEnabled = Utilities.RunButtonEnabled;
@@ -155,7 +155,7 @@ namespace Marbles
 
             Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text), cv);
 
-            assetToAdd.SetPosition((int)lastDropPosition.X, (int)lastDropPosition.Y);
+            assetToAdd.SetPositionNoAwait((int)lastDropPosition.X, (int)lastDropPosition.Y);
 
             cv.Children.Add(assetToAdd);
 			Utilities.assetsInCanvas.Add(assetToAdd);
@@ -198,6 +198,11 @@ namespace Marbles
 
         private void DeleteIcon_Drop(object sender, DragEventArgs e)
         {
+            Utilities.BlueCompile();
+            Utilities.DisableRunButton();
+            Run_Button.Background = Utilities.RunButtonColor;
+            Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+
             // Delete the asset dropped
             Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
             cv.Children.Remove(assetDragged);
@@ -270,8 +275,32 @@ namespace Marbles
     
 		private async void Run_Button_Click(object sender, RoutedEventArgs e)
 		{
-			try { await VirtualMachine.StartExecution(); }
+            List<Tuple<int, int, int, int, int, int, string>> assetValues = new List<Tuple<int, int, int, int, int, int, string>>();
+
+            foreach (UIElement child in cv.Children)
+            {
+                Asset c = child as Asset;
+                assetValues.Add(new Tuple<int, int, int, int, int, int, string>(
+                    c.GetX(), c.GetY(), c.GetWidth(), c.GetHeight(), c.GetRotation(), c.GetNumber(), c.GetLabel()));
+            }
+
+            try { await VirtualMachine.Execute(); }
 			catch (Exception ex) { ErrorPrinter.AddError(ex.Message); }
-		}
+
+            MemoryManager.PrintMemory(); // print the memory with all of its values set
+
+            for (int i = 0; i < cv.Children.ToList().Count; i++)
+            {
+                Asset c = cv.Children[i] as Asset;
+                c.SetPositionNoAwait(assetValues[i].Item1, assetValues[i].Item2);
+                c.SetWidthNoAnimation(assetValues[i].Item3);
+                c.SetHeightNoAnimation(assetValues[i].Item4);
+                c.SetRotationNoAnimation(0);
+                c.SetNumberNoWait(assetValues[i].Item6);
+                c.SetLabelNoWait(assetValues[i].Item7);
+            }
+
+            System.Threading.Thread.Sleep(1000);
+        }
 	}
 }

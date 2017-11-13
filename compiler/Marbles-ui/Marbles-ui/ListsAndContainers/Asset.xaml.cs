@@ -101,6 +101,13 @@ namespace Marbles
             return width;
         }
 
+        public void SetWidthNoAnimation(int width)
+        {
+            this.width = width;
+            AssetImage.Width = this.width;
+            ctImage.CenterX = ctUserControl.CenterX = this.width / 2;
+        }
+
         public async Task SetWidth(int width)
         {
             int originalWidth = this.width;
@@ -145,6 +152,13 @@ namespace Marbles
         public int GetHeight()
         {
             return height;
+        }
+
+        public void SetHeightNoAnimation(int height)
+        {
+            this.height= height;
+            AssetImage.Height = this.height;
+            ctImage.CenterY = ctUserControl.CenterY = this.height / 2;
         }
 
         public async Task SetHeight(int height)
@@ -213,13 +227,39 @@ namespace Marbles
 			return label;
 		}
 
-		public void SetPosition(int x, int y)
+        /// <summary>
+        /// Sets the (x, y) position of an Asset.
+        /// Used when we manually call this function within our code.
+        /// Use <see cref="SetPosition"/> when the user sets the position through the UI's code blocks.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public void SetPositionNoAwait(int x, int y)
         {
             this.x = x;
             this.y = y;
-            
+
             Canvas.SetLeft(this, x);
             Canvas.SetTop(this, y);
+        }
+
+        /// <summary>
+        /// Sets the (x, y) position of an Asset.
+        /// Use this only when the user sets the position throught the UI's code blocks.
+        /// Otherwise, use <see cref="SetPositionNoAwait"/>.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+		public async Task SetPosition(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+
+            Canvas.SetLeft(this, x);
+            Canvas.SetTop(this, y);
+
+            await Turn(0); // necessary for the SetPosition action to wait sb.Duration milliseconds afte completion
         }
 
         public async Task MoveX(int displacement)
@@ -256,6 +296,13 @@ namespace Marbles
             sb.Stop();
         }
 
+        public void SetRotationNoAnimation(int rotation)
+        {
+            this.rotation = rotation;
+            ctImage.Rotation = rotation;
+            AssetImage.RenderTransform = ctImage;
+        }
+
         public async Task Turn(int degrees)
         {
             AssetImage.RenderTransform = ctImage;
@@ -290,16 +337,32 @@ namespace Marbles
             sb.Stop();
         }
 
-        public void SetNumber(int number)
+        public void SetNumberNoWait(int number)
         {
             this.number = number;
             AssetNumber.Text = number.ToString();
         }
 
-        public void SetLabel(string label)
+        public async Task SetNumber(int number)
+        {
+            this.number = number;
+            AssetNumber.Text = number.ToString();
+
+            await Turn(0); // necessary for the SetNumber action to wait sb.Duration milliseconds afte completion
+        }
+
+        public void SetLabelNoWait(string label)
         {
             this.label = label;
             AssetLabel.Text = label;
+        }
+
+        public async Task SetLabel(string label)
+        {
+            this.label = label;
+            AssetLabel.Text = label;
+
+            await Turn(0); // necessary for the SetLabel action to wait sb.Duration milliseconds afte completion
         }
 
         private void UserControl_DragStarting(UIElement sender, DragStartingEventArgs args)
@@ -335,14 +398,14 @@ namespace Marbles
 			return memoryAddress;
 		}
 
-        public void SetPositionXAttribute(int newX)
+        public async Task SetPositionXAttribute(int newX)
         {
-            SetPosition(newX, y);
+            await SetPosition(newX, y);
         }
 
-        public void SetPositionYAttribute(int newY)
+        public async Task SetPositionYAttribute(int newY)
         {
-            SetPosition(x, newY);
+            await SetPosition(x, newY);
         }
 	}
 }
