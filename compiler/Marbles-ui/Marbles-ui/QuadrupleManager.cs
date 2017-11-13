@@ -700,7 +700,7 @@ namespace Marbles
 					idMemoryAddress = current.GetParameter(id).GetMemoryAddress();
 				}
 
-                existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
+                existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id) && !FunctionDirectory.FunctionExists(id);
                 if (existsGlobal)
                 {
                     type = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetDataType();
@@ -709,7 +709,7 @@ namespace Marbles
             }
 			else
 			{
-				existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
+				existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id) && !FunctionDirectory.FunctionExists(id);
 				if (existsGlobal)
 				{
 					type = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetDataType();
