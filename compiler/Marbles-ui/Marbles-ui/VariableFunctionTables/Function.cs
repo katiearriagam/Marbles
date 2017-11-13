@@ -20,7 +20,6 @@ namespace Marbles
         /// </summary>
 		private int location;
 
-		private int paramCount = 0;
 		private int quadrupleStart;
 
 		private Dictionary<string, Variable> localVariables = new Dictionary<string, Variable>();

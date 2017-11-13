@@ -58,7 +58,7 @@ namespace Marbles
                 int newXPosition = (int)e.GetPosition(relativeTo: cv).X - xClicked;
                 int newYPosition = (int)e.GetPosition(relativeTo: cv).Y - yClicked;
 
-                assetDragged.SetPosition(newXPosition, newYPosition);
+                assetDragged.SetPositionNoAwait(newXPosition, newYPosition);
                 Utilities.DisableRunButton();
                 Run_Button.Background = Utilities.RunButtonColor;
                 Run_Button.IsEnabled = Utilities.RunButtonEnabled;
@@ -155,7 +155,7 @@ namespace Marbles
 
             Asset assetToAdd = new Asset(IDTextBox.Text, Utilities.shapeToImagePath[assetToAddType], LabelTextBox.Text, (int)lastDropPosition.X, (int)lastDropPosition.Y, Convert.ToInt32(NumberTextBox.Text.Length == 0 ? "0" : NumberTextBox.Text), cv);
 
-            assetToAdd.SetPosition((int)lastDropPosition.X, (int)lastDropPosition.Y);
+            assetToAdd.SetPositionNoAwait((int)lastDropPosition.X, (int)lastDropPosition.Y);
 
             cv.Children.Add(assetToAdd);
 			Utilities.assetsInCanvas.Add(assetToAdd);
@@ -198,15 +198,15 @@ namespace Marbles
 
         private void DeleteIcon_Drop(object sender, DragEventArgs e)
         {
-			Utilities.BlueCompile();
-			Utilities.DisableRunButton();
-			Run_Button.Background = Utilities.RunButtonColor;
-			Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+            Utilities.BlueCompile();
+            Utilities.DisableRunButton();
+            Run_Button.Background = Utilities.RunButtonColor;
+            Run_Button.IsEnabled = Utilities.RunButtonEnabled;
 
-			// Delete the asset dropped
-			Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
+            // Delete the asset dropped
+            Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
             cv.Children.Remove(assetDragged);
-			Utilities.assetsInCanvas.Remove(assetDragged);
+			      Utilities.assetsInCanvas.Remove(assetDragged);
         }
 
         private void DeleteIcon_DragOver(object sender, DragEventArgs e)
@@ -275,8 +275,48 @@ namespace Marbles
     
 		private async void Run_Button_Click(object sender, RoutedEventArgs e)
 		{
-			try { await VirtualMachine.StartExecution(); }
+            List<Tuple<int, int, int, int, int, int, string>> assetValues = new List<Tuple<int, int, int, int, int, int, string>>();
+
+            foreach (UIElement child in cv.Children)
+            {
+                Asset c = child as Asset;
+                assetValues.Add(new Tuple<int, int, int, int, int, int, string>(
+                    c.GetX(), c.GetY(), c.GetWidth(), c.GetHeight(), c.GetRotation(), c.GetNumber(), c.GetLabel()));
+            }
+
+            try { await VirtualMachine.Execute(); }
 			catch (Exception ex) { ErrorPrinter.AddError(ex.Message); }
-		}
+
+            MemoryManager.PrintMemory(); // Print memory with all of its values set
+            MemoryManager.RunReset(); // Reset memory to its original state before execution
+
+            int attrCount = Enum.GetNames(typeof(MemoryManager.AssetAttributes)).Length;
+
+            // Return assets in canvas to their original state before execution
+            for (int i = 0; i < cv.Children.ToList().Count; i++)
+            {
+                Asset c = cv.Children[i] as Asset;
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.x + (i * attrCount), assetValues[i].Item1);
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.y + (i * attrCount), assetValues[i].Item2);
+                c.SetPositionNoAwait(assetValues[i].Item1, assetValues[i].Item2);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.width + (i * attrCount), assetValues[i].Item3);
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.height + (i * attrCount), assetValues[i].Item4);
+                c.SetWidthNoAnimation(assetValues[i].Item3);
+                c.SetHeightNoAnimation(assetValues[i].Item4);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.rotation + (i * attrCount), 0);
+                c.SetRotationNoAnimation(0);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.number + (i * attrCount), assetValues[i].Item6);
+                c.SetNumberNoWait(assetValues[i].Item6);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.label + (i * attrCount), assetValues[i].Item7);
+                c.SetLabelNoWait(assetValues[i].Item7);
+            }
+
+            System.Threading.Thread.Sleep(1000);
+        }
 	}
 }

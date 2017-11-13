@@ -19,7 +19,7 @@ namespace Marbles
 		/// <summary>
 		/// Starts executing all quadruples until it reaches the end.
 		/// </summary>
-        public static async Task StartExecution()
+        public static async Task Execute()
         {
             quadruples = QuadrupleManager.GetQuadruples();
             while (!endExecution)
@@ -54,7 +54,7 @@ namespace Marbles
             if (action == Utilities.QuadrupleAction.plus)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 				
                 int result = num1 + num2;
 
@@ -62,8 +62,8 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.minus)
             {
-				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+                int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				int result = num1 - num2;
 
@@ -72,7 +72,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.multiply)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				int result = num1 * num2;
 
@@ -81,7 +81,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.divide)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				if (num2 == 0)
 				{
@@ -95,7 +95,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.greaterThan)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = num1 > num2;
 
@@ -104,7 +104,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.lessThan)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = num1 < num2;
 
@@ -113,7 +113,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.greaterThanOrEqualTo)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = num1 >= num2;
 
@@ -122,7 +122,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.lessThanOrEqualTo)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = num1 <= num2;
 
@@ -131,7 +131,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.equalEqual)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = num1 == num2;
 
@@ -140,7 +140,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.notEqual)
             {
 				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = num1 != num2;
 
@@ -149,7 +149,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.and)
             {
 				bool cond1 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				bool cond2 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				bool cond2 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = cond1 && cond2;
 
@@ -158,7 +158,7 @@ namespace Marbles
             else if (action == Utilities.QuadrupleAction.or)
             {
 				bool cond1 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				bool cond2 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				bool cond2 = (bool)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				bool result = cond1 || cond2;
 
@@ -184,19 +184,19 @@ namespace Marbles
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.x)
 					{
-						caller.SetPositionXAttribute((int)value);
+						await caller.SetPositionXAttribute((int)value);
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.y)
 					{
-						caller.SetPositionYAttribute((int)value);
+						await caller.SetPositionYAttribute((int)value);
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.number)
 					{
-						caller.SetNumber((int)value);
+						await caller.SetNumber((int)value);
 					}
 					else if (targetAddress % assetAttributesCount == (int)MemoryManager.AssetAttributes.label)
 					{
-						caller.SetLabel((string)value);
+						await caller.SetLabel((string)value);
 					}
 				}
 
@@ -236,8 +236,9 @@ namespace Marbles
             {
 				int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
 				int paramIndex = quadruple.GetAssignee();
-				
-				int destinationAddress = FunctionDirectory.GetFunction(CallStack.Peek().Item1).GetParameters()[paramIndex].GetMemoryAddress();
+                Variable p = FunctionDirectory.GetFunction(CallStack.Peek().Item1).GetParameters()[paramIndex];
+                int pAddr = p.GetMemoryAddress();
+                int destinationAddress = MapAddressToLocalMemory(pAddr);
 
 				MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
             }
@@ -286,7 +287,7 @@ namespace Marbles
                 int x = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
                 int y = (int)MemoryManager.GetValueFromAddress(quadruple.GetAssignee());
 
-                caller.SetPosition(x, y);
+                await caller.SetPosition(x, y);
 
 				int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
 				MemoryManager.SetMemory(xAttrAddress, x);
@@ -313,7 +314,7 @@ namespace Marbles
 
                 int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
-                await caller.MoveX(displacement);
+                await caller.MoveY(displacement);
 
 				int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
 				MemoryManager.SetMemory(yAttrAddress, (int)MemoryManager.GetValueFromAddress(yAttrAddress) + displacement);
@@ -360,7 +361,8 @@ namespace Marbles
 		/// <returns></returns>
 		public static int MapAddressToLocalMemory(int address)
 		{
-			if (address < 100000) { return address; } 
+			if (address < 100000) { return address; }
+            if (CallStack.Count == 0) throw new Exception("CallStack is empty");
 			return CallStack.Peek().Item2 + MemoryManager.FunctionMemoryToMemoryManager(CallStack.Peek().Item1, address); 
 		}
     }

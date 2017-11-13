@@ -230,6 +230,16 @@ namespace Marbles
             return null;
         }
 
+        public static object GetDefaultValueFromType(Type t)
+        {
+            if (t == typeof(int) || t == typeof(Int32)) return 0;
+            else if (t == typeof(bool)) return false;
+            else if (t == typeof(string)) return "";
+            else if (t == typeof(double) || t == typeof(float)) return 0.0;
+
+            return null;
+        }
+      
 		public static SolidColorBrush GetRandomBrushForErrors()
 		{
 			return errorDotColors[rand.Next(0, errorDotColors.Count - 1)];

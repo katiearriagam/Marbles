@@ -40,7 +40,7 @@ namespace Marbles
 		private static int counter = 0;
 
 		/// <summary>
-		/// Tells us whether we are currently in a function or not.
+		/// Tells whether we are currently in a function or not.
 		/// </summary>
 		private static bool inFunction = false;
 
@@ -48,6 +48,11 @@ namespace Marbles
 		/// If inFunction is true, this value holds the ID of the function we are currently in.
 		/// </summary>
 		private static string functionId = "";
+
+        /// <summary>
+        /// Tells whether the function we are currently in has a return statement or not.
+        /// </summary>
+        private static bool hasReturn = false;
 
 		/// <summary>
 		/// An object of the last function that was called.
@@ -361,18 +366,25 @@ namespace Marbles
 				throw new Exception("FOR loop conditions must contain a numeric data type.");
 			}
 
-			int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored           
-            int numericExpValue;
+			int numericExpAddress = operandStack.Pop(); // memory address where the numeric expression's result is stored
+
+            int tempAddressWithNumericExp = 0;
+
             if (inFunction)
             {
-                numericExpValue = (int)(FunctionDirectory.GetFunction(functionId).memory.GetValueFromAddress(numericExpAddress));
+                tempAddressWithNumericExp = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                tempAddressWithNumericExp = FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempAddressWithNumericExp, 0);
             }
             else
             {
-                numericExpValue = (int)(MemoryManager.GetValueFromAddress(numericExpAddress));
+                tempAddressWithNumericExp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+                tempAddressWithNumericExp = MemoryManager.SetMemory(tempAddressWithNumericExp, 0);
             }
 
-			int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, numericExpAddress, tempAddressWithNumericExp));
+            counter++;
+
+            int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
 			try { zeroMem = MemoryManager.SetMemory(zeroMem, 0); }
 			catch (Exception e) { throw new Exception(e.Message); }
 
@@ -389,22 +401,10 @@ namespace Marbles
 				conditionMem = MemoryManager.SetMemory(conditionMem, false);
 			}
 
-            int tempNumericExpAddress;
-            if (inFunction)
-            {
-                tempNumericExpAddress = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempNumericExpAddress, numericExpValue);
-            }
-            else
-            {
-                tempNumericExpAddress = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-                MemoryManager.SetMemory(tempNumericExpAddress, numericExpValue);
-            }
-
 			// This is where we will jump back to at the end of every FOR loop iteration
 			jumpStack.Push(counter);
 
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, tempNumericExpAddress, zeroMem, conditionMem));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, tempAddressWithNumericExp, zeroMem, conditionMem));
 			counter++;
 
 			// we will have to set this jump's position at the end of the FOR statement
@@ -417,7 +417,7 @@ namespace Marbles
             oneMem = MemoryManager.SetMemory(oneMem, 1);
             
 			// After checking the condition, we can safely substract one from the numeric expression on the FOR condition
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, tempNumericExpAddress, oneMem, tempNumericExpAddress));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.minus, tempAddressWithNumericExp, oneMem, tempAddressWithNumericExp));
 			counter++;
 		}
 
@@ -461,7 +461,7 @@ namespace Marbles
             }
             else
             {
-                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), -1, -1));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), LastFunctionCalled.GetLocation(), -1));
             }
 
             counter++;
@@ -491,7 +491,7 @@ namespace Marbles
 
 			// create a new parameter indicating what paremeter you are setting
 			// and pass on the address of its value
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount - 1));
 			counter++;
         }
         
@@ -542,6 +542,7 @@ namespace Marbles
 		{
 			inFunction = true;
 			functionId = func.GetName();
+            hasReturn = false;
 
 			if (FunctionDirectory.FunctionExists(func))
 			{
@@ -652,6 +653,11 @@ namespace Marbles
 		/// </summary>
 		public static void ExitFunction()
 		{
+            if (!hasReturn)
+            {
+                throw new Exception("Function must contain a return statement.");
+            }
+
             // if the function was recursive, fill all pending era quadruples with size 
             while (recursiveCalls.Count > 0)
             {
@@ -660,7 +666,6 @@ namespace Marbles
 
             FunctionDirectory.GetFunction(functionId).memory.PrintMemory(functionId);
             FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
-            FunctionDirectory.GetFunction(functionId).ReleaseMemory();
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.endProc, -1, -1, -1));
 			counter++;
 			inFunction = false;
@@ -822,8 +827,7 @@ namespace Marbles
 			// we read a constant string, so we add it to global constant memory
 			int constMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.text);
 
-			// gets the new memory of the constant
-			// of retrieves it it was already set
+			// gets the new memory of the constant or retrieves if it was already set
 			try
 			{
 				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
@@ -985,6 +989,7 @@ namespace Marbles
 
 		public static void ReturnEnd()
 		{
+            hasReturn = true;
             SemanticCubeUtilities.DataTypes type = typeStack.Peek();
             SemanticCubeUtilities.DataTypes expectedType = FunctionDirectory.GetFunction(functionId).GetReturnType();
             if (type != expectedType)
