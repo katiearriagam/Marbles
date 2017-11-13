@@ -111,15 +111,18 @@ namespace Marbles
 			Utilities.BlockToLineErrors.Clear();
 			foreach (int element in ErrorPrinter.GetErrorLines())
 			{
-				if (Utilities.BlockToLineErrors.ContainsKey(Utilities.linesOfCode[element - 1].owner))
-				{
-					Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1.Concat(ErrorPrinter.GetErrorsAtLine(element));
-				}
-				else
-				{
-					Utilities.BlockToLineErrors.Add(Utilities.linesOfCode[element - 1].owner, new Tuple<List<string>, SolidColorBrush>(ErrorPrinter.GetErrorsAtLine(element), Utilities.GetRandomBrushForErrors()));
-					BlocksWithErrorsInOrder.Add(Utilities.linesOfCode[element - 1].owner);
-				}
+				//if (element >= 1)
+				//{
+					if (Utilities.BlockToLineErrors.ContainsKey(Utilities.linesOfCode[element - 1].owner))
+					{
+						Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1.Concat(ErrorPrinter.GetErrorsAtLine(element));
+					}
+					else
+					{
+						Utilities.BlockToLineErrors.Add(Utilities.linesOfCode[element - 1].owner, new Tuple<List<string>, SolidColorBrush>(ErrorPrinter.GetErrorsAtLine(element), Utilities.GetRandomBrushForErrors()));
+						BlocksWithErrorsInOrder.Add(Utilities.linesOfCode[element - 1].owner);
+					}
+				//}
 			}
 		}
 
@@ -162,7 +165,7 @@ namespace Marbles
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
             try { parser.Parse(); }
-            catch (Exception e) { ErrorPrinter.AddError(e.Message); }
+            catch (Exception e) { }
 		}
 
         private void CodeViewPage_Loaded(object sender, RoutedEventArgs e)
@@ -178,7 +181,8 @@ namespace Marbles
             BooleanExpression.SomethingChanged += new EventHandler(SomethingChanged);
             ConstantNumber.SomethingChanged += new EventHandler(SomethingChanged);
             ConstantText.SomethingChanged += new EventHandler(SomethingChanged);
-            FunctionCall.SomethingChanged += new EventHandler(SomethingChanged);
+			ConstantBoolean.SomethingChanged += new EventHandler(SomethingChanged);
+			FunctionCall.SomethingChanged += new EventHandler(SomethingChanged);
             MathExpression.SomethingChanged += new EventHandler(SomethingChanged);
             Values.SomethingChanged += new EventHandler(SomethingChanged);
             VariableCall.SomethingChanged += new EventHandler(SomethingChanged);

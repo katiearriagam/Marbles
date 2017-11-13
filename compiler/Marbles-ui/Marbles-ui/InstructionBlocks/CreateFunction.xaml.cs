@@ -102,7 +102,8 @@ namespace Marbles
 
         public void PrintCode()
         {
-            string funcType = ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString();
+			CleanPossibleError();
+			string funcType = ((ComboBoxItem)(functionType.SelectedItem)).Content.ToString();
             if (funcType == "boolean") funcType = "bool";
 
             Utilities.linesOfCode.Add(new CodeLine("function " + funcType  + " " + functionID.Text + "(", this, Utilities.linesOfCodeCount + 1));
@@ -179,6 +180,19 @@ namespace Marbles
             SomethingChanged?.Invoke(this, EventArgs.Empty);
         }
 
+		public void SetError(Brush errorColor)
+		{
+			ErrorEllipseGrid.Padding = new Thickness(5.0);
+			ErrorEllipse.Height = 10;
+			ErrorEllipse.Width = 10;
+			ErrorEllipse.Fill = errorColor;
+		}
 
-    }
+		public void CleanPossibleError()
+		{
+			ErrorEllipseGrid.Padding = new Thickness(0.0);
+			ErrorEllipse.Height = 0;
+			ErrorEllipse.Width = 0;
+		}
+	}
 }

@@ -237,6 +237,51 @@ namespace Marbles
 
 		public static void SetUserControlWithError(UserControl block, SolidColorBrush color)
 		{
+			if (block.GetType() == typeof(Marbles.AssignBlock))
+			{
+				var AssignBlock = block as AssignBlock;
+				AssignBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.CreateAsset))
+			{
+				var CreateAsset = block as CreateAsset;
+				CreateAsset.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.CreateFunction))
+			{
+				var CreateFunction = block as CreateFunction;
+				CreateFunction.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.CreateVariable))
+			{
+				var CreateVariable = block as CreateVariable;
+				CreateVariable.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.DoBlock))
+			{
+				var DoBlock = block as DoBlock;
+				DoBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.ForBlock))
+			{
+				var ForBlock = block as ForBlock;
+				ForBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.IfBlock))
+			{
+				var IfBlock = block as IfBlock;
+				IfBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.ReturnBlock))
+			{
+				var ReturnBlock = block as ReturnBlock;
+				ReturnBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.DoBlock))
+			{
+				var DoBlock = block as DoBlock;
+				DoBlock.SetError(color);
+			}
 			if (block.GetType() == typeof(Marbles.DoBlock))
 			{
 				var DoBlock = block as DoBlock;
@@ -248,43 +293,43 @@ namespace Marbles
 		{
 			if (block.GetType() == typeof(Marbles.AssignBlock))
 			{
-				return "Assign block";
+				return "Assign block".ToUpper(); ;
 			}
 			else if (block.GetType() == typeof(Marbles.CreateAsset))
 			{
-				return "Create asset block";
+				return "Create asset block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.CreateFunction))
 			{
-				return "Create function block";
+				return "Create function block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.CreateVariable))
 			{
-				return "Create variable block";
+				return "Create variable block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.DoBlock))
 			{
-				return "Do block";
+				return "Do block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.ForBlock))
 			{
-				return "For block";
+				return "For block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.IfBlock))
 			{
-				return "If block";
+				return "If block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.ReturnBlock))
 			{
-				return "Return block";
+				return "Return block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.StopBlock))
 			{
-				return "Stop block";
+				return "Stop block".ToUpper();
 			}
 			else if (block.GetType() == typeof(Marbles.WhileBlock))
 			{
-				return "While block";
+				return "While block".ToUpper();
 			}
 
 			return "";

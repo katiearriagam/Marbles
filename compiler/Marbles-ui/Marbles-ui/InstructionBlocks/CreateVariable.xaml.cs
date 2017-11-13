@@ -27,7 +27,8 @@ namespace Marbles
 
 		public void PrintCode()
 		{
-            string dataTypeSelected = ((ComboBoxItem)(VariableType.SelectedItem)).Content.ToString();
+			CleanPossibleError();
+			string dataTypeSelected = ((ComboBoxItem)(VariableType.SelectedItem)).Content.ToString();
             if (dataTypeSelected == "boolean")
             {
                 dataTypeSelected = "bool";
@@ -71,5 +72,20 @@ namespace Marbles
         {
             SomethingChanged?.Invoke(this, EventArgs.Empty);
         }
-    }
+
+		public void SetError(Brush errorColor)
+		{
+			ErrorEllipseGrid.Padding = new Thickness(5.0);
+			ErrorEllipse.Height = 10;
+			ErrorEllipse.Width = 10;
+			ErrorEllipse.Fill = errorColor;
+		}
+
+		public void CleanPossibleError()
+		{
+			ErrorEllipseGrid.Padding = new Thickness(0.0);
+			ErrorEllipse.Height = 0;
+			ErrorEllipse.Width = 0;
+		}
+	}
 }

@@ -22,7 +22,7 @@
 			VerticalAlignment="Center"
 			TextAlignment="Left"
 			Foreground="White"
-			FontSize="16"
+			FontSize="20"
 			Text="Hello">
 		</TextBlock>
 		<ListView Grid.Row="1" x:Name="ErrorListInBlock"

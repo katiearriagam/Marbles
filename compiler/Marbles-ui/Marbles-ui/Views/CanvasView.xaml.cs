@@ -202,8 +202,8 @@ namespace Marbles
 			Utilities.DisableRunButton();
 			Run_Button.Background = Utilities.RunButtonColor;
 			Run_Button.IsEnabled = Utilities.RunButtonEnabled;
-			// Delete the asset dropped
 
+			// Delete the asset dropped
 			Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
             cv.Children.Remove(assetDragged);
 			Utilities.assetsInCanvas.Remove(assetDragged);
