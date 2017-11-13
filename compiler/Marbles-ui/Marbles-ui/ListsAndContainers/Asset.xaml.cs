@@ -91,11 +91,17 @@ namespace Marbles
             get { return number.ToString(); }
         }
 
+        /// <summary>
+        ///  Returns the Asset object's ID attribute.
+        /// </summary>
         public string GetID()
         {
             return id;
         }
 
+        /// <summary>
+        /// Returns the Asset object's width attribute.
+        /// </summary>
         public int GetWidth()
         {
             return width;
@@ -149,6 +155,9 @@ namespace Marbles
             ctImage.CenterX = ctUserControl.CenterX = this.width / 2;
         }
 
+        /// <summary>
+        /// Returns the Asset object's height attribute.
+        /// </summary>
         public int GetHeight()
         {
             return height;
@@ -202,26 +211,41 @@ namespace Marbles
             ctImage.CenterY = ctUserControl.CenterY =  this.height / 2;
         }
 
+        /// <summary>
+        /// Returns the Asset object's X position.
+        /// </summary>
 		public int GetX()
 		{
 			return x;
 		}
 
+        /// <summary>
+        /// Returns the Asset object's Y position.
+        /// </summary>
 		public int GetY()
 		{
 			return y;
 		}
 
+        /// <summary>
+        /// Returns the Asset object's rotation attribute.
+        /// </summary>
 		public int GetRotation()
 		{
 			return rotation;
 		}
 
+        /// <summary>
+        /// Returns the Asset object's Number attribute.
+        /// </summary>
 		public int GetNumber()
 		{
 			return number;
 		}
 
+        /// <summary>
+        /// Returns the Asset object's Label attribute.
+        /// </summary>
 		public string GetLabel()
 		{
 			return label;

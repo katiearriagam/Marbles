@@ -287,16 +287,32 @@ namespace Marbles
             try { await VirtualMachine.Execute(); }
 			catch (Exception ex) { ErrorPrinter.AddError(ex.Message); }
 
-            MemoryManager.PrintMemory(); // print the memory with all of its values set
+            MemoryManager.PrintMemory(); // Print memory with all of its values set
+            MemoryManager.RunReset(); // Reset memory to its original state before execution
 
+            int attrCount = Enum.GetNames(typeof(MemoryManager.AssetAttributes)).Length;
+
+            // Return assets in canvas to their original state before execution
             for (int i = 0; i < cv.Children.ToList().Count; i++)
             {
                 Asset c = cv.Children[i] as Asset;
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.x + (i * attrCount), assetValues[i].Item1);
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.y + (i * attrCount), assetValues[i].Item2);
                 c.SetPositionNoAwait(assetValues[i].Item1, assetValues[i].Item2);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.width + (i * attrCount), assetValues[i].Item3);
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.height + (i * attrCount), assetValues[i].Item4);
                 c.SetWidthNoAnimation(assetValues[i].Item3);
                 c.SetHeightNoAnimation(assetValues[i].Item4);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.rotation + (i * attrCount), 0);
                 c.SetRotationNoAnimation(0);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.number + (i * attrCount), assetValues[i].Item6);
                 c.SetNumberNoWait(assetValues[i].Item6);
+
+                MemoryManager.SetMemory((int)MemoryManager.AssetAttributes.label + (i * attrCount), assetValues[i].Item7);
                 c.SetLabelNoWait(assetValues[i].Item7);
             }
 

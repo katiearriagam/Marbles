@@ -200,7 +200,6 @@ namespace Marbles
 			// try to add asset to global asset directory
 			try
 			{
-
 				if (currentAssetAddress + Enum.GetNames(typeof(AssetAttributes)).Length <= highestAssetAddress)
 				{
 					FunctionDirectory.GlobalFunction().AddAssetVariable(asset);
@@ -217,11 +216,12 @@ namespace Marbles
 
 					currentAssetAddress += Enum.GetNames(typeof(AssetAttributes)).Length;
 				}
+
 				return memoryAddress;
 			}
 			catch (Exception e)
 			{
-				throw new Exception(e.Message);
+                throw;
 			}
 		}
 
@@ -612,8 +612,53 @@ namespace Marbles
 			}
 		}
 
+        /// <summary>
+        /// Reset all current entries in memory to their original values (before execution).
+        /// NOTE: This does not erase any entry, only resets their values.
+        /// </summary>
+        public static void RunReset()
+        {
+            // Reset global memory
+            var memoryGlobalCopy = new List<int>();
+            foreach (KeyValuePair<int, object> kvp in memoryGlobal)
+            {
+                memoryGlobalCopy.Add(kvp.Key);
+            }
+
+            foreach (var key in memoryGlobalCopy)
+            {
+                memoryGlobal[key] = Utilities.GetDefaultValueFromType(memoryGlobal[key].GetType());
+            }
+
+            // Reset local memory
+            var memoryLocalCopy = new List<int>();
+            foreach (KeyValuePair<int, object> kvp in memoryLocal)
+            {
+                memoryLocalCopy.Add(kvp.Key);
+            }
+
+            foreach (var key in memoryLocalCopy)
+            {
+                memoryLocal[key] = Utilities.GetDefaultValueFromType(memoryLocal[key].GetType());
+            }
+
+            // Reset temporary memory
+            var memoryTemporaryCopy = new List<int>();
+            foreach (KeyValuePair<int, object> kvp in memoryTemporary)
+            {
+                memoryTemporaryCopy.Add(kvp.Key);
+            }
+
+            foreach (var key in memoryTemporaryCopy)
+            {
+                memoryTemporary[key] = Utilities.GetDefaultValueFromType(memoryTemporary[key].GetType());
+            }
+
+            // No need to reset constants as they will always hold the same value.
+        }
+
 		/// <summary>
-		/// resets memory
+		/// Resets memory
 		/// </summary>
         public static void Reset()
         {
