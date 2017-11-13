@@ -40,7 +40,7 @@ namespace Marbles
 		private static int counter = 0;
 
 		/// <summary>
-		/// Tells us whether we are currently in a function or not.
+		/// Tells whether we are currently in a function or not.
 		/// </summary>
 		private static bool inFunction = false;
 
@@ -48,6 +48,11 @@ namespace Marbles
 		/// If inFunction is true, this value holds the ID of the function we are currently in.
 		/// </summary>
 		private static string functionId = "";
+
+        /// <summary>
+        /// Tells whether the function we are currently in has a return statement or not.
+        /// </summary>
+        private static bool hasReturn = false;
 
 		/// <summary>
 		/// An object of the last function that was called.
@@ -534,6 +539,7 @@ namespace Marbles
 		{
 			inFunction = true;
 			functionId = func.GetName();
+            hasReturn = false;
 
 			if (FunctionDirectory.FunctionExists(func))
 			{
@@ -644,6 +650,11 @@ namespace Marbles
 		/// </summary>
 		public static void ExitFunction()
 		{
+            if (!hasReturn)
+            {
+                throw new Exception("Function must contain a return statement.");
+            }
+
             // if the function was recursive, fill all pending era quadruples with size 
             while (recursiveCalls.Count > 0)
             {
@@ -976,6 +987,7 @@ namespace Marbles
 
 		public static void ReturnEnd()
 		{
+            hasReturn = true;
             SemanticCubeUtilities.DataTypes type = typeStack.Peek();
             SemanticCubeUtilities.DataTypes expectedType = FunctionDirectory.GetFunction(functionId).GetReturnType();
             if (type != expectedType)
