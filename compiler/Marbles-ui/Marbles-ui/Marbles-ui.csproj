@@ -99,6 +99,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CodeLine.cs" />
+    <Compile Include="ListsAndContainers\ErrorTemplate.xaml.cs">
+      <DependentUpon>ErrorTemplate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ListsAndContainers\Asset.xaml.cs">
       <DependentUpon>Asset.xaml</DependentUpon>
     </Compile>
@@ -178,6 +181,9 @@
     </Compile>
     <Compile Include="ListsAndContainers\InstructionListViewContainer.xaml.cs">
       <DependentUpon>InstructionListViewContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ErrorView.xaml.cs">
+      <DependentUpon>ErrorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CodeView.xaml.cs">
       <DependentUpon>CodeView.xaml</DependentUpon>
@@ -259,6 +265,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="ListsAndContainers\ErrorTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ListsAndContainers\Asset.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -354,6 +364,10 @@
     <Page Include="ListsAndContainers\InstructionListViewContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ErrorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CodeView.xaml">
       <Generator>MSBuild:Compile</Generator>

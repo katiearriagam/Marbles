@@ -9,7 +9,12 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Background="#767676" Padding="10" Width="Auto" Margin="0,5">
+	<Grid Background="White">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+	<Grid Grid.Column="0" Background="#767676" Padding="10" Width="Auto" Margin="0,5">
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" />
@@ -50,6 +55,17 @@
 						IsEnabled="false">
 				</TextBox>
 			</Grid>
+		</Grid>
+	</Grid>
+
+		<Grid x:Name="ErrorEllipseGrid" Grid.Column="1" Background="White" Padding="0" Width="Auto">
+			<Ellipse
+					x:Name="ErrorEllipse"
+					Fill="Red"
+					Height="0"
+					Width="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"/>
 		</Grid>
 	</Grid>
 </UserControl>

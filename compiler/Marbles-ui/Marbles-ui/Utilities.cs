@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -16,9 +18,32 @@ namespace Marbles
         public static int assetMinimumWidth = 10;
         public static int assetMinimumHeight = 10;
         public static int linesOfCodeCount = 0;
-        public static ArrayList linesOfCode = new ArrayList();
+        public static List<CodeLine> linesOfCode = new List<CodeLine>();
 		public static ArrayList assetsInCanvas = new ArrayList();
 		public static ArrayList finalAssetsInCanvas = new ArrayList();
+		public static Dictionary<Object, List<int>> BlockToFaultyLineNumbers = new Dictionary<Object, List<int>>();
+		public static Dictionary<Object, Tuple<List<string>, SolidColorBrush>> BlockToLineErrors = new Dictionary<Object, Tuple<List<string>, SolidColorBrush>>();
+		public static Random rand = new Random();
+
+		public static List<SolidColorBrush> errorDotColors =
+			new List<SolidColorBrush>(new SolidColorBrush[]
+				{	new SolidColorBrush(Windows.UI.Color.FromArgb(255, 26, 188, 156)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 22, 160, 133)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 46, 204, 113)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 52, 152, 219)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 155, 89, 182)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 142, 68, 173)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 241, 196, 15)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 243, 156, 18)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 230, 126, 34)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 211, 84, 0)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 231, 76, 60)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 192, 57, 43)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 52, 73, 94)),
+					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 44, 62, 80))
+				});
 
         /// <summary>
         /// Helpers for front-end navigation
@@ -28,7 +53,10 @@ namespace Marbles
         public static SolidColorBrush RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
         public static SolidColorBrush CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
 
-        public static void EnableRunButton()
+		public static List<ErrorTemplate> errorsInLines = new List<ErrorTemplate>();
+
+
+		public static void EnableRunButton()
         {
             RunButtonEnabled = true;
             RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
@@ -211,5 +239,110 @@ namespace Marbles
 
             return null;
         }
+      
+		public static SolidColorBrush GetRandomBrushForErrors()
+		{
+			return errorDotColors[rand.Next(0, errorDotColors.Count - 1)];
+		}
+
+		public static void SetUserControlWithError(UserControl block, SolidColorBrush color)
+		{
+			if (block.GetType() == typeof(Marbles.AssignBlock))
+			{
+				var AssignBlock = block as AssignBlock;
+				AssignBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.CreateAsset))
+			{
+				var CreateAsset = block as CreateAsset;
+				CreateAsset.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.CreateFunction))
+			{
+				var CreateFunction = block as CreateFunction;
+				CreateFunction.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.CreateVariable))
+			{
+				var CreateVariable = block as CreateVariable;
+				CreateVariable.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.DoBlock))
+			{
+				var DoBlock = block as DoBlock;
+				DoBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.ForBlock))
+			{
+				var ForBlock = block as ForBlock;
+				ForBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.IfBlock))
+			{
+				var IfBlock = block as IfBlock;
+				IfBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.ReturnBlock))
+			{
+				var ReturnBlock = block as ReturnBlock;
+				ReturnBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.DoBlock))
+			{
+				var DoBlock = block as DoBlock;
+				DoBlock.SetError(color);
+			}
+			if (block.GetType() == typeof(Marbles.DoBlock))
+			{
+				var DoBlock = block as DoBlock;
+				DoBlock.SetError(color);
+			}
+		}
+
+		public static string MapBlockTypeToLabel(UserControl block)
+		{
+			if (block.GetType() == typeof(Marbles.AssignBlock))
+			{
+				return "Assign block".ToUpper(); ;
+			}
+			else if (block.GetType() == typeof(Marbles.CreateAsset))
+			{
+				return "Create asset block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.CreateFunction))
+			{
+				return "Create function block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.CreateVariable))
+			{
+				return "Create variable block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.DoBlock))
+			{
+				return "Do block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.ForBlock))
+			{
+				return "For block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.IfBlock))
+			{
+				return "If block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.ReturnBlock))
+			{
+				return "Return block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.StopBlock))
+			{
+				return "Stop block".ToUpper();
+			}
+			else if (block.GetType() == typeof(Marbles.WhileBlock))
+			{
+				return "While block".ToUpper();
+			}
+
+			return "";
+		}
     }
 }

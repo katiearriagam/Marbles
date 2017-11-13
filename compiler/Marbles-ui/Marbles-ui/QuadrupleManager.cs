@@ -157,7 +157,8 @@ namespace Marbles
 
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
 				{
-					throw new Exception("Invalid operation: " + unaryOperand + " " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) + " ");
+					throw new Exception("Invalid operation: " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) +
+						SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(unaryOperand)).ToString());
 				}
 
 				// at this point, the only acceptable DT is number
@@ -191,7 +192,9 @@ namespace Marbles
 
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.invalidDataType)
 				{
-					throw new Exception("Invalid operation: " + operandOne + " " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) + " " + operandTwo);
+					throw new Exception("Invalid operation: " + SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(operandOne)).ToString() 
+								+ " " + SemanticCubeUtilities.GetOperatorVisualRepresentation(op) + " " + 
+								SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(operandTwo)).ToString());
 				}
 				
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
@@ -702,7 +705,7 @@ namespace Marbles
 					idMemoryAddress = current.GetParameter(id).GetMemoryAddress();
 				}
 
-                existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
+                existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id) && !FunctionDirectory.FunctionExists(id);
                 if (existsGlobal)
                 {
                     type = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetDataType();
@@ -711,7 +714,7 @@ namespace Marbles
             }
 			else
 			{
-				existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id);
+				existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id) && !FunctionDirectory.FunctionExists(id);
 				if (existsGlobal)
 				{
 					type = FunctionDirectory.GlobalFunction().GetGlobalVariables()[id].GetDataType();

@@ -33,6 +33,7 @@ namespace Marbles
             Utilities.BlueCompile();
 		}
 
+		public static List<Object> BlocksWithErrorsInOrder = new List<Object>();
 
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -45,7 +46,7 @@ namespace Marbles
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
             Utilities.linesOfCodeCount = 0;
-            Utilities.linesOfCode = new ArrayList();
+            Utilities.linesOfCode = new List<CodeLine>();
 			ErrorPrinter.errorCount = 0;
 			ErrorPrinter.errorList = new Dictionary<int, List<string>>();
 			ErrorPrinter.warningList = new Dictionary<int, List<string>>();
@@ -53,26 +54,30 @@ namespace Marbles
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-            /*
-            AssetListViewContainer.PrintCode();
+      
+			Utilities.BlockToLineErrors.Clear();
+			BlocksWithErrorsInOrder.Clear();
+			Utilities.errorsInLines.Clear();
+
+			AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
             
-            Utilities.linesOfCode.Add(new CodeLine("instructions {", main));
+            Utilities.linesOfCode.Add(new CodeLine("instructions {", main, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
 
             InstructionListViewContainer.PrintCode();
 
-            Utilities.linesOfCode.Add(new CodeLine("}", main));
+            Utilities.linesOfCode.Add(new CodeLine("}", main, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
             
             WriteCodeToFile(out string filePath);
-            */
-            ///*
+            
+            /*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			//*/
+			      */
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
@@ -82,23 +87,58 @@ namespace Marbles
             ErrorPrinter.PrintWarnings();
             ErrorPrinter.PrintErrors();
 
-            if (ErrorPrinter.errorCount == 0)
+			if (ErrorPrinter.errorCount == 0)
             {
                 Utilities.GreenCompile();
                 Utilities.EnableRunButton();
                 CompileButton.Background = Utilities.CompileButtonColor;
                 CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
-            }
-            else
+			}
+			else
             {
                 Utilities.RedCompile();
                 Utilities.DisableRunButton();
-                
-                // TODO: Pass errors here
-                CompileButton.Background = Utilities.CompileButtonColor;
+
+				FillErrorsDictionary();
+				SetErrorsInUI();
+
+				// TODO: Pass errors here
+				CompileButton.Background = Utilities.CompileButtonColor;
                 CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
             }
         }
+
+		private void FillErrorsDictionary()
+		{
+			Utilities.BlockToLineErrors.Clear();
+			foreach (int element in ErrorPrinter.GetErrorLines())
+			{
+				//if (element >= 1)
+				//{
+					if (Utilities.BlockToLineErrors.ContainsKey(Utilities.linesOfCode[element - 1].owner))
+					{
+						Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1.Concat(ErrorPrinter.GetErrorsAtLine(element));
+					}
+					else
+					{
+						Utilities.BlockToLineErrors.Add(Utilities.linesOfCode[element - 1].owner, new Tuple<List<string>, SolidColorBrush>(ErrorPrinter.GetErrorsAtLine(element), Utilities.GetRandomBrushForErrors()));
+						BlocksWithErrorsInOrder.Add(Utilities.linesOfCode[element - 1].owner);
+					}
+				//}
+			}
+		}
+
+		private void SetErrorsInUI()
+		{
+			Utilities.errorsInLines.Clear();
+			foreach (UserControl element in BlocksWithErrorsInOrder)
+			{
+				Utilities.SetUserControlWithError(element, Utilities.BlockToLineErrors[element].Item2);
+				var errorTemplate = new ErrorTemplate();
+				errorTemplate.FillTemplate(element, Utilities.BlockToLineErrors[element].Item1, Utilities.BlockToLineErrors[element].Item2);
+				Utilities.errorsInLines.Add(errorTemplate);
+			}
+		}
 
         private void WriteCodeToFile(out string filePath)
         {
@@ -143,7 +183,8 @@ namespace Marbles
             BooleanExpression.SomethingChanged += new EventHandler(SomethingChanged);
             ConstantNumber.SomethingChanged += new EventHandler(SomethingChanged);
             ConstantText.SomethingChanged += new EventHandler(SomethingChanged);
-            FunctionCall.SomethingChanged += new EventHandler(SomethingChanged);
+			ConstantBoolean.SomethingChanged += new EventHandler(SomethingChanged);
+			FunctionCall.SomethingChanged += new EventHandler(SomethingChanged);
             MathExpression.SomethingChanged += new EventHandler(SomethingChanged);
             Values.SomethingChanged += new EventHandler(SomethingChanged);
             VariableCall.SomethingChanged += new EventHandler(SomethingChanged);

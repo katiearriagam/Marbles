@@ -206,7 +206,7 @@ namespace Marbles
             // Delete the asset dropped
             Asset assetDragged = e.DataView.Properties["assetDragged"] as Asset;
             cv.Children.Remove(assetDragged);
-			Utilities.assetsInCanvas.Remove(assetDragged);
+			      Utilities.assetsInCanvas.Remove(assetDragged);
         }
 
         private void DeleteIcon_DragOver(object sender, DragEventArgs e)

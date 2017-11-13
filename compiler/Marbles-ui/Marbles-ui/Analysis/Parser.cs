@@ -672,11 +672,11 @@ public class Errors {
 		string s;
 		switch (n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "id expected"; break;
-			case 2: s = "true expected"; break;
-			case 3: s = "false expected"; break;
-			case 4: s = "const_i expected"; break;
-			case 5: s = "const_s expected"; break;
+			case 1: s = "ID expected"; break;
+			case 2: s = "TRUE expected"; break;
+			case 3: s = "FALSE expected"; break;
+			case 4: s = "Numeric constant expected"; break;
+			case 5: s = "Text constant expected"; break;
 			case 6: s = "\"instructions\" expected"; break;
 			case 7: s = "\"{\" expected"; break;
 			case 8: s = "\"}\" expected"; break;
@@ -728,9 +728,9 @@ public class Errors {
 			case 54: s = "invalid INSTRUCTION"; break;
 			case 55: s = "invalid TYPE_FUNC"; break;
 			case 56: s = "invalid TYPE_VAR"; break;
-			case 57: s = "invalid ACTION"; break;
-			case 58: s = "invalid ATTRIBUTE"; break;
-			case 59: s = "invalid OP"; break;
+			case 57: s = "invalid ASSET BEHAVIOR"; break;
+			case 58: s = "invalid ASSET PROPERTY"; break;
+			case 59: s = "invalid OPERATOR"; break;
 			case 60: s = "invalid FACTOR"; break;
 			case 61: s = "invalid FACTOR"; break;
 			case 62: s = "invalid BOOL"; break;
@@ -739,6 +739,7 @@ public class Errors {
 		}
 		ErrorPrinter.AddError(line, s);
 		count++;
+		throw new Exception(s);
 	}
 
 	public virtual void SemErr (int line, int col, string s) {
