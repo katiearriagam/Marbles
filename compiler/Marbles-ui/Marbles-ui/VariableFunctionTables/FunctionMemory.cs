@@ -105,11 +105,11 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Loads value into a memory address
+		/// Loads value into a memory address.
 		/// </summary>
 		/// <param name="memAddress"></param>
 		/// <param name="value"></param>
-		/// <returns></returns>
+        /// <returns>Address where the value was stored.</returns>
 		public int SetMemory(int memAddress, object value)
 		{
 			// insert a global number in memory
@@ -275,27 +275,31 @@ namespace Marbles
 		public int GetIndexFromMemoryList(int address)
 		{
 			List<int> memoryList = MemoryKeysToList();
-			int counter = -1; 
+			int counter = -1;
+            bool found = false;
 			foreach (int key in memoryList)
 			{
 				counter++;
 				if (key == address)
 				{
+                    found = true;
 					break;
 				}
 			}
-			return counter;
+
+			return found ? counter : -1;
 		}
 
 		public List<int> MemoryKeysToList()
 		{
 			List<int> keys = memoryGlobal.Keys.ToList();
-			keys.Concat(memoryGlobal.Keys.ToList());
+			keys = keys.Concat(memoryTemporary.Keys.ToList()).ToList();
 			keys.Sort();
 			return keys;
 		}
+
 		/// <summary>
-		/// resets memory
+		/// Resets memory.
 		/// </summary>
 		public void Reset()
 		{

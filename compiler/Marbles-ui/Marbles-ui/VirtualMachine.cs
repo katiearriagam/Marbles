@@ -62,7 +62,7 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.minus)
             {
-				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+                int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
 				int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
 				int result = num1 - num2;
@@ -236,8 +236,9 @@ namespace Marbles
             {
 				int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
 				int paramIndex = quadruple.GetAssignee();
-				
-				int destinationAddress = FunctionDirectory.GetFunction(CallStack.Peek().Item1).GetParameters()[paramIndex].GetMemoryAddress();
+                Variable p = FunctionDirectory.GetFunction(CallStack.Peek().Item1).GetParameters()[paramIndex];
+                int pAddr = p.GetMemoryAddress();
+                int destinationAddress = MapAddressToLocalMemory(pAddr);
 
 				MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
             }
@@ -360,7 +361,8 @@ namespace Marbles
 		/// <returns></returns>
 		public static int MapAddressToLocalMemory(int address)
 		{
-			if (address < 100000) { return address; } 
+			if (address < 100000) { return address; }
+            if (CallStack.Count == 0) throw new Exception("CallStack is empty");
 			return CallStack.Peek().Item2 + MemoryManager.FunctionMemoryToMemoryManager(CallStack.Peek().Item1, address); 
 		}
     }

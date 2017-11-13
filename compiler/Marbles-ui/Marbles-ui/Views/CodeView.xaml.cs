@@ -53,7 +53,7 @@ namespace Marbles
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-
+            /*
             AssetListViewContainer.PrintCode();
             VariableListViewContainer.PrintCode();
             FunctionListViewContainer.PrintCode();
@@ -67,11 +67,12 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
             
             WriteCodeToFile(out string filePath);
-            /*
+            */
+            ///*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			*/
+			//*/
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
@@ -126,7 +127,7 @@ namespace Marbles
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
             try { parser.Parse(); }
-            catch (Exception e) { ErrorPrinter.AddError(e.Message); }
+            catch (Exception e) { }
 		}
 
         private void CodeViewPage_Loaded(object sender, RoutedEventArgs e)

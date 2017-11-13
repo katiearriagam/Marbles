@@ -458,7 +458,7 @@ namespace Marbles
             }
             else
             {
-                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), -1, -1));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), LastFunctionCalled.GetLocation(), -1));
             }
 
             counter++;
@@ -488,7 +488,7 @@ namespace Marbles
 
 			// create a new parameter indicating what paremeter you are setting
 			// and pass on the address of its value
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount - 1));
 			counter++;
         }
         
@@ -663,7 +663,6 @@ namespace Marbles
 
             FunctionDirectory.GetFunction(functionId).memory.PrintMemory(functionId);
             FunctionDirectory.GetFunction(functionId).ReleaseLocalVariables();
-            FunctionDirectory.GetFunction(functionId).ReleaseMemory();
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.endProc, -1, -1, -1));
 			counter++;
 			inFunction = false;

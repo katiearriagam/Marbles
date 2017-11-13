@@ -370,8 +370,9 @@ namespace Marbles
 		public static int FunctionMemoryToMemoryManager(string functionId, int address)
 		{
 			Function currentFunctionInCallStack = FunctionDirectory.GetFunction(functionId);
-			return currentFunctionInCallStack.memory.GetIndexFromMemoryList(address) - 1;
+			return currentFunctionInCallStack.memory.GetIndexFromMemoryList(address);
 		}
+
 		/// <summary>
 		/// Allocates the memory for a new function (in locals)
 		/// </summary>
@@ -669,25 +670,25 @@ namespace Marbles
             memoryConstant.Clear();
 
             // Asset Limits
-            currentAssetAddress = 0000;
+            currentAssetAddress = lowestAssetAddress;
 
             // Global Current Indexes
-            currentGlobalIntAddress = 1000;
-            currentGlobalStringAddress = 2000;
-            currentGlobalBoolAddress = 3000;
+            currentGlobalIntAddress = lowestGlobalIntAddress;
+            currentGlobalStringAddress = lowestGlobalStringAddress;
+            currentGlobalBoolAddress = lowestGlobalBoolAddress;
 
             // Local Current Index
-            currentLocalAddress = 6000;
+            currentLocalAddress = lowestLocalAddress;
 
             // Temporary Current Indexes
-            currentTempIntAddress = 7000;
-            currentTempStringAddress = 8000;
-            currentTempBoolAddress = 9000;
+            currentTempIntAddress = lowestTempIntAddress;
+            currentTempStringAddress = lowestTempStringAddress;
+            currentTempBoolAddress = lowestTempBoolAddress;
 
             // Constant Current Indexes
-            currentConstantIntAddress = 10000;
-            currentConstantStringAddress = 11000;
-            currentConstantBoolAddress = 12000;
+            currentConstantIntAddress = lowestConstantIntAddress;
+            currentConstantStringAddress = lowestConstantStringAddress;
+            currentConstantBoolAddress = lowestConstantBoolAddress;
         }
 
         public static void PrintMemory()
