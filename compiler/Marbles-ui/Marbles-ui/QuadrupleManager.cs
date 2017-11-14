@@ -407,10 +407,10 @@ namespace Marbles
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.greaterThan, tempAddressWithNumericExp, zeroMem, conditionMem));
 			counter++;
 
-			// we will have to set this jump's position at the end of the FOR statement
-			jumpStack.Push(counter);
+            // we will have to set this jump's position at the end of the FOR statement
+            jumpStack.Push(counter);
 
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
 			counter++;
 
             int oneMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
@@ -476,7 +476,6 @@ namespace Marbles
 		public static void CallFunctionParameter()
 		{
 			SemanticCubeUtilities.DataTypes type = typeStack.Pop();
-            int op = operandStack.Peek();
             parameterCount++;
             if (parameterCount > LastFunctionCalled.GetParameters().Count)
             {
@@ -508,24 +507,28 @@ namespace Marbles
 		public static void CallFunctionEnd()
 		{
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, LastFunctionCalled.GetQuadrupleStart(), -1, -1));
+            counter++;
 
             int memAddressWhereFunctionLives = FunctionDirectory.GlobalFunction().GetGlobalVariables()[LastFunctionCalled.GetName()].GetMemoryAddress();
             int tempGlobal;
             if (inFunction)
             {
                 tempGlobal = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, LastFunctionCalled.GetReturnType());
-                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
+                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.GetReturnType()));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
+                counter++;
+                //FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
             }
             else
             {
                 tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.GetReturnType());
-				quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
+                MemoryManager.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.GetReturnType()));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
+                counter++;
             }
             PushOperand(tempGlobal, LastFunctionCalled.GetReturnType());
-			counter++;
             recursive = false;
 		}
-
 
 		/// <summary>
 		/// Returns whether we are currently in a function or not.

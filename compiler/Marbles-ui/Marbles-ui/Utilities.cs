@@ -239,8 +239,17 @@ namespace Marbles
 
             return null;
         }
-      
-		public static SolidColorBrush GetRandomBrushForErrors()
+
+        public static object GetDefaultValueFromType(SemanticCubeUtilities.DataTypes dt)
+        {
+            if (dt == SemanticCubeUtilities.DataTypes.number) return 0;
+            else if (dt == SemanticCubeUtilities.DataTypes.boolean) return false;
+            else if (dt == SemanticCubeUtilities.DataTypes.text) return "";
+
+            return null;
+        }
+
+        public static SolidColorBrush GetRandomBrushForErrors()
 		{
 			return errorDotColors[rand.Next(0, errorDotColors.Count - 1)];
 		}
