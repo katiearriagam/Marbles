@@ -15,7 +15,8 @@ namespace Marbles
         private static Stack<int> savedInstructionPointer = new Stack<int>();
         private static Stack<int> localMemoryAllocations = new Stack<int>();
 		private static Stack<Tuple<string, int>> CallStack = new Stack<Tuple<string, int>>(); 
-        public static Function LastFunctionCalled; 
+        public static Function LastFunctionCalled;
+        private static Tuple<string, int> funcToAdd;
 
 		/// <summary>
 		/// Starts executing all quadruples until it reaches the end.
@@ -225,30 +226,36 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.era)
             {
-              int functionSize = quadruple.GetOperandOne();
-              int functionMemAddress = quadruple.GetOperandTwo();
+                int functionSize = quadruple.GetOperandOne();
+                int functionMemAddress = quadruple.GetOperandTwo();
 
-              LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
+                LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
 
-              // Indicates the address in local memory where the function is loaded.
-              functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled); // this can throw - but VM caller will catch it
+                // Indicates the address in local memory where the function is loaded.
+                int functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled); // this can throw - but VM caller will catch it
+                funcToAdd = new Tuple<string, int>(LastFunctionCalled.GetName(), functionAddressInMemory);
             }
             else if (action == Utilities.QuadrupleAction.param)
             {
-              int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
+                int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
+                
+                int paramIndex = quadruple.GetAssignee();
+                int pAddr = FunctionDirectory.GetFunction(funcToAdd.Item1).GetParameters()[paramIndex].GetMemoryAddress();
 
-              int paramIndex = quadruple.GetAssignee();
-              Variable p = LastFunctionCalled.GetParameters()[paramIndex];
-              int pAddr = p.GetMemoryAddress();
-              int destinationAddress = MapAddressToLocalMemory(pAddr);
+                CallStack.Push(funcToAdd);
 
-              MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
+                int destinationAddress = MapAddressToLocalMemory(pAddr);
+
+                CallStack.Pop();
+
+                MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
             }
             else if (action == Utilities.QuadrupleAction.gosub)
             {
-              CallStack.Push(new Tuple<string, int>(LastFunctionCalled.GetName(), functionAddressInMemory));
-              savedInstructionPointer.Push(currentInstruction + 1);
-              currentInstruction = quadruple.GetOperandOne();
+                savedInstructionPointer.Push(currentInstruction + 1);
+                currentInstruction = quadruple.GetOperandOne();
+
+                CallStack.Push(funcToAdd);
             }
             else if (action == Utilities.QuadrupleAction.retorno)
             {
@@ -364,7 +371,21 @@ namespace Marbles
 		public static int MapAddressToLocalMemory(int address)
 		{
 			if (address < 100000) { return address; }
-			return functionAddressInMemory + MemoryManager.FunctionMemoryToMemoryManager(LastFunctionCalled.GetName(), address); 
+            string s;
+            int addr;
+            if (CallStack.Count > 0)
+            {
+                s = CallStack.Peek().Item1;
+                addr = CallStack.Peek().Item2;
+            }
+            else
+            {
+                s = funcToAdd.Item1;
+                addr = funcToAdd.Item2;
+            }
+            int sum = MemoryManager.FunctionMemoryToMemoryManager(s, address);
+
+            return addr + sum;
 		}
     }
 }
