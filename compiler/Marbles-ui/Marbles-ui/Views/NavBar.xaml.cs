@@ -38,6 +38,13 @@ namespace Marbles
 					break;
 				}
 			}
+
+			Utilities.ChangedPageHeader += new EventHandler(ChangedPageHeader);
+		}
+
+		private void ChangedPageHeader(object sender, EventArgs e)
+		{
+			NavView.Header = Utilities.PageHeader;
 		}
 
 		private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)

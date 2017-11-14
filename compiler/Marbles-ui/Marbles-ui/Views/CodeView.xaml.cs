@@ -117,7 +117,10 @@ namespace Marbles
 				//{
 					if (Utilities.BlockToLineErrors.ContainsKey(Utilities.linesOfCode[element - 1].owner))
 					{
-                        Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1.Concat(ErrorPrinter.GetErrorsAtLine(element)).ToList();
+						List<string> addedStrings = Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1;
+						addedStrings = (List<string>)addedStrings.Concat(ErrorPrinter.GetErrorsAtLine(element));
+
+						Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner] = new Tuple<List<string>, SolidColorBrush>(addedStrings, Utilities.GetRandomBrushForErrors());
 					}
 					else
 					{

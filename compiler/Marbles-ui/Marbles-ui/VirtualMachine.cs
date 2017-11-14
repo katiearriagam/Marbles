@@ -21,7 +21,8 @@ namespace Marbles
 		/// </summary>
         public static async Task Execute()
         {
-            quadruples = QuadrupleManager.GetQuadruples();
+			Utilities.vmExecuting = true;
+			quadruples = QuadrupleManager.GetQuadruples();
             while (!endExecution)
             {
                 int instructionToExecute = currentInstruction;

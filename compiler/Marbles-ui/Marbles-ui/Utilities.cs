@@ -18,6 +18,7 @@ namespace Marbles
         public static int assetMinimumWidth = 10;
         public static int assetMinimumHeight = 10;
         public static int linesOfCodeCount = 0;
+		public static bool vmExecuting = false;
         public static List<CodeLine> linesOfCode = new List<CodeLine>();
 		public static ArrayList assetsInCanvas = new ArrayList();
 		public static ArrayList finalAssetsInCanvas = new ArrayList();
@@ -310,48 +311,64 @@ namespace Marbles
 
 		public static string MapBlockTypeToLabel(UserControl block)
 		{
-			if (block.GetType() == typeof(Marbles.AssignBlock))
+			if (block != null)
 			{
-				return "Assign block".ToUpper(); ;
+				if (block.GetType() == typeof(Marbles.AssignBlock))
+				{
+					return "Assign block".ToUpper(); ;
+				}
+				else if (block.GetType() == typeof(Marbles.CreateAsset))
+				{
+					return "Create asset block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.CreateFunction))
+				{
+					return "Create function block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.CreateVariable))
+				{
+					return "Create variable block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.DoBlock))
+				{
+					return "Do block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.ForBlock))
+				{
+					return "For block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.IfBlock))
+				{
+					return "If block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.ReturnBlock))
+				{
+					return "Return block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.StopBlock))
+				{
+					return "Stop block".ToUpper();
+				}
+				else if (block.GetType() == typeof(Marbles.WhileBlock))
+				{
+					return "While block".ToUpper();
+				}
 			}
-			else if (block.GetType() == typeof(Marbles.CreateAsset))
+			else if (Utilities.vmExecuting)
 			{
-				return "Create asset block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.CreateFunction))
-			{
-				return "Create function block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.CreateVariable))
-			{
-				return "Create variable block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.DoBlock))
-			{
-				return "Do block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.ForBlock))
-			{
-				return "For block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.IfBlock))
-			{
-				return "If block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.ReturnBlock))
-			{
-				return "Return block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.StopBlock))
-			{
-				return "Stop block".ToUpper();
-			}
-			else if (block.GetType() == typeof(Marbles.WhileBlock))
-			{
-				return "While block".ToUpper();
+				return "Execution error";
 			}
 
 			return "";
+		}
+
+		public static event EventHandler ChangedPageHeader;
+		public static string PageHeader;
+
+		public static void ChangePageHeader(string newHeader)
+		{
+			PageHeader = newHeader;
+			ChangedPageHeader?.Invoke(null, EventArgs.Empty);
 		}
     }
 }
