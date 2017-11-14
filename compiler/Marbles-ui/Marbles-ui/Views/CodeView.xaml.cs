@@ -54,7 +54,7 @@ namespace Marbles
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-      
+            /*
 			Utilities.BlockToLineErrors.Clear();
 			BlocksWithErrorsInOrder.Clear();
 			Utilities.errorsInLines.Clear();
@@ -70,7 +70,7 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
-            
+
             // WriteCodeToFile(out string filePath);
             
            

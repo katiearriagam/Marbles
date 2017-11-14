@@ -226,11 +226,11 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Loads value into a memory address
+		/// Loads value into a memory address.
 		/// </summary>
 		/// <param name="memAddress"></param>
 		/// <param name="value"></param>
-		/// <returns></returns>
+		/// <returns>Memory address where the value was stored.</returns>
 		public static int SetMemory(int memAddress, object value)
 		{
 			// insert an asset attribute in memory
@@ -242,48 +242,72 @@ namespace Marbles
 			// insert a global number in memory
 			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
 			{
-				memoryGlobal[memAddress] = (int)value;
-                currentGlobalIntAddress++;
+                if (!memoryGlobal.ContainsKey(memAddress))
+                {
+                    currentGlobalIntAddress++;
+                }
+
+                memoryGlobal[memAddress] = (int)value;
 				return memAddress;
 			}
 
 			// insert a temporary number in memory
 			else if (memAddress >= lowestTempIntAddress && memAddress <= highestTempIntAddress)
 			{
-				memoryTemporary[memAddress] = (int)value;
-                currentTempIntAddress++;
+                if (!memoryTemporary.ContainsKey(memAddress))
+                {
+                    currentTempIntAddress++;
+                }
+
+                memoryTemporary[memAddress] = (int)value;
                 return memAddress;
 			}
 
 			// insert a global string in memory
 			else if (memAddress >= lowestGlobalStringAddress && memAddress <= highestGlobalStringAddress)
 			{
-				memoryGlobal[memAddress] = (string)value;
-                currentGlobalStringAddress++;
+                if (!memoryGlobal.ContainsKey(memAddress))
+                {
+                    currentGlobalStringAddress++;
+                }
+
+                memoryGlobal[memAddress] = (string)value;
                 return memAddress;
 			}
 
 			// insert a temporary string in memory
 			else if (memAddress >= lowestTempStringAddress && memAddress <= highestTempStringAddress)
 			{
-				memoryTemporary[memAddress] = (string)value;
-                currentTempStringAddress++;
+                if (!memoryTemporary.ContainsKey(memAddress))
+                {
+                    currentTempStringAddress++;
+                }
+
+                memoryTemporary[memAddress] = (string)value;
                 return memAddress;
 			}
 
 			// insert a global boolean in memory
 			else if (memAddress >= lowestGlobalBoolAddress && memAddress <= highestGlobalBoolAddress)
 			{
-				memoryGlobal[memAddress] = (bool)value;
-                currentGlobalBoolAddress++;
+                if (!memoryGlobal.ContainsKey(memAddress))
+                {
+                    currentGlobalBoolAddress++;
+                }
+
+                memoryGlobal[memAddress] = (bool)value;
                 return memAddress;
 			}
 
 			// insert temporary boolean in memory
 			else if (memAddress >= lowestTempBoolAddress && memAddress <= highestTempBoolAddress)
 			{
-				memoryTemporary[memAddress] = (bool)value;
-                currentTempBoolAddress++;
+                if (!memoryTemporary.ContainsKey(memAddress))
+                {
+                    currentTempBoolAddress++;
+                }
+
+                memoryTemporary[memAddress] = (bool)value;
                 return memAddress;
 			}
 
@@ -354,10 +378,15 @@ namespace Marbles
 			// insert a local object in memory
 			else if (memAddress >= lowestLocalAddress && memAddress <= highestLocalAddress)
 			{
-				memoryLocal[memAddress] = value;
-				currentLocalAddress++;
-				return memAddress;
+                if (!memoryLocal.ContainsKey(memAddress))
+                {
+                    currentLocalAddress++;
+                }
+
+                memoryLocal[memAddress] = value;
+                return memAddress;
 			}
+
 			throw new Exception("Out of memory");
 		}
 
@@ -513,7 +542,7 @@ namespace Marbles
 					return memoryGlobalAssets[memAddress].GetType();
 				}
             }
-			// if memoy belongs to local memory
+			// if memory belongs to local memory
 			if (memAddress >= lowestLocalAddress && memAddress <= highestLocalAddress)
 			{
 				if (memoryLocal.ContainsKey(memAddress))
