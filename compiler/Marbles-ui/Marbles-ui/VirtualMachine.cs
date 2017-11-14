@@ -133,19 +133,19 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.equalEqual)
             {
-				        var num1 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				        var num2 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
+                var num1 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+                var num2 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
-                bool result = num1 == num2;
+                bool result = ((IComparable)num1).CompareTo((IComparable)num2) == 0;
 
                 MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
             }
             else if (action == Utilities.QuadrupleAction.notEqual)
             {
-				        var num1 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-				        var num2 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
+                var num1 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+                var num2 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
-                bool result = num1 != num2;
+                bool result = ((IComparable)num1).CompareTo((IComparable)num2) != 0;
 
                 MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
             }
