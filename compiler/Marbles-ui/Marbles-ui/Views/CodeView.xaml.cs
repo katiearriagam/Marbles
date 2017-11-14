@@ -70,14 +70,14 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
+
+            // WriteCodeToFile(out string filePath);
             
-            WriteCodeToFile(out string filePath);
-            */
-            ///*
+           
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			//*/
+			
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();

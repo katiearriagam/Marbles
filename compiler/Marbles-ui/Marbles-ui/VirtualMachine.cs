@@ -10,7 +10,8 @@ namespace Marbles
     {
         private static List<Quadruple> quadruples = new List<Quadruple>();
         private static int currentInstruction = 0;
-        private static bool endExecution = false;
+		private static int functionAddressInMemory = -1;
+		private static bool endExecution = false;
         private static Stack<int> savedInstructionPointer = new Stack<int>();
         private static Stack<int> localMemoryAllocations = new Stack<int>();
 		private static Stack<Tuple<string, int>> CallStack = new Stack<Tuple<string, int>>(); 
@@ -131,8 +132,8 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.equalEqual)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-                int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
+				        var num1 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				        var num2 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
                 bool result = num1 == num2;
 
@@ -140,8 +141,8 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.notEqual)
             {
-                int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
-                int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
+				        var num1 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
+				        var num2 = MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));
 
                 bool result = num1 != num2;
 
@@ -224,54 +225,51 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.era)
             {
-                int functionSize = quadruple.GetOperandOne();
-                int functionMemAddress = quadruple.GetOperandTwo();
+              int functionSize = quadruple.GetOperandOne();
+              int functionMemAddress = quadruple.GetOperandTwo();
 
-                LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
+              LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
 
-                // Indicates the address in local memory where the function is loaded.
-                int functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled); // this can throw - but VM caller will catch it
-
-                CallStack.Push(new Tuple<string, int>(LastFunctionCalled.GetName(), functionAddressInMemory));
+              // Indicates the address in local memory where the function is loaded.
+              functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled); // this can throw - but VM caller will catch it
             }
             else if (action == Utilities.QuadrupleAction.param)
             {
-                var temp = CallStack.Pop();
-                int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
-                CallStack.Push(temp);
+              int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
 
-                int paramIndex = quadruple.GetAssignee();
-                Variable p = FunctionDirectory.GetFunction(CallStack.Peek().Item1).GetParameters()[paramIndex];
-                int pAddr = p.GetMemoryAddress();
-                int destinationAddress = MapAddressToLocalMemory(pAddr);
+              int paramIndex = quadruple.GetAssignee();
+              Variable p = LastFunctionCalled.GetParameters()[paramIndex];
+              int pAddr = p.GetMemoryAddress();
+              int destinationAddress = MapAddressToLocalMemory(pAddr);
 
-                MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
+              MemoryManager.SetMemory(destinationAddress, MemoryManager.GetValueFromAddress(paramValueAddress));
             }
             else if (action == Utilities.QuadrupleAction.gosub)
             {
-                savedInstructionPointer.Push(currentInstruction + 1);
-                currentInstruction = quadruple.GetOperandOne();
+              CallStack.Push(new Tuple<string, int>(LastFunctionCalled.GetName(), functionAddressInMemory));
+              savedInstructionPointer.Push(currentInstruction + 1);
+              currentInstruction = quadruple.GetOperandOne();
             }
             else if (action == Utilities.QuadrupleAction.retorno)
             {
-				int localResultValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
-				int functionAddressInGlobalMemory = quadruple.GetAssignee();
+              int localResultValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
+              int functionAddressInGlobalMemory = quadruple.GetAssignee();
 
-				object resultValue = MemoryManager.GetValueFromAddress(localResultValueAddress);
+              object resultValue = MemoryManager.GetValueFromAddress(localResultValueAddress);
 
-				// save result in global memory
-				try { MemoryManager.SetMemory(functionAddressInGlobalMemory, resultValue); }
-				catch (Exception e) { throw new Exception(e.Message); }
+              // save result in global memory
+              try { MemoryManager.SetMemory(functionAddressInGlobalMemory, resultValue); }
+              catch (Exception e) { throw new Exception(e.Message); }
 
-				currentInstruction = savedInstructionPointer.Pop();
+              currentInstruction = savedInstructionPointer.Pop();
 
-				if (CallStack.Count == 0)
-				{
-					throw new Exception("Call stack is empty.");
-				}
+              if (CallStack.Count == 0)
+              {
+                throw new Exception("Call stack is empty.");
+              }
 
-				MemoryManager.DeallocateLocalMemory(FunctionDirectory.GetFunction(CallStack.Pop().Item1).GetFunctionSize());
-			}
+              MemoryManager.DeallocateLocalMemory(FunctionDirectory.GetFunction(CallStack.Pop().Item1).GetFunctionSize());
+            }
             else if (action == Utilities.QuadrupleAction.endProc)
             {
                 currentInstruction = savedInstructionPointer.Pop();
@@ -293,12 +291,12 @@ namespace Marbles
 
                 await caller.SetPosition(x, y);
 
-				int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
-				MemoryManager.SetMemory(xAttrAddress, x);
+                int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
+                MemoryManager.SetMemory(xAttrAddress, x);
 
-				int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
-				MemoryManager.SetMemory(yAttrAddress, y);
-			}
+                int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
+                MemoryManager.SetMemory(yAttrAddress, y);
+              }
             else if (action == Utilities.QuadrupleAction.move_x)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
@@ -308,21 +306,21 @@ namespace Marbles
 
                 await caller.MoveX(displacement);
 
-				int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
-				MemoryManager.SetMemory(xAttrAddress, (int)MemoryManager.GetValueFromAddress(xAttrAddress) + displacement);
-            }
-            else if (action == Utilities.QuadrupleAction.move_y)
-            {
-                string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
-                Asset caller = Utilities.FindAssetFromID(assetID);
+                int xAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.x;
+                MemoryManager.SetMemory(xAttrAddress, (int)MemoryManager.GetValueFromAddress(xAttrAddress) + displacement);
+                    }
+                    else if (action == Utilities.QuadrupleAction.move_y)
+                    {
+                        string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
+                        Asset caller = Utilities.FindAssetFromID(assetID);
 
-                int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
+                        int displacement = (int)MemoryManager.GetValueFromAddress(quadruple.GetOperandTwo());
 
-                await caller.MoveY(displacement);
+                        await caller.MoveY(displacement);
 
-				int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
-				MemoryManager.SetMemory(yAttrAddress, (int)MemoryManager.GetValueFromAddress(yAttrAddress) + displacement);
-			}
+                int yAttrAddress = quadruple.GetOperandOne() + (int)MemoryManager.AssetAttributes.y;
+                MemoryManager.SetMemory(yAttrAddress, (int)MemoryManager.GetValueFromAddress(yAttrAddress) + displacement);
+              }
             else if (action == Utilities.QuadrupleAction.spin)
             {
                 string assetID = (string)MemoryManager.GetValueFromAddress(quadruple.GetOperandOne());
@@ -366,11 +364,7 @@ namespace Marbles
 		public static int MapAddressToLocalMemory(int address)
 		{
 			if (address < 100000) { return address; }
-            if (CallStack.Count == 0) throw new Exception("CallStack is empty");
-            string s = CallStack.Peek().Item1;
-            int sum = MemoryManager.FunctionMemoryToMemoryManager(CallStack.Peek().Item1, address);
-
-            return CallStack.Peek().Item2 + sum; 
+			return functionAddressInMemory + MemoryManager.FunctionMemoryToMemoryManager(LastFunctionCalled.GetName(), address); 
 		}
     }
 }

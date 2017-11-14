@@ -36,61 +36,61 @@ namespace Marbles
 		public static Dictionary<int, object> memoryConstant = new Dictionary<int, object>();
 
 		// Asset Limits
-		const int lowestAssetAddress = 0000;
-		const int highestAssetAddress = 0999;
-		static int currentAssetAddress = 0000;
+		public const int lowestAssetAddress = 0000;
+		public const int highestAssetAddress = 0999;
+		public static int currentAssetAddress = 0000;
 
 		// Global Lower Limits
-		const int lowestGlobalIntAddress = 1000;
-		const int lowestGlobalStringAddress = 2000;
-		const int lowestGlobalBoolAddress = 3000;
+		public const int lowestGlobalIntAddress = 1000;
+		public const int lowestGlobalStringAddress = 2000;
+		public const int lowestGlobalBoolAddress = 3000;
 
 		// Global Upper Limits
-		const int highestGlobalIntAddress = 1999;
-		const int highestGlobalStringAddress = 2999;
-		const int highestGlobalBoolAddress = 3999;
+		public const int highestGlobalIntAddress = 1999;
+		public const int highestGlobalStringAddress = 2999;
+		public const int highestGlobalBoolAddress = 3999;
 
 		// Global Current Indexes
-		static int currentGlobalIntAddress = 1000;
-		static int currentGlobalStringAddress = 2000;
-		static int currentGlobalBoolAddress = 3000;
+		public static int currentGlobalIntAddress = 1000;
+		public static int currentGlobalStringAddress = 2000;
+		public static int currentGlobalBoolAddress = 3000;
 
 		// Local Limits
-		const int lowestLocalAddress = 4000;
-		const int highestLocalAddress = 6999;
+		public const int lowestLocalAddress = 4000;
+		public const int highestLocalAddress = 6999;
 
 		// Local Current Index
-		static int currentLocalAddress = 4000;
+		public static int currentLocalAddress = 4000;
 
 		// Temporary Lower Limits
-		const int lowestTempIntAddress = 7000;
-		const int lowestTempStringAddress = 8000;
-		const int lowestTempBoolAddress = 9000;
+		public const int lowestTempIntAddress = 7000;
+		public const int lowestTempStringAddress = 8000;
+		public const int lowestTempBoolAddress = 9000;
 
 		// Temporary Upper Limits
-		const int highestTempIntAddress = 7999;
-		const int highestTempStringAddress = 8999;
-		const int highestTempBoolAddress = 9999;
+		public const int highestTempIntAddress = 7999;
+		public const int highestTempStringAddress = 8999;
+		public const int highestTempBoolAddress = 9999;
 
 		// Temporary Current Indexes
-		static int currentTempIntAddress = 7000;
-		static int currentTempStringAddress = 8000;
-		static int currentTempBoolAddress = 9000;
+		public static int currentTempIntAddress = 7000;
+		public static int currentTempStringAddress = 8000;
+		public static int currentTempBoolAddress = 9000;
 
 		// Constant Upper Limits
-		const int lowestConstantIntAddress = 10000;
-		const int lowestConstantStringAddress = 11000;
-		const int lowestConstantBoolAddress = 12000;
+		public const int lowestConstantIntAddress = 10000;
+		public const int lowestConstantStringAddress = 11000;
+		public const int lowestConstantBoolAddress = 12000;
 
 		// Constant Upper Limits
-		const int highestConstantIntAddress = 10999;
-		const int highestConstantStringAddress = 11999;
-		const int highestConstantBoolAddress = 12001;
+		public const int highestConstantIntAddress = 10999;
+		public const int highestConstantStringAddress = 11999;
+		public const int highestConstantBoolAddress = 12001;
 
 		// Constant Current Indexes
-		static int currentConstantIntAddress = 10000;
-		static int currentConstantStringAddress = 11000;
-		static int currentConstantBoolAddress = 12000;
+		public static int currentConstantIntAddress = 10000;
+		public static int currentConstantStringAddress = 11000;
+		public static int currentConstantBoolAddress = 12000;
 
 		/// <summary>
 		/// Gets the next available memory address for each scope and data type
@@ -455,7 +455,7 @@ namespace Marbles
 			{
 				for (int i = currentLocalAddress - 1; i >= currentLocalAddress - funcSize; i--)
 				{
-                    memoryLocal.Remove(i);
+					memoryLocal.Remove(i);
 				}
 				currentLocalAddress -= funcSize;
 			}
@@ -756,7 +756,14 @@ namespace Marbles
             Debug.WriteLine(">--- LOCAL ---< ");
             foreach (KeyValuePair<int, object> kvp in memoryLocal)
             {
-                Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+				if (kvp.Value == null)
+				{
+					Debug.WriteLine(kvp.Key + "[" + "NULL" + "]" + " -> " + "NULL");
+				}
+				else
+				{
+					Debug.WriteLine(kvp.Key + "[" + SemanticCubeUtilities.GetDataTypeFromType(kvp.Value.GetType()).ToString() + "]" + " -> " + kvp.Value.ToString());
+				}
             }
 
             Debug.WriteLine("\n");
