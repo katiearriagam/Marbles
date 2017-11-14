@@ -54,7 +54,7 @@ namespace Marbles
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-      
+            /*
 			Utilities.BlockToLineErrors.Clear();
 			BlocksWithErrorsInOrder.Clear();
 			Utilities.errorsInLines.Clear();
@@ -72,12 +72,12 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
             
             WriteCodeToFile(out string filePath);
-            
-            /*
+            */
+            ///*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			      */
+			//*/
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
