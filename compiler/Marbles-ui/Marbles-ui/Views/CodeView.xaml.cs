@@ -70,14 +70,14 @@ namespace Marbles
 
             Utilities.linesOfCode.Add(new CodeLine("}", main, Utilities.linesOfCodeCount + 1));
             Utilities.linesOfCodeCount++;
-            
-            WriteCodeToFile(out string filePath);
+
+            // WriteCodeToFile(out string filePath);
             */
-            ///*
+           
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			//*/
+			
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
@@ -113,21 +113,18 @@ namespace Marbles
 			Utilities.BlockToLineErrors.Clear();
 			foreach (int element in ErrorPrinter.GetErrorLines())
 			{
-				//if (element >= 1)
-				//{
-					if (Utilities.BlockToLineErrors.ContainsKey(Utilities.linesOfCode[element - 1].owner))
-					{
-						List<string> addedStrings = Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1;
-						addedStrings = (List<string>)addedStrings.Concat(ErrorPrinter.GetErrorsAtLine(element));
+				if (Utilities.BlockToLineErrors.ContainsKey(Utilities.linesOfCode[element - 1].owner))
+				{
+					List<string> addedStrings = Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner].Item1;
+					addedStrings = (List<string>)addedStrings.Concat(ErrorPrinter.GetErrorsAtLine(element));
 
-						Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner] = new Tuple<List<string>, SolidColorBrush>(addedStrings, Utilities.GetRandomBrushForErrors());
-					}
-					else
-					{
-						Utilities.BlockToLineErrors.Add(Utilities.linesOfCode[element - 1].owner, new Tuple<List<string>, SolidColorBrush>(ErrorPrinter.GetErrorsAtLine(element), Utilities.GetRandomBrushForErrors()));
-						BlocksWithErrorsInOrder.Add(Utilities.linesOfCode[element - 1].owner);
-					}
-				//}
+					Utilities.BlockToLineErrors[Utilities.linesOfCode[element - 1].owner] = new Tuple<List<string>, SolidColorBrush>(addedStrings, Utilities.GetRandomBrushForErrors());
+				}
+				else
+				{
+					Utilities.BlockToLineErrors.Add(Utilities.linesOfCode[element - 1].owner, new Tuple<List<string>, SolidColorBrush>(ErrorPrinter.GetErrorsAtLine(element), Utilities.GetRandomBrushForErrors()));
+					BlocksWithErrorsInOrder.Add(Utilities.linesOfCode[element - 1].owner);
+				}
 			}
 		}
 
