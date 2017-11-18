@@ -299,15 +299,7 @@ namespace Marbles
 		}
 
         /// <summary>
-        /// Remove all entries from the memory simulation
-        /// </summary>
-        public void ReleaseMemory()
-        {
-            memory.Reset();
-        }
-
-        /// <summary>
-        /// Clean memory
+        /// Cleans memory
         /// </summary>
         public void Reset()
         {
