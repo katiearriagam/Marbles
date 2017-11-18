@@ -18,6 +18,10 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Marbles
 {
+    /// <summary>
+    /// Class describing an Asset used in the Canvas and that the user
+    /// can interact with.
+    /// </summary>
     public sealed partial class Asset : UserControl
     {
         private Canvas cv;
@@ -76,16 +80,25 @@ namespace Marbles
             sb.Children.Add(anim);
         }
 
+        /// <summary>
+        /// The Asset's image source.
+        /// </summary>
         public string ImageSource
         {
             get { return imageSource; }
         }
 
+        /// <summary>
+        /// The Asset's current label.
+        /// </summary>
         public string Label
         {
             get { return label; }
         }
 
+        /// <summary>
+        /// The Asset's current value.
+        /// </summary>
         public string Number
         {
             get { return number.ToString(); }
@@ -107,6 +120,10 @@ namespace Marbles
             return width;
         }
 
+        /// <summary>
+        /// Set the Asset's width without animating the change.
+        /// </summary>
+        /// <param name="width"></param>
         public void SetWidthNoAnimation(int width)
         {
             this.width = width;
@@ -114,6 +131,10 @@ namespace Marbles
             ctImage.CenterX = ctUserControl.CenterX = this.width / 2;
         }
 
+        /// <summary>
+        /// Set the Asset's width, animating the change.
+        /// </summary>
+        /// <param name="width"></param>
         public async Task SetWidth(int width)
         {
             int originalWidth = this.width;
@@ -163,6 +184,10 @@ namespace Marbles
             return height;
         }
 
+        /// <summary>
+        /// Set the Asset's height without animating the change.
+        /// </summary>
+        /// <param name="height"></param>
         public void SetHeightNoAnimation(int height)
         {
             this.height= height;
@@ -170,6 +195,11 @@ namespace Marbles
             ctImage.CenterY = ctUserControl.CenterY = this.height / 2;
         }
 
+        /// <summary>
+        /// Set the Asset's height, animating the change.
+        /// </summary>
+        /// <param name="height"></param>
+        /// <returns></returns>
         public async Task SetHeight(int height)
         {
             int originalHeight= this.height;
@@ -287,6 +317,11 @@ namespace Marbles
             await Turn(0); // necessary for the SetPosition action to wait sb.Duration milliseconds afte completion
         }
 
+        /// <summary>
+        /// Move the horizontal position of the asset, animating the transition
+        /// from one point in the Canvas to another.
+        /// </summary>
+        /// <param name="displacement"></param>
         public async Task MoveX(int displacement)
         {
             AssetUserControl.RenderTransform = ctUserControl;
@@ -304,6 +339,11 @@ namespace Marbles
             sb.Stop();
         }
 
+        /// <summary>
+        /// Move the vertical position of the asset, animating the transition
+        /// from one point in the Canvas to another.
+        /// </summary>
+        /// <param name="displacement"></param>
         public async Task MoveY(int displacement)
         {
             AssetUserControl.RenderTransform = ctUserControl;
@@ -321,6 +361,10 @@ namespace Marbles
             sb.Stop();
         }
 
+        /// <summary>
+        /// Set the Asset's current rotation without animating the change.
+        /// </summary>
+        /// <param name="rotation"></param>
         public void SetRotationNoAnimation(int rotation)
         {
             this.rotation = rotation;
@@ -328,6 +372,10 @@ namespace Marbles
             AssetImage.RenderTransform = ctImage;
         }
 
+        /// <summary>
+        /// Rotate the asset a certain amount of degrees, animating the rotation.
+        /// </summary>
+        /// <param name="degrees"></param>
         public async Task Turn(int degrees)
         {
             AssetImage.RenderTransform = ctImage;

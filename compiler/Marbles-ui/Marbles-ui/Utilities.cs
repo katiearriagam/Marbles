@@ -15,8 +15,8 @@ namespace Marbles
     {
         public static int assetInitialHeight = 90;
         public static int assetInitialWidth = 90;
-        public static int assetMinimumWidth = 10;
-        public static int assetMinimumHeight = 10;
+        public static int assetMinimumWidth = 0;
+        public static int assetMinimumHeight = 0;
         public static int linesOfCodeCount = 0;
 		public static bool vmExecuting = false;
         public static List<CodeLine> linesOfCode = new List<CodeLine>();

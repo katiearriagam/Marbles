@@ -569,6 +569,8 @@ namespace Marbles
         /// <summary>
         /// Returns a memory scope given a memory address.
         /// </summary>
+        /// <param name="memAddress"></param>
+        /// <returns>A MemoryScope enum value. This can be global, local, temporary, or constant.</returns>
         public static MemoryScope GetScopeFromAddress(int memAddress)
         {
             if (memAddress >= lowestAssetAddress && memAddress <= highestGlobalBoolAddress)

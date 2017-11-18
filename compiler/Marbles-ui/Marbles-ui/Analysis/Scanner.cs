@@ -30,7 +30,9 @@ using System.IO;
 using System.Collections;
 
 
-
+/// <summary>
+/// Contains attributes that describe a Token read by the scanner.
+/// </summary>
 public class Token {
 	public int kind;    // token kind
 	public int pos;     // token position in bytes in the source text (starting at 0)
@@ -93,6 +95,9 @@ public class Buffer {
 
 	~Buffer() { Close(); }
 	
+    /// <summary>
+    /// Close the buffer.
+    /// </summary>
 	protected void Close() {
 		if (!isUserStream && stream != null) {
 			stream.Dispose();
@@ -100,6 +105,9 @@ public class Buffer {
 		}
 	}
 	
+    /// <summary>
+    /// Read from the buffer.
+    /// </summary>
 	public virtual int Read () {
 		if (bufPos < bufLen) {
 			return buf[bufPos++];
@@ -113,6 +121,9 @@ public class Buffer {
 		}
 	}
 
+    /// <summary>
+    /// Look at the next byte in the buffer
+    /// </summary>
 	public int Peek () {
 		int curPos = Pos;
 		int ch = Read();
@@ -276,6 +287,10 @@ public class Scanner {
 
 	}
 	
+    /// <summary>
+    /// Given a file name, generates a new FileStream with that file and opens it for reading.
+    /// </summary>
+    /// <param name="fileName"></param>
 	public Scanner (string fileName) {
 		try {
 			Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -291,6 +306,9 @@ public class Scanner {
 		Init();
 	}
 	
+    /// <summary>
+    /// Starts reading from the FileStream
+    /// </summary>
 	void Init() {
 		pos = -1; line = 1; col = 0; charPos = -1;
 		oldEols = 0;
