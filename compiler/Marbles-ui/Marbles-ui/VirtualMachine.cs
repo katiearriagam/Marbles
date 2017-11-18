@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Marbles
 {
+    /// <summary>
+    /// This class carries out the execution of the program specified by the instructions on the
+    /// intermediate code. Execution errors are detected in this step.
+    /// </summary>
     public static class VirtualMachine
     {
         private static List<Quadruple> quadruples = new List<Quadruple>();
         private static int currentInstruction = 0;
-		private static int functionAddressInMemory = -1;
 		private static bool endExecution = false;
         private static Stack<int> savedInstructionPointer = new Stack<int>();
         private static Stack<int> localMemoryAllocations = new Stack<int>();
@@ -19,7 +22,7 @@ namespace Marbles
         private static Tuple<string, int> funcToAdd;
 
 		/// <summary>
-		/// Starts executing all quadruples until it reaches the end.
+		/// Starts executing all quadruples until all of them have been processed.
 		/// </summary>
         public static async Task Execute()
         {
@@ -48,6 +51,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Executes the instruction at position currentInstruction.
+        /// For instructions that involve animations, the animation is awaited until completed.
 		/// </summary>
         private static async Task ExecuteInstruction()
         {
@@ -354,6 +358,7 @@ namespace Marbles
             }
             else if (action == Utilities.QuadrupleAction.end)
             {
+                // Finish execution
                 endExecution = true;
             }
             else
@@ -383,6 +388,7 @@ namespace Marbles
                 s = funcToAdd.Item1;
                 addr = funcToAdd.Item2;
             }
+
             int sum = MemoryManager.FunctionMemoryToMemoryManager(s, address);
 
             return addr + sum;
