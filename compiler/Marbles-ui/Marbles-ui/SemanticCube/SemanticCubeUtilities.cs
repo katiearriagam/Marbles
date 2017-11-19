@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Marbles
 {
+    /// <summary>
+    /// Class with utilities regarding Operators and Data Types.
+    /// </summary>
     public static class SemanticCubeUtilities
     {
+        // Dictionaries to translate Operators and Data Types from one format to another
         private static Dictionary<Operators, String> OperatorToString = new Dictionary<Operators, String>();
         private static Dictionary<String, Operators> StringToOperator = new Dictionary<String, Operators>();
         private static Dictionary<Type, DataTypes> TypeToDataType = new Dictionary<Type, DataTypes>();
@@ -46,7 +50,7 @@ namespace Marbles
             TypeToDataType.Add(typeof(String), DataTypes.text);
             TypeToDataType.Add(typeof(Boolean), DataTypes.boolean);
         }
-
+        
         public enum DataTypes
         {
             invalidDataType = 0,
@@ -75,6 +79,15 @@ namespace Marbles
             invalidOperator = 15
         }
 
+        /// <summary>
+        /// Given an operator, returns its level of priority, with 0 being the highest.
+        /// Called by <see cref="Parser"/> and <see cref="QuadrupleManager"/> whenever an 
+        /// operator will be evaluated.
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns>
+        /// An integer representing the operator's priority.
+        /// </returns>
         public static int OperatorToPriority(Operators op)
         {
             switch (op)
@@ -108,6 +121,13 @@ namespace Marbles
             }
         }
 
+        /// <summary>
+        /// Given a <see cref="Type"/>, returns the equivalent Marbles <see cref="DataTypes"/>.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns>
+        /// A <see cref="DataTypes"/> object.
+        /// </returns>
         public static DataTypes GetDataTypeFromType(Type t)
         {
             DataTypes type;
@@ -121,6 +141,13 @@ namespace Marbles
             }
         }
 
+        /// <summary>
+        /// Given a <see cref="String"/> representing an operator, returns its equivalent <see cref="Operators"/>.
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns>
+        /// A <see cref="Operators"/> object.
+        /// </returns>
         public static Operators GetOperatorFromString(String c)
         {
             Operators op;
@@ -134,6 +161,13 @@ namespace Marbles
             }
         }
 
+        /// <summary>
+        /// Given a <see cref="Operators"/> object, returns its <see cref="String"/> representation.
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns>
+        /// A <see cref="String"/> representing the given <see cref="Operators"/>.
+        /// </returns>
         public static String GetOperatorVisualRepresentation(Operators op)
         {
             String str;
