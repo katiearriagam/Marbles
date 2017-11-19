@@ -296,7 +296,7 @@ namespace Marbles
 
 			// we will have to set this jump's position at the end of the whole IF statement
 			jumpStack.Push(counter);
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition, -1, -1));
 			counter++;
 		}
 
@@ -336,7 +336,7 @@ namespace Marbles
 
 			// we will have to set this jump's position at the end of the WHILE statement
 			jumpStack.Push(counter);
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition, -1, -1));
 			counter++;
 		}
 
@@ -416,7 +416,7 @@ namespace Marbles
             // we will have to set this jump's position at the end of the FOR statement
             jumpStack.Push(counter);
 
-            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem, -1, -1));
 			counter++;
 
             int oneMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);

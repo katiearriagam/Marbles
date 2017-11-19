@@ -111,7 +111,7 @@ public class Parser {
 	}
 	
 	void Marbles() {
-        QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.Goto));
+        QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, -1));
 		PROGRAM();
         QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.end, -1, -1, -1));
     }
