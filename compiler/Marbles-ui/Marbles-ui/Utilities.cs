@@ -22,10 +22,13 @@ namespace Marbles
         public static List<CodeLine> linesOfCode = new List<CodeLine>();
 		public static ArrayList assetsInCanvas = new ArrayList();
 		public static ArrayList finalAssetsInCanvas = new ArrayList();
+
+		// Helpers for found errors
 		public static Dictionary<Object, List<int>> BlockToFaultyLineNumbers = new Dictionary<Object, List<int>>();
 		public static Dictionary<Object, Tuple<List<string>, SolidColorBrush>> BlockToLineErrors = new Dictionary<Object, Tuple<List<string>, SolidColorBrush>>();
 		public static Random rand = new Random();
-
+		public static event EventHandler ChangedPageHeader;
+		public static string PageHeader;
 		public static List<SolidColorBrush> errorDotColors =
 			new List<SolidColorBrush>(new SolidColorBrush[]
 				{	new SolidColorBrush(Windows.UI.Color.FromArgb(255, 26, 188, 156)),
@@ -46,47 +49,14 @@ namespace Marbles
 					new SolidColorBrush(Windows.UI.Color.FromArgb(255, 44, 62, 80))
 				});
 
-        /// <summary>
-        /// Helpers for front-end navigation
-        /// </summary>
+        // Helpers for front-end navigation
         public static bool RunButtonEnabled = false;
         public static bool CompileButtonEnabled = true;
         public static SolidColorBrush RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
         public static SolidColorBrush CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
-
+		
+		/// Tracker of errors in the program
 		public static List<ErrorTemplate> errorsInLines = new List<ErrorTemplate>();
-
-
-		public static void EnableRunButton()
-        {
-            RunButtonEnabled = true;
-            RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
-        }
-
-        public static void DisableRunButton()
-        {
-            RunButtonEnabled = false;
-            RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 189, 195, 199));
-        }
-
-        public static void BlueCompile()
-        {
-            DisableRunButton();
-            CompileButtonEnabled = true;
-            CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
-        }
-
-        public static void RedCompile()
-        {
-            CompileButtonEnabled = true;
-            CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 231, 76, 60));
-        }
-
-        public static void GreenCompile()
-        {
-            CompileButtonEnabled = true;
-            CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
-        }
 
         public enum ShapeTypes
         {
@@ -97,8 +67,25 @@ namespace Marbles
             Heart,
             Polygon,
             Rhombus,
-            Hexagon
-        }
+            Hexagon,
+			Banana,
+			Strawberry,
+			Pineapple,
+			Candy,
+			Coffee,
+			Cookie,
+			Pizza,
+			Chick,
+			Crab,
+			Fox,
+			Whale,
+			Hedgehog,
+			Koala,
+			Pig,
+			Tiger,
+			Zebra,
+			Bull
+		}
         
         public enum BlockTypes
         {
@@ -194,8 +181,26 @@ namespace Marbles
             shapeToImagePath.Add(ShapeTypes.Polygon,  "/Assets/polygon.png");
             shapeToImagePath.Add(ShapeTypes.Rhombus,  "/Assets/rhombus.png");
             shapeToImagePath.Add(ShapeTypes.Hexagon,  "/Assets/hexagon.png");
+			shapeToImagePath.Add(ShapeTypes.Banana, "/Assets/banana.png");
+			shapeToImagePath.Add(ShapeTypes.Strawberry, "/Assets/strawberry.png");
+			shapeToImagePath.Add(ShapeTypes.Pineapple, "/Assets/pineapple.png");
+			shapeToImagePath.Add(ShapeTypes.Candy, "/Assets/candy.png");
+			shapeToImagePath.Add(ShapeTypes.Coffee, "/Assets/coffee.png");
+			shapeToImagePath.Add(ShapeTypes.Cookie, "/Assets/cookie.png");
+			shapeToImagePath.Add(ShapeTypes.Pizza, "/Assets/pizza.png");
 
-            actionToShapeType.Add("CircleInstantiator",   ShapeTypes.Circle);
+			shapeToImagePath.Add(ShapeTypes.Chick, "/Assets/chick.png");
+			shapeToImagePath.Add(ShapeTypes.Crab, "/Assets/crab.png");
+			shapeToImagePath.Add(ShapeTypes.Fox, "/Assets/fox.png");
+			shapeToImagePath.Add(ShapeTypes.Whale, "/Assets/whale.png");
+			shapeToImagePath.Add(ShapeTypes.Hedgehog, "/Assets/hedgehog.png");
+			shapeToImagePath.Add(ShapeTypes.Koala, "/Assets/koala.png");
+			shapeToImagePath.Add(ShapeTypes.Pig, "/Assets/pig.png");
+			shapeToImagePath.Add(ShapeTypes.Tiger, "/Assets/tiger.png");
+			shapeToImagePath.Add(ShapeTypes.Zebra, "/Assets/zebra.png");
+			shapeToImagePath.Add(ShapeTypes.Bull, "/Assets/bull.png");
+			
+			actionToShapeType.Add("CircleInstantiator",   ShapeTypes.Circle);
             actionToShapeType.Add("TriangleInstantiator", ShapeTypes.Triangle);
             actionToShapeType.Add("SquareInstantiator",   ShapeTypes.Square);
             actionToShapeType.Add("StarInstantiator",     ShapeTypes.Star);
@@ -203,8 +208,26 @@ namespace Marbles
             actionToShapeType.Add("PolygonInstantiator",  ShapeTypes.Polygon);
             actionToShapeType.Add("RhombusInstantiator",  ShapeTypes.Rhombus);
             actionToShapeType.Add("HexagonInstantiator",  ShapeTypes.Hexagon);
+			actionToShapeType.Add("BananaInstantiator", ShapeTypes.Banana);
+			actionToShapeType.Add("StrawberryInstantiator", ShapeTypes.Strawberry);
+			actionToShapeType.Add("PineappleInstantiator", ShapeTypes.Pineapple);
+			actionToShapeType.Add("CandyInstantiator", ShapeTypes.Candy);
+			actionToShapeType.Add("CoffeeInstantiator", ShapeTypes.Coffee);
+			actionToShapeType.Add("CookieInstantiator", ShapeTypes.Cookie);
+			actionToShapeType.Add("PizzaInstantiator", ShapeTypes.Pizza);
+			actionToShapeType.Add("ChickInstantiator", ShapeTypes.Chick);
+			actionToShapeType.Add("CrabInstantiator", ShapeTypes.Crab);
+			actionToShapeType.Add("FoxInstantiator", ShapeTypes.Fox);
+			actionToShapeType.Add("WhaleInstantiator", ShapeTypes.Whale);
+			actionToShapeType.Add("HedgehogInstantiator", ShapeTypes.Hedgehog);
+			actionToShapeType.Add("KoalaInstantiator", ShapeTypes.Koala);
+			actionToShapeType.Add("PigInstantiator", ShapeTypes.Pig);
+			actionToShapeType.Add("TigerInstantiator", ShapeTypes.Tiger);
+			actionToShapeType.Add("ZebraInstantiator", ShapeTypes.Zebra);
+			actionToShapeType.Add("BullInstantiator", ShapeTypes.Bull);
 
-            operatorToAction.Add(SemanticCubeUtilities.Operators.plus, QuadrupleAction.plus);
+
+			operatorToAction.Add(SemanticCubeUtilities.Operators.plus, QuadrupleAction.plus);
             operatorToAction.Add(SemanticCubeUtilities.Operators.minus, QuadrupleAction.minus);
             operatorToAction.Add(SemanticCubeUtilities.Operators.multiply, QuadrupleAction.multiply);
             operatorToAction.Add(SemanticCubeUtilities.Operators.divide, QuadrupleAction.divide);
@@ -219,6 +242,12 @@ namespace Marbles
             operatorToAction.Add(SemanticCubeUtilities.Operators.or, QuadrupleAction.or);
         }
 
+		/// <summary>
+		/// Retrieves an asset using an ID.
+		/// Called from the virtual machine whenever an asset property/behavior is needed.
+		/// </summary>
+		/// <param name="assetID"></param>
+		/// <returns>Asset object with the given ID (or null if it does not exist)</returns>
         public static Asset FindAssetFromID(string assetID)
         {
             foreach (Asset a in finalAssetsInCanvas)
@@ -231,7 +260,13 @@ namespace Marbles
             return null;
         }
 
-        public static object GetDefaultValueFromType(Type t)
+		/// <summary>
+		/// Get a default value given a C# native data type.
+		/// Called by methods that initialize memory addresses to set a default value.
+		/// </summary>
+		/// <param name="t"></param>
+		/// <returns>Default value for the corresponding type</returns>
+		public static object GetDefaultValueFromType(Type t)
         {
             if (t == typeof(int) || t == typeof(Int32)) return 0;
             else if (t == typeof(bool)) return false;
@@ -241,7 +276,13 @@ namespace Marbles
             return null;
         }
 
-        public static object GetDefaultValueFromType(SemanticCubeUtilities.DataTypes dt)
+		/// <summary>
+		/// Get a default value given a Marbles data type.
+		/// Called by methods that initialize memory addresses to set a default value.
+		/// </summary>
+		/// <param name="dt"></param>
+		/// <returns>Default value for the corresponding type</returns>
+		public static object GetDefaultValueFromType(SemanticCubeUtilities.DataTypes dt)
         {
             if (dt == SemanticCubeUtilities.DataTypes.number) return 0;
             else if (dt == SemanticCubeUtilities.DataTypes.boolean) return false;
@@ -250,11 +291,22 @@ namespace Marbles
             return null;
         }
 
+		/// <summary>
+		/// Gets a random color from a pre-defined list to provide feedback on errors found.
+		/// Called whenever an error is found during compile/execution time.
+		/// </summary>
+		/// <returns>Returns a random color brush</returns>
         public static SolidColorBrush GetRandomBrushForErrors()
 		{
 			return errorDotColors[rand.Next(0, errorDotColors.Count - 1)];
 		}
 
+		/// <summary>
+		/// Activates visual feedback to indicate an error was found in a given block.
+		/// Called when an error is found during compilation.
+		/// </summary>
+		/// <param name="block"></param>
+		/// <param name="color"></param>
 		public static void SetUserControlWithError(UserControl block, SolidColorBrush color)
 		{
 			if (block.GetType() == typeof(Marbles.AssignBlock))
@@ -309,6 +361,12 @@ namespace Marbles
 			}
 		}
 
+		/// <summary>
+		/// Retrieves a string labeling the given type of block.
+		/// Called while generating a new error template for a block with errors.
+		/// </summary>
+		/// <param name="block"></param>
+		/// <returns>String with the label</returns>
 		public static string MapBlockTypeToLabel(UserControl block)
 		{
 			if (block != null)
@@ -362,13 +420,80 @@ namespace Marbles
 			return "";
 		}
 
-		public static event EventHandler ChangedPageHeader;
-		public static string PageHeader;
-
+		/// <summary>
+		/// Changes the page title. 
+		/// This method is called on execution errors.
+		/// </summary>
+		/// <param name="newHeader"></param>
 		public static void ChangePageHeader(string newHeader)
 		{
 			PageHeader = newHeader;
 			ChangedPageHeader?.Invoke(null, EventArgs.Empty);
 		}
-    }
+
+		/// <summary>
+		/// Enables the RUN button and provides feedback that the program is ready to run
+		/// </summary>
+		public static void EnableRunButton()
+		{
+			RunButtonEnabled = true;
+			RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
+		}
+
+		/// <summary>
+		/// Disables the RUN button and provides feedback that the program is not ready to run
+		/// </summary>
+		public static void DisableRunButton()
+		{
+			RunButtonEnabled = false;
+			RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 189, 195, 199));
+		}
+
+		/// <summary>
+		/// Provides feedback with the COMPILE button to indicate that the program is ready to be compiled
+		/// </summary>
+		public static void BlueCompile()
+		{
+			DisableRunButton();
+			CompileButtonEnabled = true;
+			CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
+		}
+
+		/// <summary>
+		/// Provides feedback with the COMPILE button to indicate that the program has compilation errors
+		/// </summary>
+		public static void RedCompile()
+		{
+			CompileButtonEnabled = true;
+			CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 231, 76, 60));
+		}
+
+		/// <summary>
+		/// Provides feedback with the COMPILE button to indicate that the program compiled successfully
+		/// and is ready to run
+		/// </summary>
+		public static void GreenCompile()
+		{
+			CompileButtonEnabled = true;
+			CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
+		}
+
+		/// <summary>
+		/// Disables buttons while the virtual machine is executing. 
+		/// </summary>
+		public static void DisableRunAndCompileButtons()
+		{
+			CompileButtonEnabled = false;
+			RunButtonEnabled = false;
+		}
+
+		/// <summary>
+		/// Enables buttons after the virtual machine stopped execution.
+		/// </summary>
+		public static void EnableRunAndCompileButtons()
+		{
+			CompileButtonEnabled = true;
+			RunButtonEnabled = true;
+		}
+	}
 }
