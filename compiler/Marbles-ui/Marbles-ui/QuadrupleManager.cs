@@ -547,7 +547,7 @@ namespace Marbles
 			functionId = func.GetName();
             hasReturn = false;
 
-			if (FunctionDirectory.FunctionExists(func))
+			if (FunctionDirectory.FunctionExists(functionId))
 			{
 				throw new Exception("Function " + functionId + " has been previously defined.");
 			}
