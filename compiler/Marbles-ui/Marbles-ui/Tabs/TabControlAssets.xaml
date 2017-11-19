@@ -56,79 +56,96 @@
     <Grid>
         <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
 			<Pivot Title="Assets">
-                <PivotItem Style="{StaticResource TabsStylePivotStyle}">
-                    <PivotItem.Header>
-                        <local:TabHeader Label="Shapes" Glyph="&#xE7BC;" />
-                    </PivotItem.Header>
-                    <Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
-                        <ListView 
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Animals" Glyph="&#xE8BE;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView 
+							ScrollViewer.VerticalScrollBarVisibility="Auto" 
+							ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+							ScrollViewer.HorizontalScrollMode="Disabled"                  
+							ScrollViewer.VerticalScrollMode="Enabled"
+							SelectionMode="None">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+									<Setter Property="VerticalContentAlignment" Value="Stretch" />
+								</Style>
+							</ListView.ItemContainerStyle>
+							<local:TabControlAssetsButton ImageSource="/Assets/chick.png" Label="Chick" Group="Shapes" DragStartingId="ChickInstantiator" HorizontalAlignment="Center" />
+							<local:TabControlAssetsButton ImageSource="/Assets/crab.png" Label="Crab" Group="Shapes" DragStartingId="CrabInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/fox.png" Label="Fox" Group="Shapes" DragStartingId="FoxInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/whale.png" Label="Whale" Group="Shapes" DragStartingId="WhaleInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/hedgehog.png" Label="Hedgehog" Group="Shapes" DragStartingId="HedgehogInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/koala.png" Label="Koala" Group="Shapes" DragStartingId="KoalaInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/pig.png" Label="Pig" Group="Shapes" DragStartingId="PigInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/tiger.png" Label="Tiger" Group="Shapes" DragStartingId="TigerInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/zebra.png" Label="Zebra" Group="Shapes" DragStartingId="ZebraInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/bull.png" Label="Bull" Group="Shapes" DragStartingId="BullInstantiator" HorizontalAlignment="Center"/>
+						</ListView>
+					</Grid>
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Food" Glyph="&#xED56;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView 
+							ScrollViewer.VerticalScrollBarVisibility="Auto" 
+							ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+							ScrollViewer.HorizontalScrollMode="Disabled"                  
+							ScrollViewer.VerticalScrollMode="Enabled"
+							SelectionMode="None">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+									<Setter Property="VerticalContentAlignment" Value="Stretch" />
+								</Style>
+							</ListView.ItemContainerStyle>
+							<local:TabControlAssetsButton ImageSource="/Assets/banana.png" Label="Banana" Group="Shapes" DragStartingId="BananaInstantiator" HorizontalAlignment="Center" />
+							<local:TabControlAssetsButton ImageSource="/Assets/strawberry.png" Label="Strawberry" Group="Shapes" DragStartingId="StrawberryInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/pineapple.png" Label="Pineapple" Group="Shapes" DragStartingId="PineappleInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/candy.png" Label="Candy" Group="Shapes" DragStartingId="CandyInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/coffee.png" Label="Coffee" Group="Shapes" DragStartingId="CoffeeInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/cookie.png" Label="Cookie" Group="Shapes" DragStartingId="CookieInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/pizza.png" Label="Pizza" Group="Shapes" DragStartingId="PizzaInstantiator" HorizontalAlignment="Center"/>
+						</ListView>
+					</Grid>
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Shapes" Glyph="&#xE734;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView 
 							ScrollViewer.VerticalScrollBarVisibility="Auto" 
 							ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 							ScrollViewer.HorizontalScrollMode="Disabled"                  
 							ScrollViewer.VerticalScrollMode="Enabled"
 						SelectionMode="None">
-                            <ListView.ItemContainerStyle>
+							<ListView.ItemContainerStyle>
 								<Style TargetType="ListViewItem">
 									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 									<Setter Property="VerticalContentAlignment" Value="Stretch" />
 								</Style>
-                            </ListView.ItemContainerStyle>
-							<TextBlock 
-								Style="{StaticResource TitleTextBlockStyle}"
-								Foreground="Gray"
-								VerticalAlignment="Bottom"
-								HorizontalAlignment="Left">
-								Shapes
-							</TextBlock>
-                            <local:TabControlAssetsButton ImageSource="/Assets/circle.png" Label="Circle" Group="Shapes" DragStartingId="CircleInstantiator" HorizontalAlignment="Center" />
+							</ListView.ItemContainerStyle>
+							<local:TabControlAssetsButton ImageSource="/Assets/star.png" Label="Star" Group="Shapes" DragStartingId="StarInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/heart.png" Label="Heart" Group="Shapes" DragStartingId="HeartInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/polygon.png" Label="Polygon" Group="Shapes" DragStartingId="PolygonInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/rhombus.png" Label="Rhombus" Group="Shapes" DragStartingId="RhombusInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/hexagon.png" Label="Hexagon" Group="Shapes" DragStartingId="HexagonInstantiator" HorizontalAlignment="Center"/>
+							<local:TabControlAssetsButton ImageSource="/Assets/circle.png" Label="Circle" Group="Shapes" DragStartingId="CircleInstantiator" HorizontalAlignment="Center" />
 							<local:TabControlAssetsButton ImageSource="/Assets/triangle.png" Label="Triangle" Group="Shapes" DragStartingId="TriangleInstantiator" HorizontalAlignment="Center"/>
 							<local:TabControlAssetsButton ImageSource="/Assets/square.png" Label="Square" Group="Shapes" DragStartingId="SquareInstantiator" HorizontalAlignment="Center"/>
-                            <local:TabControlAssetsButton ImageSource="/Assets/star.png" Label="Star" Group="Shapes" DragStartingId="StarInstantiator" HorizontalAlignment="Center"/>
-                            <local:TabControlAssetsButton ImageSource="/Assets/heart.png" Label="Heart" Group="Shapes" DragStartingId="HeartInstantiator" HorizontalAlignment="Center"/>
-                            <local:TabControlAssetsButton ImageSource="/Assets/polygon.png" Label="Polygon" Group="Shapes" DragStartingId="PolygonInstantiator" HorizontalAlignment="Center"/>
-                            <local:TabControlAssetsButton ImageSource="/Assets/rhombus.png" Label="Rhombus" Group="Shapes" DragStartingId="RhombusInstantiator" HorizontalAlignment="Center"/>
-                            <local:TabControlAssetsButton ImageSource="/Assets/hexagon.png" Label="Hexagon" Group="Shapes" DragStartingId="HexagonInstantiator" HorizontalAlignment="Center"/>
-                        </ListView>
-                    </Grid>
-                </PivotItem>
+						</ListView>
+					</Grid>
+				</PivotItem>
 
-                <PivotItem Style="{StaticResource TabsStylePivotStyle}">
-                    <PivotItem.Header>
-                        <local:TabHeader Label="Characters" Glyph="&#xE94A;" />
-                    </PivotItem.Header>
-                    <Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
-                        <ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-						ScrollViewer.HorizontalScrollMode="Disabled"                  
-						ScrollViewer.VerticalScrollMode="Enabled"
-						SelectionMode="None">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <TextBlock 
-								Style="{StaticResource TitleTextBlockStyle}"
-								Foreground="Gray"
-								VerticalAlignment="Bottom">
-								People
-                            </TextBlock>
-                            <TextBlock 
-								Style="{StaticResource TitleTextBlockStyle}"
-								Foreground="Gray"
-								VerticalAlignment="Bottom">
-								Animals
-                            </TextBlock>
-                            <TextBlock 
-								Style="{StaticResource TitleTextBlockStyle}"
-								Foreground="Gray"
-								VerticalAlignment="Bottom">
-								Others
-                            </TextBlock>
-                        </ListView>
-                    </Grid>
-                </PivotItem>
-            </Pivot>
+			</Pivot>
         </ScrollViewer>
     </Grid>
 </UserControl>
