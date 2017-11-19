@@ -123,6 +123,7 @@ namespace Marbles
 
         /// <summary>
         /// Given a <see cref="Type"/>, returns the equivalent Marbles <see cref="DataTypes"/>.
+        /// Called by functions that generate error messages.
         /// </summary>
         /// <param name="t"></param>
         /// <returns>
@@ -143,6 +144,7 @@ namespace Marbles
 
         /// <summary>
         /// Given a <see cref="String"/> representing an operator, returns its equivalent <see cref="Operators"/>.
+        /// Called by <see cref="Parser"/> to translate from a string token to a <see cref="Operators"/> value.
         /// </summary>
         /// <param name="c"></param>
         /// <returns>
@@ -163,6 +165,7 @@ namespace Marbles
 
         /// <summary>
         /// Given a <see cref="Operators"/> object, returns its <see cref="String"/> representation.
+        /// Called by <see cref="QuadrupleManager"/> to show friendly error messages.
         /// </summary>
         /// <param name="op"></param>
         /// <returns>

@@ -85,6 +85,7 @@ namespace Marbles
         /// <summary>
         /// Overrides <see cref="object.Equals(object)"/>'s definition. Two <see cref="TypeTypeOperator"/> objects are equal
         /// if the two hold the same <see cref="SemanticCubeUtilities.DataTypes"/> and the same <see cref="SemanticCubeUtilities.Operators"/>.
+        /// Called every time two <see cref="TypeTypeOperator"/> objects are compared in the Semantic Cube.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>
@@ -101,6 +102,7 @@ namespace Marbles
 
         /// <summary>
         /// Generates a hash code given the values the current <see cref="TypeTypeOperator"/> object's properties.
+        /// Called implicitly when comparing two <see cref="TypeTypeOperator"/> objects.
         /// </summary>
         /// <returns>
         /// An integer value representing a hash value.

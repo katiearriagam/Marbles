@@ -432,7 +432,8 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Enables the RUN button and provides feedback that the program is ready to run
+		/// Enables the RUN button and provides feedback that the program is ready to run.
+        /// Called by <see cref="CodeView.CompileButton_Click(object, Windows.UI.Xaml.RoutedEventArgs)"/>.
 		/// </summary>
 		public static void EnableRunButton()
 		{
@@ -441,7 +442,8 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Disables the RUN button and provides feedback that the program is not ready to run
+		/// Disables the RUN button and provides feedback that the program is not ready to run.
+        /// Called by <see cref="CanvasView"/> and <see cref="CodeView"/>.
 		/// </summary>
 		public static void DisableRunButton()
 		{
@@ -449,20 +451,22 @@ namespace Marbles
 			RunButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 189, 195, 199));
 		}
 
-		/// <summary>
-		/// Provides feedback with the COMPILE button to indicate that the program is ready to be compiled
-		/// </summary>
-		public static void BlueCompile()
+        /// <summary>
+        /// Provides feedback with the COMPILE button to indicate that the program is ready to be compiled.
+        /// Called by <see cref="CodeView.CompileButton_Click(object, Windows.UI.Xaml.RoutedEventArgs)"/>.
+        /// </summary>
+        public static void BlueCompile()
 		{
 			DisableRunButton();
 			CompileButtonEnabled = true;
 			CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 41, 128, 185));
 		}
 
-		/// <summary>
-		/// Provides feedback with the COMPILE button to indicate that the program has compilation errors
-		/// </summary>
-		public static void RedCompile()
+        /// <summary>
+        /// Provides feedback with the COMPILE button to indicate that the program has compilation errors.
+        /// Called by <see cref="CodeView.CompileButton_Click(object, Windows.UI.Xaml.RoutedEventArgs)"/>.
+        /// </summary>
+        public static void RedCompile()
 		{
 			CompileButtonEnabled = true;
 			CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 231, 76, 60));
@@ -470,7 +474,8 @@ namespace Marbles
 
 		/// <summary>
 		/// Provides feedback with the COMPILE button to indicate that the program compiled successfully
-		/// and is ready to run
+		/// and is ready to run.
+        /// Called by <see cref="CodeView.CompileButton_Click(object, Windows.UI.Xaml.RoutedEventArgs)"/>.
 		/// </summary>
 		public static void GreenCompile()
 		{
@@ -478,10 +483,11 @@ namespace Marbles
 			CompileButtonColor = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 39, 174, 96));
 		}
 
-		/// <summary>
-		/// Disables buttons while the virtual machine is executing. 
-		/// </summary>
-		public static void DisableRunAndCompileButtons()
+        /// <summary>
+        /// Disables buttons while the virtual machine is executing. 
+        /// Called by <see cref="CanvasView.Run_Button_Click(object, Windows.UI.Xaml.RoutedEventArgs)"/>.
+        /// </summary>
+        public static void DisableRunAndCompileButtons()
 		{
 			CompileButtonEnabled = false;
 			RunButtonEnabled = false;
@@ -489,6 +495,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Enables buttons after the virtual machine stopped execution.
+        /// Called by <see cref="CanvasView.Run_Button_Click(object, Windows.UI.Xaml.RoutedEventArgs)"/>.
 		/// </summary>
 		public static void EnableRunAndCompileButtons()
 		{

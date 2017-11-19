@@ -424,6 +424,8 @@ namespace Marbles
         /// <summary>
         /// Function that receives a <see cref="TypeTypeOperator"/> object and returns the
         /// resulting data type of combining the given types with the given operator.
+        /// Called by <see cref="QuadrupleManager"/> to get the resulting data type of two operands
+        /// and an operator.
         /// </summary>
         /// <param name="tto"></param>
         /// <returns>
@@ -467,6 +469,8 @@ namespace Marbles
         /// <summary>
         /// Function that receives two <see cref="SemanticCubeUtilities.DataTypes"/> and a <see cref="SemanticCubeUtilities.Operators"/>
         /// and returns the resulting data type of combining the given types with the given operator.
+        /// Called by <see cref="QuadrupleManager"/> to get the resulting data type of two operands
+        /// and an operator.
         /// </summary>
         /// <param name="typeOne"></param>
         /// <param name="typeTwo"></param>
