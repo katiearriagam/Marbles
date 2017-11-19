@@ -284,7 +284,11 @@ namespace Marbles
                     c.GetX(), c.GetY(), c.GetWidth(), c.GetHeight(), c.GetRotation(), c.GetNumber(), c.GetLabel()));
             }
 
-            try { await VirtualMachine.Execute(); }
+            try {
+				Utilities.DisableRunAndCompileButtons();
+				Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+				await VirtualMachine.Execute();
+			}
 			catch (Exception ex)
 			{
 				var errorTemplate = new ErrorTemplate();
@@ -298,6 +302,9 @@ namespace Marbles
 
 				Utilities.vmExecuting = false;
 				Utilities.BlueCompile();
+
+				// restart instruction pointer
+				VirtualMachine.currentInstruction = 0;
 
 				Utilities.ChangePageHeader("Errors");
 				this.Frame.Navigate((typeof(ErrorView)));
@@ -332,7 +339,10 @@ namespace Marbles
                 c.SetLabelNoWait(assetValues[i].Item7);
             }
 
-            System.Threading.Thread.Sleep(1000);
-        }
+            System.Threading.Thread.Sleep(500);
+
+			Utilities.EnableRunAndCompileButtons();
+			Run_Button.IsEnabled = Utilities.RunButtonEnabled;
+		}
 	}
 }

@@ -13,7 +13,7 @@ namespace Marbles
     public static class VirtualMachine
     {
         private static List<Quadruple> quadruples = new List<Quadruple>();
-        private static int currentInstruction = 0;
+        public static int currentInstruction = 0;
 		private static bool endExecution = false;
         private static Stack<int> savedInstructionPointer = new Stack<int>();
         private static Stack<int> localMemoryAllocations = new Stack<int>();
@@ -291,6 +291,7 @@ namespace Marbles
                 }
 
                 MemoryManager.DeallocateLocalMemory(FunctionDirectory.GetFunction(CallStack.Pop().Item1).GetFunctionSize());
+				throw new Exception("Function codepath did not contain return statement.");
             }
             else if (action == Utilities.QuadrupleAction.set_position)
             {
