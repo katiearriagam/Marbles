@@ -85,7 +85,18 @@ namespace Marbles
 
                 MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), result);
             }
-            else if (action == Utilities.QuadrupleAction.divide)
+			else if (action == Utilities.QuadrupleAction.negative)
+			{
+				int numMemAddress = quadruple.GetOperandOne();
+				int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(numMemAddress));
+				if (numMemAddress < MemoryManager.lowestConstantIntAddress)
+				{
+					num1 *= -1;
+				}
+
+				MemoryManager.SetMemory(MapAddressToLocalMemory(quadruple.GetAssignee()), num1);
+			}
+			else if (action == Utilities.QuadrupleAction.divide)
             {
                 int num1 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandOne()));
                 int num2 = (int)MemoryManager.GetValueFromAddress(MapAddressToLocalMemory(quadruple.GetOperandTwo()));

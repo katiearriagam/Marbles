@@ -445,6 +445,21 @@ namespace Marbles
 				// make this a semantic error
 				throw new Exception("Use of undeclared function " + functionBeingCalledId);
 			}
+			if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
+			{
+				if (FunctionDirectory.GetFunction(functionBeingCalledId).GetReturnType() == SemanticCubeUtilities.DataTypes.text)
+				{
+					throw new Exception("Invalid operand: cannot apply negative to text.");
+				}
+				if (FunctionDirectory.GetFunction(functionBeingCalledId).GetReturnType() == SemanticCubeUtilities.DataTypes.boolean)
+				{
+					throw new Exception("Invalid operand: cannot apply negative to boolean.");
+				}
+				if (FunctionDirectory.GetFunction(functionBeingCalledId).GetReturnType() == SemanticCubeUtilities.DataTypes.invalidDataType)
+				{
+					throw new Exception("Invalid operand: cannot apply negative to an invalid data type.");
+				}
+			}
 			LastFunctionCalled = FunctionDirectory.GetFunction(functionBeingCalledId);
 
             // if we are inside a function, and a function call matches the name
@@ -763,6 +778,24 @@ namespace Marbles
 			{
 				throw new Exception("Use of undeclared identifier.");
 			}
+			else
+			{
+				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
+				{
+					if (idType == SemanticCubeUtilities.DataTypes.text)
+					{
+						throw new Exception("Invalid operand: cannot apply negative to text.");
+					}
+					else if (idType == SemanticCubeUtilities.DataTypes.boolean)
+					{
+						throw new Exception("Invalid operand: cannot apply negative to boolean.");
+					}
+					else if (idType == SemanticCubeUtilities.DataTypes.invalidDataType)
+					{
+						throw new Exception("Invalid operand: cannot apply negative to an invalid data type.");
+					}
+				}
+			}
 
 			PushOperand(idMemoryAddress, idType);
 		}
@@ -806,7 +839,6 @@ namespace Marbles
 			try {
 				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 				{
-					operatorStack.Pop();
 					constMem = MemoryManager.SetMemory(constMem, num * -1);
 				}
 				else
@@ -835,7 +867,7 @@ namespace Marbles
 			{
 				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 				{
-					throw new Exception("Invalid operand: negative to constant text." );
+					throw new Exception("Invalid operand: cannot apply negative to text." );
 				}
 				else { constMem = MemoryManager.SetMemory(constMem, text); }
 			}
@@ -859,7 +891,7 @@ namespace Marbles
 			{
 				if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 				{
-					throw new Exception("Invalid operand: negative to constant boolean.");
+					throw new Exception("Invalid operand: cannot apply negative to boolean.");
 				}
 				constMem = MemoryManager.SetMemory(constMem, condition);
 			}
@@ -986,6 +1018,14 @@ namespace Marbles
 			// get the memory address of the asset
 			int memoryAdressOfAsset = LastAssetCalled.GetMemoryAddress();
 
+			if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
+			{
+				if (attribute == MemoryManager.AssetAttributes.label || attribute == MemoryManager.AssetAttributes.id)
+				{
+					throw new Exception("Invalid operand: cannot apply negative to this asset attribute.");
+				}
+			}
+
 			// add address to operands
 			PushOperand(memoryAdressOfAsset + (int)attribute, MemoryManager.AttributeToType(attribute));
 		}
@@ -993,7 +1033,11 @@ namespace Marbles
 		public static void ReturnEnd()
 		{
             hasReturn = true;
-            SemanticCubeUtilities.DataTypes type = typeStack.Peek();
+			if (functionId == "")
+			{
+				throw new Exception("Cannot add a return statement here.");
+			}
+			SemanticCubeUtilities.DataTypes type = typeStack.Peek();
             SemanticCubeUtilities.DataTypes expectedType = FunctionDirectory.GetFunction(functionId).GetReturnType();
             if (type != expectedType)
             {

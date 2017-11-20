@@ -106,6 +106,9 @@
       <DependentUpon>Asset.xaml</DependentUpon>
     </Compile>
     <Compile Include="MemoryManagement\MemoryManager.cs" />
+    <Compile Include="Values\Negative.xaml.cs">
+      <DependentUpon>Negative.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Values\Parenthesis.xaml.cs">
       <DependentUpon>Parenthesis.xaml</DependentUpon>
     </Compile>
@@ -322,6 +325,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ListsAndContainers\Asset.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Values\Negative.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

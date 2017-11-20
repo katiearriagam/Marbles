@@ -174,6 +174,23 @@ namespace Marbles
 					}
 					selectedValue = parExp as Parenthesis;
 				}
+				if (e.DataView.Properties.ContainsKey("NegativeValue"))
+				{
+					selectedValueType = Utilities.ValueTypes.Negative;
+					var negative = new Negative();
+					Values valuePlaceHolder = sender as Values;
+					var grid = valuePlaceHolder.Parent as Grid;
+					if (grid != null)
+					{
+						var row = Grid.GetRow(valuePlaceHolder);
+						var column = Grid.GetColumn(valuePlaceHolder);
+						grid.Children.Remove(valuePlaceHolder);
+						grid.Children.Add(negative);
+						Grid.SetRow(negative, row);
+						Grid.SetColumn(negative, column);
+					}
+					selectedValue = negative as Negative;
+				}
 				if (e.DataView.Properties.ContainsKey("AssetProperty"))
 				{
                     selectedValueType = Utilities.ValueTypes.AssetProperty;
@@ -262,6 +279,10 @@ namespace Marbles
 			else if (selectedValueType == Utilities.ValueTypes.Parenthesis)
 			{
 				((Parenthesis)selectedValue).PrintCode();
+			}
+			else if (selectedValueType == Utilities.ValueTypes.Negative)
+			{
+				((Negative)selectedValue).PrintCode();
 			}
 			else if (selectedValueType == Utilities.ValueTypes.FunctionCall)
             {
