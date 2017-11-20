@@ -141,10 +141,9 @@ public class Parser {
 	}
 
 	/// <summary>
-	/// Action called when a creat asset block is found
+	/// Action called when a creat asset block is found.
 	/// </summary>
-	/// <returns> The index of the asset being 
-	/// created in Utilities.finalAssetsInCanvas </returns>
+	/// <returns> The index of the asset being created in <see cref="Utilities.finalAssetsInCanvas"/></returns>
 	int CREATE_ASSET() {
 		Expect(18); // "asset"
 		Expect(1); // id
