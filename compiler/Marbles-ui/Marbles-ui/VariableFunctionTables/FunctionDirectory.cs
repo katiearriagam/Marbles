@@ -4,14 +4,13 @@ using System.Collections.Generic;
 namespace Marbles
 {
 	/// <summary>
-	/// Class that stores all the functions used in the program.
+	/// Class that stores all the functions used in a program.
 	/// </summary>
     public static class FunctionDirectory
     {
-		/// <summary>
-		/// Dictionary that stores all functions by using the ID (function name)
-		/// as the key.
-		/// </summary>
+        /// <summary>
+        /// Dictionary that stores all functions by using the ID as the key.
+        /// </summary>
         private static Dictionary<String, Function> FunctionDictionary;
 
         /// <summary>
@@ -19,7 +18,7 @@ namespace Marbles
         /// </summary>
         /// <remarks>
         /// Adds by default the function "_Global", which represents the global context 
-        /// of the program. This way, we can keep track of global variables.
+        /// of the program. This way we can keep track of global variables.
         /// </remarks>
         static FunctionDirectory()
         {
@@ -30,9 +29,14 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Returns a Function object given the function's name (ID).
+        /// Returns a Function object given the function's name.
+        /// This function is called by <see cref="QuadrupleManager"/>, <see cref="Parser"/>, <see cref="VirtualMachine"/>,
+        /// and <see cref="MemoryManager"/> to retrieve a function given its ID.
         /// </summary>
         /// <param name="funcID"></param>
+        /// <returns>
+        /// A <see cref="Function"/> object with the given ID.
+        /// </returns>
         public static Function GetFunction(String funcID)
         {
             if (!FunctionDictionary.ContainsKey(funcID))
@@ -46,10 +50,13 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Returns a Function object given the function's memory address.
+        /// Returns a Function given its memory address.
+        /// This function is called by <see cref="VirtualMachine"/> when executing a <see cref="Utilities.QuadrupleAction.era"/> action.
         /// </summary>
         /// <param name="address"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// A <see cref="Function"/> object.
+        /// </returns>
         public static Function GetFunctionWithAddress(int address)
         {
             foreach (Function func in FunctionDictionary.Values)
@@ -65,6 +72,8 @@ namespace Marbles
 
         /// <summary>
         /// Inserts a new function into the Function Directory.
+        /// This function is called by <see cref="QuadrupleManager"/> whenever <see cref="Parser"/> reads
+        /// a new valid function.
         /// </summary>
         /// <param name="funcID"></param>
         /// <returns>
@@ -80,25 +89,10 @@ namespace Marbles
             FunctionDictionary.Add(func.GetName(), func);
             return true;
         }
-		
-		/// <summary>
-		/// Returns whether the Function Directory is empty or not.
-		/// </summary>
-		public static bool IsEmpty()
-        {
-            return FunctionDictionary.Count == 0;
-        }
-
-        /// <summary>
-        /// Returns the amount of Functions registered in the Function Directory.
-        /// </summary>
-        public static int Size()
-        {
-            return FunctionDictionary.Count;
-        }
 
         /// <summary>
         /// Removes all entries from the Function Directory.
+        /// This function is called every time before starting compilation.
         /// </summary>
         public static void Reset()
         {
@@ -114,50 +108,31 @@ namespace Marbles
         }
 
         /// <summary>
-        ///  Removes a specific Function from the Function Directory, given the function's name.
+        /// Returns whether a specific function exists in the Function Directory or not,
+        /// given the function's name (ID) as a parameter.
+        /// This function is called by <see cref="QuadrupleManager"/>.
         /// </summary>
         /// <param name="funcID"></param>
         /// <returns>
-        /// True if the function was removed successfully.
-        /// False if it did not extist or it could not be removed.
+        /// A boolean indicating whether the function exists.
         /// </returns>
-        public static bool DeleteFunction(String funcID)
-        {
-            if (!FunctionDictionary.ContainsKey(funcID))
-            {
-                return false;
-            }
-
-            return FunctionDictionary.Remove(funcID);
-        }
-
-        /// <summary>
-        /// Returns whether a specific function exists in the Function Directory or not,
-        /// given the function's name (ID) as a parameter.
-        /// </summary>
-        /// <param name="funcID"></param>
         public static bool FunctionExists(String funcID)
         {
             return FunctionDictionary.ContainsKey(funcID);
         }
 
         /// <summary>
-        /// Returns whethere a specific function exists in the Function Directory or not, 
-        /// given the Function as a parameter.
-        /// </summary>
-        /// <param name="func"></param>
-        public static bool FunctionExists(Function func)
-        {
-            return FunctionDictionary.ContainsValue(func);
-        }
-
-        /// <summary>
         /// Returns the _Global Function from the Function Directory.
+        /// This function is called by <see cref="MemoryManager"/> to manage memory of global variables and assets
+        /// and by <see cref="QuadrupleManager"/> to get the current state of the global function.
         /// </summary>
         /// <remarks>
         /// If for some reason the _Global Function has been removed from the directory,
         /// a KeyNotFound exception will be thrown.
         /// </remarks>
+        /// <returns>
+        /// A <see cref="Function"/> object with ID: "_Global".
+        /// </returns>
         public static Function GlobalFunction()
         {
             if (!FunctionDictionary.ContainsKey("_Global"))

@@ -4,7 +4,7 @@ namespace Marbles
 {
 	/// <summary>
 	/// This class defines what a variable is in Marbles.
-	/// A variable has a data type associated with it and an id (name).
+	/// A variable has a data type associated with it and an ID (name).
 	/// </summary>
 	public class Variable
 	{
@@ -35,23 +35,25 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Variable's data type getter method.
+		/// Variable's <see cref="dataType"/> getter method.
 		/// </summary>
+        /// <returns>A <see cref="SemanticCubeUtilities.DataTypes"/> value.</returns>
 		public SemanticCubeUtilities.DataTypes GetDataType()
 		{
 			return dataType;
 		}
 
 		/// <summary>
-		/// Variable's identifier (name) getter method.
+		/// Variable's <see cref="name"/> getter method.
 		/// </summary>
+        /// <returns>The variable's identifier.</returns>
 		public String GetName()
 		{
 			return name;
 		}
 
 		/// <summary>
-		/// Variable's identifier (name) setter method.
+		/// Variable's <see cref="name"/> setter method.
 		/// </summary>
 		public void SetName(string variableName)
 		{
@@ -59,7 +61,7 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Sets or modifies the memory address value
+		/// Sets the memory address of the variable.
 		/// </summary>
 		/// <param name="mem"></param>
 		public void SetMemoryAddress(int mem)
@@ -68,7 +70,7 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Retrieves the memory address
+		/// Retrieves the memory address of the variable.
 		/// </summary>
 		public int GetMemoryAddress()
 		{

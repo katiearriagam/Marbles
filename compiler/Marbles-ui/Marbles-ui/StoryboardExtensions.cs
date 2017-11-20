@@ -7,8 +7,16 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace Marbles
 {
+    /// <summary>
+    /// Class with extension utilities for <see cref="Storyboard"/> objects.
+    /// </summary>
     public static class StoryboardExtensions
     {
+        /// <summary>
+        /// Runs animations asynchronically that can be awaited.
+        /// </summary>
+        /// <param name="storyboard"></param>
+        /// <returns>An awaitable <see cref="Task"/>.</returns>
         public static Task BeginAsync(this Storyboard storyboard)
         {
             TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();

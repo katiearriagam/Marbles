@@ -26,16 +26,24 @@ namespace Marbles
     /// </summary>
     public sealed partial class CodeView : Page
     {
-		public CodeView()
+        /// <summary>
+        /// CodeView class constructor.
+        /// </summary>
+        public CodeView()
         {
             this.InitializeComponent();
-			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+			this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Utilities.BlueCompile();
 		}
 
 		public static List<Object> BlocksWithErrorsInOrder = new List<Object>();
 
-
+        /// <summary>
+        /// This function is an event called whenever the user changes from a different view
+        /// to this view (CodeView). Reflects on code the assets that are currently in the
+        /// canvas, and sets the Compile button enable state.
+        /// </summary>
+        /// <param name="e"></param>
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			AssetListViewContainer.UpdateAssets();
@@ -43,18 +51,24 @@ namespace Marbles
             CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
         }
 
+        /// <summary>
+        /// This event is invoked when the user clicks the Compile button.
+        /// The function prepares to compile by resetting all necessary values back
+        /// to default and then begins compilation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CompileButton_Click(object sender, RoutedEventArgs e)
         {
             Utilities.linesOfCodeCount = 0;
             Utilities.linesOfCode = new List<CodeLine>();
 			ErrorPrinter.errorCount = 0;
 			ErrorPrinter.errorList = new Dictionary<int, List<string>>();
-			ErrorPrinter.warningList = new Dictionary<int, List<string>>();
             FunctionDirectory.Reset();
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-            
+            /*
 			Utilities.BlockToLineErrors.Clear();
 			BlocksWithErrorsInOrder.Clear();
 			Utilities.errorsInLines.Clear();
@@ -72,20 +86,19 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
 
             WriteCodeToFile(out string filePath);
-            
-           /*
+            */
+            ///*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
-            string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			*/
+            string filePath = Path.Combine(directoryPath, "testMarblesCode2.txt");
+			//*/
 
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
             QuadrupleManager.PrintQuadruples();
 
-            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
-            ErrorPrinter.PrintWarnings();
+            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) found.");
             ErrorPrinter.PrintErrors();
 
 			if (ErrorPrinter.errorCount == 0)
@@ -100,15 +113,19 @@ namespace Marbles
                 Utilities.RedCompile();
                 Utilities.DisableRunButton();
 
-				FillErrorsDictionary();
-				SetErrorsInUI();
+				//FillErrorsDictionary();
+				//SetErrorsInUI();
 
-				// TODO: Pass errors here
 				CompileButton.Background = Utilities.CompileButtonColor;
                 CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
             }
         }
 
+        /// <summary>
+        /// This function connects errors to the respective UI block where the error was found.
+        /// This function is called by <see cref="CompileButton_Click(object, RoutedEventArgs)"/> when
+        /// errors are found.
+        /// </summary>
 		private void FillErrorsDictionary()
 		{
 			Utilities.BlockToLineErrors.Clear();
@@ -129,6 +146,11 @@ namespace Marbles
 			}
 		}
 
+        /// <summary>
+        /// Shows the errors found during compilation and execution in the Error Page view.
+        /// This function is called by <see cref="CompileButton_Click(object, RoutedEventArgs)"/> when
+        /// errors are found.
+        /// </summary>
 		private void SetErrorsInUI()
 		{
 			Utilities.errorsInLines.Clear();
@@ -141,6 +163,13 @@ namespace Marbles
 			}
 		}
 
+        /// <summary>
+        /// This function is called by <see cref="CompileButton_Click(object, RoutedEventArgs)"/> after all
+        /// the blocks in the CodeView have been translated to CodeLine objects.
+        /// Reads all the CodeLine objects stored in Utility so far, and writes them to a new text file
+        /// on a temporary folder. The file path is then returned to the caller.
+        /// </summary>
+        /// <param name="filePath"></param>
         private void WriteCodeToFile(out string filePath)
         {
             List<string> linesToOutput = new List<string>();
@@ -163,14 +192,28 @@ namespace Marbles
             File.WriteAllLines(filePath, linesToOutput);
         }
 
+        /// <summary>
+        /// Given a file path to a text file containing code in Marbles language, runs this code
+        /// through the scanner and then through the parser.
+        /// This function is called by <see cref="CompileButton_Click(object, RoutedEventArgs)"/> right after
+        /// it has generated the source code.
+        /// </summary>
+        /// <param name="filePath"></param>
 		private void AnalyzeCode(string filePath)
 		{
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
             try { parser.Parse(); }
-            catch (Exception e) { }
+            catch (Exception) { }
 		}
 
+        /// <summary>
+        /// This event is invoked after this Page is loaded. Subscribes different elements to an
+        /// event that indicates that anything from that element has been modified. This is used
+        /// to reset the Compile button when it is necessary to do so.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CodeViewPage_Loaded(object sender, RoutedEventArgs e)
         {
             CreateFunction.SomethingChanged += new EventHandler(SomethingChanged);
@@ -191,6 +234,13 @@ namespace Marbles
             VariableCall.SomethingChanged += new EventHandler(SomethingChanged);
         }
 
+        /// <summary>
+        /// Event invoked when an element on the screen has been modified. If this event is fired,
+        /// the compile button goes to a state in which the user must compile again in order to run the program.
+        /// This event is subscribed to in <see cref="CodeViewPage_Loaded(object, RoutedEventArgs)"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SomethingChanged(object sender, EventArgs e)
         {
             Utilities.BlueCompile();

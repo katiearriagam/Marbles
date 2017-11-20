@@ -15,8 +15,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Marbles
 {
 	public sealed partial class FunctionInstructionList : UserControl
@@ -33,6 +31,12 @@ namespace Marbles
 			SizeChanged += MainPage_SizeChanged;
 		}
 
+        /// <summary>
+        /// Event invoked when the size of the page changes.
+        /// Gets the function instruction list's scroll viewer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			scrollViewer = VisualTreeHelper.GetChild(
@@ -42,6 +46,11 @@ namespace Marbles
 			SizeChanged -= MainPage_SizeChanged;
 		}
 
+        /// <summary>
+        /// Prevents drag and drop operations on this element.
+        /// Called after dropping an element on the ListView to prevent parent
+        /// elements from calling the same event.
+        /// </summary>
 		public void ListView_SuspendDragAndDrop()
 		{
 			this.CanDrag = false;
@@ -50,6 +59,10 @@ namespace Marbles
 			this.AllowDrop = false;
 		}
 
+        /// <summary>
+        /// Enables drag and drop operations on this element.
+        /// Called after dragging an element over the ListView.
+        /// </summary>
 		public void ListView_ResumeDragAndDrop()
 		{
 			this.CanDrag = false;
@@ -58,6 +71,13 @@ namespace Marbles
 			this.AllowDrop = true;
 		}
 
+        /// <summary>
+        /// Event invoked when a Block is dropped on the ListView.
+        /// Gets the index in which the element was dropped and inserts a new
+        /// <see cref="CreateFunction"/> block in that position.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void TargetListView_Drop(object sender, DragEventArgs e)
 		{
 			ListView lv = sender as ListView;
@@ -92,13 +112,19 @@ namespace Marbles
 				if (e.DataView.Properties.ContainsKey("CreateFunction"))
 				{
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
-                    lv.Items.Insert(index, new Marbles.CreateFunction());
+                    lv.Items.Insert(index, new CreateFunction());
 				}
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
 		}
 
+        /// <summary>
+        /// Event invoked when a Block is dragged over the ListView.
+        /// Accepts the drag operation to allow dropping.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void TargetListView_DragOver(object sender, DragEventArgs e)
 		{
 			dropped = false;
@@ -117,10 +143,14 @@ namespace Marbles
 				e.DragUIOverride.IsCaptionVisible = false;
 				e.DragUIOverride.IsGlyphVisible = false;
 				e.DragUIOverride.IsContentVisible = true;
-				this.ListView_SuspendDragAndDrop();
+				ListView_SuspendDragAndDrop();
 			}
 		}
 
+        /// <summary>
+        /// Calls the PrintCode() function for each corresponding block.
+        /// Called by blocks that contain this UserControl.
+        /// </summary>
         public void PrintCode()
         {
             foreach (CreateFunction function in TargetListView.Items)
@@ -129,6 +159,12 @@ namespace Marbles
             }
         }
 
+        /// <summary>
+        /// Event invoked when a drag operation starts over this list view.
+        /// Invokes the <see cref="SomethingChanged"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void TargetListView_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
             SomethingChanged?.Invoke(this, EventArgs.Empty);

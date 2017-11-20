@@ -19,15 +19,15 @@ namespace Marbles
 		/// </summary>
 		private static Stack<SemanticCubeUtilities.DataTypes> typeStack = new Stack<SemanticCubeUtilities.DataTypes>();
 
-		/// <summary>
-		/// Stores values referencing <code>Utilities.Operators</code>.
-		/// </summary>
-		private static Stack<int> operandStack = new Stack<int>();
+        /// <summary>
+        /// Stores values referencing memory addresses in which the operators are stored.
+        /// </summary>
+        private static Stack<int> operandStack = new Stack<int>();
 
-		/// <summary>
-		/// Stores values referencing memory addresses in which the operators are stored.
-		/// </summary>
-		private static Stack<SemanticCubeUtilities.Operators> operatorStack = new Stack<SemanticCubeUtilities.Operators>();
+        /// <summary>
+        /// Stores values referencing <see cref="SemanticCubeUtilities.Operators"/>.
+        /// </summary>
+        private static Stack<SemanticCubeUtilities.Operators> operatorStack = new Stack<SemanticCubeUtilities.Operators>();
 
 		/// <summary>
 		/// Stores line numbers (within the quadruples list) to which control will jump.
@@ -80,9 +80,10 @@ namespace Marbles
         public static Stack<int> recursiveCalls = new Stack<int>();
 
 		/// <summary>
-		/// Returns the list of all quadruples generated.
+		/// Returns a list of all quadruples generated.
+        /// Called by <see cref="VirtualMachine"/> before starting execution.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A list of <see cref="Quadruple"/> objects.</returns>
 		public static List<Quadruple> GetQuadruples()
 		{
 			return quadruples;
@@ -90,7 +91,8 @@ namespace Marbles
 
 		/// <summary>
 		/// Add the memory address pointing to an operand to the operand stack
-		/// and its data type to the type stack.
+		/// and its <see cref="SemanticCubeUtilities.DataTypes"/> to the type stack.
+        /// Called by <see cref="QuadrupleManager"/> when an operand is identified.
 		/// </summary>
 		/// <param name="operand"></param>
 		/// <param name="type"></param>
@@ -100,19 +102,21 @@ namespace Marbles
 			typeStack.Push(type);
 		}
 
-		/// <summary>
-		/// Add the memory address pointing to a constant to the operand stack
-		/// and its data type to the type stack.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="type"></param>
-		public static void PushConstant(int constant, SemanticCubeUtilities.DataTypes type)
+        /// <summary>
+        /// Add the memory address pointing to a constant to the operand stack
+        /// and its <see cref="SemanticCubeUtilities.DataTypes"/> to the type stack.
+        /// Called by <see cref="QuadrupleManager"/> when a constant is identified.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        public static void PushConstant(int constant, SemanticCubeUtilities.DataTypes type)
 		{
             PushOperand(constant, type);
 		}
 
 		/// <summary>
 		/// Push an operator to the operator stack.
+        /// Called by <see cref="Parser"/> when an operator is identified.
 		/// </summary>
 		/// <param name="op"></param>
 		public static void PushOperator(SemanticCubeUtilities.Operators op)
@@ -124,6 +128,7 @@ namespace Marbles
 		/// Pop an operator from the operator stack and two corresponding operands from the
 		/// operand stack. Verify their compatibility with the Semantic Cube and push the resulting
 		/// operand to the operand stack. Adds a quadruple with the operation that was verified.
+        /// Called by <see cref="Parser"/> every time it checks for a pending operator on the operator stack.
 		/// </summary>
 		public static void PopOperator(int priority)
 		{
@@ -145,8 +150,8 @@ namespace Marbles
 			SemanticCubeUtilities.DataTypes resultingDataType;
 			int addressTemp = -1;
 
-			// if we have a negative to apply to our next operand
-			// this is the only unary operator
+			// Check if we have a negative to apply to our next operand.
+			// This is the only unary operator.
 			if (op == SemanticCubeUtilities.Operators.negative)
 			{
 				int unaryOperand = operandStack.Pop();
@@ -161,7 +166,7 @@ namespace Marbles
 						SemanticCubeUtilities.GetDataTypeFromType(MemoryManager.GetTypeFromAddress(unaryOperand)).ToString());
 				}
 
-				// at this point, the only acceptable DT is number
+				// At this point, the only acceptable Data Type is number
 				if (resultingDataType == SemanticCubeUtilities.DataTypes.number)
 				{
 					if (inFunction)
@@ -179,7 +184,7 @@ namespace Marbles
 				quadruples.Add(new Quadruple(Utilities.operatorToAction[op], unaryOperand, -1, addressTemp));
 				counter++;
 			}
-			else
+			else // we have a binary operator
 			{
 				int operandTwo = operandStack.Pop();
 				SemanticCubeUtilities.DataTypes typeTwo = typeStack.Pop();
@@ -245,21 +250,21 @@ namespace Marbles
 			}
 		}
 
-		/// <summary>
-		/// This method is called when we read an open parenthesis. A fake bottom is added to
-		/// mark the beginning of a new expression to evaluate.
-		/// </summary>
-		public static void PushFakeBottom()
+        /// <summary>
+        /// Adds a fake bottom to the operator stack to mark the beginning of a new expression to evaluate.
+        /// Called when an open parenthesis is read.
+        /// </summary>
+        public static void PushFakeBottom()
 		{
 			operatorStack.Push(SemanticCubeUtilities.Operators.fakeBottom);
 		}
 
-		/// <summary>
-		/// This method is called when we read a closing parenthesis. Pops the opening
-		/// parenthesis at the top of the operator stack. Throws an exception if the latter
-		/// is not present.
-		/// </summary>
-		public static void PopFakeBottom()
+        /// <summary>
+        /// Pops the opening parenthesis at the top of the operator stack.
+        /// Throws an exception if the latter is not present.
+        /// Called when a closing parenthesis is read. 
+        /// </summary>
+        public static void PopFakeBottom()
 		{
 			if (operatorStack.Count == 0)
 			{
@@ -274,12 +279,12 @@ namespace Marbles
 			operatorStack.Pop();
 		}
 
-		/// <summary>
-		/// This method is called when we have read the closing parenthesis of an IF expression.
-		/// The function verifies that the expression is boolean and, if it is, sets the GOTOF
-		/// in case it is false.
-		/// </summary>
-		public static void IfAfterCondition()
+        /// <summary>
+        /// This function verifies that the IF condition's expression is boolean and adds a
+        /// new quadruple with a <see cref="Utilities.QuadrupleAction.GotoF"/> action.
+        /// Called when the closing parenthesis of an IF expression is read.
+        /// </summary>
+        public static void IfAfterCondition()
 		{
 			SemanticCubeUtilities.DataTypes compareType = typeStack.Pop();
 			if (compareType != SemanticCubeUtilities.DataTypes.boolean)
@@ -291,35 +296,35 @@ namespace Marbles
 
 			// we will have to set this jump's position at the end of the whole IF statement
 			jumpStack.Push(counter);
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition, -1, -1));
 			counter++;
 		}
 
-		/// <summary>
-		/// This method is called when the last block in the IF statement has been processed.
-		/// Update the jump of the last IF block to jump to this position.
-		/// </summary>
-		public static void IfEnd()
+        /// <summary>
+        /// Update the jump of the last IF block to jump to this position.
+        /// Called when the last block in the IF statement has been processed.
+        /// </summary>
+        public static void IfEnd()
 		{
 			int lastJump = jumpStack.Pop();
 			quadruples[lastJump].SetAssignee(counter);
 		}
 
-		/// <summary>
-		/// This method is called after a WHILE expression is detected but before we read
-		/// its condition. This point is where we will jump to each time after the end of the loop.
-		/// </summary>
-		public static void WhileBeforeCondition()
+        /// <summary>
+        /// Sets the point where control will jump to each time after the end of a While loop.
+        /// Called after a WHILE expression is detected but before we read its condition.
+        /// </summary>
+        public static void WhileBeforeCondition()
 		{
 			jumpStack.Push(counter);
 		}
 
-		/// <summary>
-		/// This method is called when we have read the closing parenthesis of a WHILE expression.
-		/// The function verifies that the expression is boolean and, if it is, sets the GOTOF
-		/// in case it is false.
-		/// </summary>
-		public static void WhileAfterCondition()
+        /// <summary>
+        /// This function verifies that the expression is boolean and adds a
+        /// new quadruple with a <see cref="Utilities.QuadrupleAction.GotoF"/> action.
+        /// Called when we have read the closing parenthesis of a WHILE expression.
+        /// </summary>
+        public static void WhileAfterCondition()
 		{
 			SemanticCubeUtilities.DataTypes compareType = typeStack.Pop();
 			if (compareType != SemanticCubeUtilities.DataTypes.boolean)
@@ -331,15 +336,15 @@ namespace Marbles
 
 			// we will have to set this jump's position at the end of the WHILE statement
 			jumpStack.Push(counter);
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition));
+			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, condition, -1, -1));
 			counter++;
 		}
 
-		/// <summary>
-		/// This method is called after the last instruction in the WHILE statement has been processed.
-		/// Update the jump of the while condition to jump to this position.
-		/// </summary>
-		public static void WhileEnd()
+        /// <summary>
+        /// Update the jump of the while condition to jump to this position.
+        /// Called after the last instruction in the WHILE statement has been processed.
+        /// </summary>
+        public static void WhileEnd()
 		{
 			int jumpToOnFalse = jumpStack.Pop();
 			int jumpToBeginningOfWhile = jumpStack.Pop();
@@ -352,13 +357,12 @@ namespace Marbles
 			quadruples[jumpToOnFalse].SetAssignee(counter);
 		}
 
-		/// <summary>
-		/// This method is called when we have read the closing parenthesis of a FOR expression.
-		/// The function verifies that the expression is numeric and, if it is, sets the GOTOF
-		/// in case it is less than or equal to 0. Finally, substracts one from the numeric expression
-		/// in the FOR condition (after evaluating the condition).
-		/// </summary>
-		public static void ForAfterCondition()
+        /// <summary>
+        /// The function verifies that the FOR condition's expression is numeric and sets the <see cref="Utilities.QuadrupleAction.GotoF"/>
+        /// that compares the expression's value against zero. Finally, substracts one from the numeric expression.
+        /// Called when we have read the closing parenthesis of a FOR expression.
+        /// </summary>
+        public static void ForAfterCondition()
 		{
 			SemanticCubeUtilities.DataTypes forType = typeStack.Pop();
 			if (forType != SemanticCubeUtilities.DataTypes.number)
@@ -384,12 +388,14 @@ namespace Marbles
             quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, numericExpAddress, tempAddressWithNumericExp));
             counter++;
 
+            // store the zero constant in memory
             int zeroMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
 			try { zeroMem = MemoryManager.SetMemory(zeroMem, 0); }
 			catch (Exception e) { throw new Exception(e.Message); }
 
 			int conditionMem = 0;
 
+            // store the resulting condition's boolean value in memory
 			if (inFunction)
 			{
 				conditionMem = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.boolean);
@@ -410,7 +416,7 @@ namespace Marbles
             // we will have to set this jump's position at the end of the FOR statement
             jumpStack.Push(counter);
 
-            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem));
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.GotoF, conditionMem, -1, -1));
 			counter++;
 
             int oneMem = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.constant, SemanticCubeUtilities.DataTypes.number);
@@ -421,12 +427,12 @@ namespace Marbles
 			counter++;
 		}
 
-		/// <summary>
-		/// This method is called after every instruction inside the FOR loop is executed.
-		/// Jumps back to where the FOR condition was checked against 0, and sets the jump
-		/// to here when the FOR condition evaluates to false.
-		/// </summary>
-		public static void ForEnd()
+        /// <summary>
+        /// Jumps back to where the FOR condition was compared against 0, and sets the jump
+        /// to here when the FOR condition evaluates to false.
+        /// Called after every instruction inside the FOR loop hs been executed.
+        /// </summary>
+        public static void ForEnd()
 		{
 			int jumpToOnFalse = jumpStack.Pop();
 			int jumpToBeginningOfFor = jumpStack.Pop();
@@ -438,6 +444,13 @@ namespace Marbles
 			quadruples[jumpToOnFalse].SetAssignee(counter);
 		}
 
+        /// <summary>
+        /// Verifies that the current function being called exists.
+        /// Sets the <see cref="recursive"/> flag to true if this call is being
+        /// called within itself.
+        /// Called after reading a function call's id.
+        /// </summary>
+        /// <param name="functionBeingCalledId"></param>
 		public static void CallFunctionBeforeParameters(string functionBeingCalledId)
 		{
 			if (!FunctionDirectory.FunctionExists(functionBeingCalledId))
@@ -467,6 +480,11 @@ namespace Marbles
             if (functionId == LastFunctionCalled.GetName()) { recursive = true; }
         }
 
+        /// <summary>
+        /// Adds an ERA quadruple and resets the <see cref="parameterCount"/> to zero.
+        /// If the call is recursive, increments the current level of recursion.
+        /// Called before reading a function call's parameters.
+        /// </summary>
 		public static void CallFunctionOpeningParenthesis()
 		{
             if (recursive)
@@ -487,6 +505,7 @@ namespace Marbles
 		/// <summary>
 		/// Compare the current parameter's type against the called functions's parameter type.
 		/// If types match, adds a new quadruple with PARAM action.
+        /// Called after reading a new parameter in a call to a function.
 		/// </summary>
 		public static void CallFunctionParameter()
 		{
@@ -509,6 +528,12 @@ namespace Marbles
 			counter++;
         }
         
+        /// <summary>
+        /// Verifies that the amount of parameters provided in a function call matches
+        /// the amount of parameters in that function's definition.
+        /// Resets the <see cref="parameterCount"/> back to zero.
+        /// Called after reading a call to function's paremeters.
+        /// </summary>
 		public static void CallFunctionClosingParenthesis()
 		{
 			if (parameterCount < LastFunctionCalled.GetParameters().Count)
@@ -519,6 +544,11 @@ namespace Marbles
             parameterCount = 0;
 		}
 
+        /// <summary>
+        /// Generates a GoSub quadruple and creates a temporary variable in which the call to function's
+        /// result will be stored in memory. Resets the <see cref="recursive"/> flag to false.
+        /// Called after reading the closing parenthesis of a call to a function.
+        /// </summary>
 		public static void CallFunctionEnd()
 		{
 			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, LastFunctionCalled.GetQuadrupleStart(), -1, -1));
@@ -532,7 +562,6 @@ namespace Marbles
                 FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.GetReturnType()));
                 quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
                 counter++;
-                //FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, MemoryManager.GetValueFromAddress(memAddressWhereFunctionLives));
             }
             else
             {
@@ -546,15 +575,10 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Returns whether we are currently in a function or not.
-		/// </summary>
-		public static bool IsInFunction()
-		{
-			return inFunction;
-		}
-
-		/// <summary>
+        /// Verifies that the current function's name being defined does not already exist.
+        /// Separates a space in memory in which to store the function.
 		/// Sets the value of InFunction to true, meaning we are now inside a function.
+        /// Called by <see cref="Parser"/> when a function id is read.
 		/// </summary>
 		public static void EnterFunction(Function func)
 		{
@@ -562,7 +586,7 @@ namespace Marbles
 			functionId = func.GetName();
             hasReturn = false;
 
-			if (FunctionDirectory.FunctionExists(func))
+			if (FunctionDirectory.FunctionExists(functionId))
 			{
 				throw new Exception("Function " + functionId + " has been previously defined.");
 			}
@@ -582,6 +606,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Loads a parameter into a function's dictionary.
+        /// Called by <see cref="Parser"/> when a parameter id is read.
 		/// </summary>
 		public static void CreateFunction_LoadParameter(string functionID, Variable var)
 		{
@@ -618,12 +643,13 @@ namespace Marbles
 			}
 			else
 			{
-				throw new Exception("Function " + functionId + " does not exist.");
+				throw new Exception("Use of undeclared function " + functionId + ".");
 			}
 		}
 
 		/// <summary>
 		/// Loads a local variable into a function's dictionary.
+        /// Called by <see cref="Parser"/> when a local variable's id is read.
 		/// </summary>
 		public static void CreateFunction_LoadLocalVariable(string functionID, Variable var)
 		{
@@ -660,16 +686,16 @@ namespace Marbles
 			}
 			else
 			{
-				throw new Exception("Function " + functionId + " does not exist.");
-			}
+                throw new Exception("Use of undeclared function " + functionId + ".");
+            }
 		}
 
-		/// <summary>
-		/// Sets the value of InFunction to false, meaning we are now not inside a function.
-		/// Releases the local variable table of the function we exited, and generates a
-		/// retorno quadruple.
-		/// </summary>
-		public static void ExitFunction()
+        /// <summary>
+        /// Sets the value of InFunction to false, meaning we are now not inside a function.
+        /// Releases the local variable table of the function we exited, and generates a retorno quadruple.
+        /// Called by <see cref="Parser"/> when all the instructions of a function definition have been read.
+        /// </summary>
+        public static void ExitFunction()
 		{
             if (!hasReturn)
             {
@@ -690,16 +716,17 @@ namespace Marbles
 			functionId = "";
 		}
 
-		/// <summary>
-		/// Actual verification of an variables's ID existence. Returns the memory address of the
-		/// variable found, -1 otherwise.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="type"></param>
-		/// <param name="idMemoryAddress"></param>
-		/// <returns></returns>
-		public static bool VerifyVariableIDExists(string id, out SemanticCubeUtilities.DataTypes type, out int idMemoryAddress)
+        /// <summary>
+        /// Actual verification of an variables's ID existence.
+        /// Called by <see cref="ReadIDVariable(string)"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
+        /// <param name="idMemoryAddress"></param>
+        /// <returns>Returns the memory address of the variable found, or -1 otherwise.</returns>
+        public static bool VerifyVariableIDExists(string id, out SemanticCubeUtilities.DataTypes type, out int idMemoryAddress)
 		{
+            // initialize parameters passed by reference
 			type = SemanticCubeUtilities.DataTypes.invalidDataType;
 			idMemoryAddress = -1;
 
@@ -707,6 +734,8 @@ namespace Marbles
 
 			if (inFunction)
 			{
+                // we have to search in the local variables table and in parameters table
+
 				Function current = FunctionDirectory.GetFunction(functionId);
 
 				existsLocalVar = current.GetLocalVariables().ContainsKey(id);
@@ -732,6 +761,7 @@ namespace Marbles
             }
 			else
 			{
+                // we only have to search in global variables table
 				existsGlobal = FunctionDirectory.GlobalFunction().GetGlobalVariables().ContainsKey(id) && !FunctionDirectory.FunctionExists(id);
 				if (existsGlobal)
 				{
@@ -744,28 +774,9 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Actual verification of an asset's ID existence. Returns the memory address of the
-		/// Asset found, -1 otherwise.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="idMemoryAddress"></param>
-		/// <returns></returns>
-		public static bool VerifyAssetIDExists(string id, out int idMemoryAddress)
-		{
-			idMemoryAddress = -1;
-
-			bool exists = FunctionDirectory.GlobalFunction().GetAssets().ContainsKey(id);
-			if (exists)
-			{
-				idMemoryAddress = FunctionDirectory.GlobalFunction().GetAssets()[id].GetMemoryAddress();
-			}
-
-			return exists;
-		}
-
-		/// <summary>
-		/// This method is called when we read an id and it is not followed by a decimal point (meaning it is a variable).
+		/// This method is called when we read an id and it is not followed by a point (meaning it is a variable).
 		/// Verifies that the variable exists either locally or globally and, if it exists, returns its memory address.
+        /// Called by <see cref="Parser"/> when an id is read.
 		/// </summary>
 		/// <param name="id"></param>
 		public static void ReadIDVariable(string id)
@@ -800,11 +811,11 @@ namespace Marbles
 			PushOperand(idMemoryAddress, idType);
 		}
 
-		/// <summary>
-		/// Called after reading the expression in an assign instruction. Verifies that the assignation
-		/// matches both data types and generates a new quadruple with this instruction.
-		/// </summary>
-		public static void AssignEnd()
+        /// <summary>
+        /// Verifies that an assignment matches its data types and generates a new quadruple with this instruction.
+        /// Called by <see cref="Parser"/> after reading the expression in an assign instruction.
+        /// </summary>
+        public static void AssignEnd()
 		{
 			if (operandStack.Count < 2)
 			{
@@ -828,7 +839,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Called every time we read a constant number. We add it to memory (if not already present)
-		/// and push it to the operand stack.
+		/// and push it to the operand stack. Called by <see cref="Parser"/>.
 		/// </summary>
 		/// <param name="num"></param>
 		public static void ReadConstantNumber(int num)
@@ -854,7 +865,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Called every time we read a constant string. We add it to memory (if not already present)
-		/// and push it to the operand stack.
+		/// and push it to the operand stack. Called by <see cref="Parser"/>.
 		/// </summary>
 		/// <param name="text"></param>
 		public static void ReadConstantText(string text)
@@ -879,7 +890,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Called every time we read a constant boolean. We add it to memory (if not already present)
-		/// and push it to the operand stack.
+		/// and push it to the operand stack. Called by <see cref="Parser"/>.
 		/// </summary>
 		/// <param name="condition"></param>
 		public static void ReadConstantBool(bool condition)
@@ -902,7 +913,8 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Called when we find a 'stop' block
+        /// Adds a quadruple with a <see cref="Utilities.QuadrupleAction.stop"/> action.
+		/// Called by <see cref="Parser"/> when a Stop instruction is read.
 		/// </summary>
 		public static void ReadStop()
 		{
@@ -911,10 +923,10 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Called when an asset id is read
+		/// Called by <see cref="Parser"/> when an asset's id is read.
+        /// Verifies that the asset exists and stores its value in <see cref="LastAssetCalled"/> if it does.
 		/// </summary>
 		/// <param name="id"></param>
-		/// <returns></returns>
 		public static void ReadAssetId(string id)
 		{
 			// verify an asset was given
@@ -933,6 +945,12 @@ namespace Marbles
 			}
 		}
 
+        /// <summary>
+        /// Based on the action read, retrieves all the parameters to pass to the action (if any) and
+        /// adds a new quadruple with the corresponding action and the parameters retrieved.
+        /// Called by <see cref="Parser"/> when an Asset action is read.
+        /// </summary>
+        /// <param name="action"></param>
 		public static void DoBlock_ReadAssetAction(Utilities.AssetAction action)
 		{
 			// get the memory address of the asset
@@ -1013,6 +1031,11 @@ namespace Marbles
 			}
 		}
 
+        /// <summary>
+        /// Adds the asset attribute's memory address to the operand stack.
+        /// Called by <see cref="Parser"/> when an Asset attribute is read.
+        /// </summary>
+        /// <param name="attribute"></param>
 		public static void ReadAssetAttribute(MemoryManager.AssetAttributes attribute)
 		{
 			// get the memory address of the asset
@@ -1030,6 +1053,11 @@ namespace Marbles
 			PushOperand(memoryAdressOfAsset + (int)attribute, MemoryManager.AttributeToType(attribute));
 		}
 
+        /// <summary>
+        /// Verifies that the type of the returned expression matches the function's return type.
+        /// Adds the result to the operand stack and adds a retorno quadruple.
+        /// Called by <see cref="Parser"/> when the end of a return statement is read.
+        /// </summary>
 		public static void ReturnEnd()
 		{
             hasReturn = true;
@@ -1052,22 +1080,40 @@ namespace Marbles
 			counter++;
 		}
 
+        /// <summary>
+        /// Returns <see cref="counter"/>.
+        /// Called by <see cref="Parser"/> to set the start quadruple of a function.
+        /// </summary>
+        /// <returns>The number of quadruples generated so far.</returns>
 		public static int GetCounter()
         {
             return counter;
         }
 
+        /// <summary>
+        /// Adds a new quadruple to <see cref="quadruples"/>.
+        /// Called by <see cref="Parser"/>.
+        /// </summary>
+        /// <param name="q"></param>
         public static void AddQuadruple(Quadruple q)
         {
             quadruples.Add(q);
             counter++;
         }
 
+        /// <summary>
+        /// Updates the jump of the first quadruple in the list.
+        /// Called by <see cref="Parser"/>.
+        /// </summary>
         public static void UpdateBeginQuadruple()
         {
             quadruples[0].SetAssignee(counter);
         }
 
+        /// <summary>
+        /// Prints <see cref="quadruples"/> to console.
+        /// Called by <see cref="CodeView"/> after the quadruples have been generated.
+        /// </summary>
         public static void PrintQuadruples()
         {
             Debug.WriteLine("---- QUADRUPLES START ----");
@@ -1080,6 +1126,10 @@ namespace Marbles
             Debug.WriteLine("---- QUADRUPLES END ----");
         }
 
+        /// <summary>
+        /// Resets all the properties of this class.
+        /// Called by <see cref="CodeView"/> before compilation.
+        /// </summary>
         public static void Reset()
         {
             quadruples.Clear();

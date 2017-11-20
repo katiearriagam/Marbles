@@ -30,6 +30,12 @@ namespace Marbles
 			SizeChanged += MainPage_SizeChanged;
 		}
 
+        /// <summary>
+        /// Event invoked when the size of the page changes.
+        /// Gets the instruction list's scroll viewer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			scrollViewer = VisualTreeHelper.GetChild(
@@ -39,6 +45,11 @@ namespace Marbles
 			SizeChanged -= MainPage_SizeChanged;
 		}
 
+        /// <summary>
+        /// Prevents drag and drop operations on this element.
+        /// Called after dropping an element on the ListView to prevent parent
+        /// elements from calling the same event.
+        /// </summary>
 		public void ListView_SuspendDragAndDrop()
 		{
 			this.CanDrag = false;
@@ -47,6 +58,10 @@ namespace Marbles
 			this.AllowDrop = false;
 		}
 
+        /// <summary>
+        /// Enables drag and drop operations on this element.
+        /// Called after dragging an element over the ListView.
+        /// </summary>
 		public void ListView_ResumeDragAndDrop()
 		{
 			this.CanDrag = false;
@@ -55,6 +70,13 @@ namespace Marbles
 			this.AllowDrop = true;
 		}
 
+        /// <summary>
+        /// Event invoked when a Block is dropped on the ListView.
+        /// Gets the index in which the element was dropped and inserts a new
+        /// Instruction block in that position.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void TargetListView_Drop(object sender, DragEventArgs e)
 		{
 			ListView lv = sender as ListView;
@@ -88,45 +110,51 @@ namespace Marbles
 
 				if (e.DataView.Properties.ContainsKey("AssignInstantiator"))
 				{
-					lv.Items.Insert(index, new Marbles.AssignBlock());
+					lv.Items.Insert(index, new AssignBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				else if (e.DataView.Properties.ContainsKey("DoInstantiator"))
 				{
-					lv.Items.Insert(index, new Marbles.DoBlock());
+					lv.Items.Insert(index, new DoBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				else if (e.DataView.Properties.ContainsKey("ForInstantiator"))
 				{
-					lv.Items.Insert(index, new Marbles.ForBlock());
+					lv.Items.Insert(index, new ForBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				else if (e.DataView.Properties.ContainsKey("WhileInstantiator"))
 				{
-					lv.Items.Insert(index, new Marbles.WhileBlock());
+					lv.Items.Insert(index, new WhileBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				else if (e.DataView.Properties.ContainsKey("IfInstantiator"))
 				{
-					lv.Items.Insert(index, new Marbles.IfBlock());
+					lv.Items.Insert(index, new IfBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				else if (e.DataView.Properties.ContainsKey("StopInstantiator"))
 				{
-					lv.Items.Insert(index, new Marbles.StopBlock());
+					lv.Items.Insert(index, new StopBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				else if (e.DataView.Properties.ContainsKey("ReturnStatement"))
 				{
-					lv.Items.Insert(index, new Marbles.ReturnBlock());
+					lv.Items.Insert(index, new ReturnBlock());
                     SomethingChanged?.Invoke(this, EventArgs.Empty);
                 }
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
-			this.TargetListView.CanReorderItems = true;
+			TargetListView.CanReorderItems = true;
 		}
 
+        /// <summary>
+        /// Event invoked when a Block is dragged over the ListView.
+        /// Accepts the drag operation to allow dropping.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void TargetListView_DragOver(object sender, DragEventArgs e)
 		{
 			dropped = false;
@@ -145,15 +173,14 @@ namespace Marbles
 				e.DragUIOverride.IsCaptionVisible = false;
 				e.DragUIOverride.IsGlyphVisible = false;
 				e.DragUIOverride.IsContentVisible = true;
-				this.ListView_SuspendDragAndDrop();
+				ListView_SuspendDragAndDrop();
 			}
 		}
 
-		public ListView GetTargetListView()
-		{
-			return this.TargetListView;
-		}
-
+        /// <summary>
+        /// Calls the PrintCode() function for each corresponding block.
+        /// Called by blocks that contain this UserControl.
+        /// </summary>
         public void PrintCode()
         {
             foreach (UserControl instruction in TargetListView.Items)
@@ -201,6 +228,12 @@ namespace Marbles
             }
         }
 
+        /// <summary>
+        /// Event invoked when a drag operation starts over this list view.
+        /// Invokes the <see cref="SomethingChanged"/> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void TargetListView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
         {
             SomethingChanged?.Invoke(this, EventArgs.Empty);

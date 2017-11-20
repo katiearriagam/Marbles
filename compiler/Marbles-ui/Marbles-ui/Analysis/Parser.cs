@@ -29,8 +29,6 @@ using Marbles;
 using Marbles.Analysis;
 using System;
 
-
-
 public class Parser {
 	public const int _EOF = 0;
 	public const int _id = 1;
@@ -53,7 +51,6 @@ public class Parser {
 
 	// helper variables
 	public int AssetIndex = 0;
-
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
@@ -111,7 +108,7 @@ public class Parser {
 	}
 	
 	void Marbles() {
-        QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.Goto));
+        QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.Goto, -1, -1, -1));
 		PROGRAM();
         QuadrupleManager.AddQuadruple(new Quadruple(Utilities.QuadrupleAction.end, -1, -1, -1));
     }
@@ -758,15 +755,7 @@ public class Errors {
 		count++;
         throw new Exception(s);
     }
-	
-	public virtual void Warning (int line, int col, string s) {
-		ErrorPrinter.AddWarning(line, s);
-	}
-	
-	public virtual void Warning(string s) {
-		ErrorPrinter.AddWarning(s);
-	}
-} // Errors
+} // End Errors
 
 
 public class FatalError: Exception {

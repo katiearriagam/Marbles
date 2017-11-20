@@ -38,12 +38,22 @@ namespace Marbles
         DoubleAnimation anim = new DoubleAnimation();
 
         /// <summary>
-        /// The variable's memory address
+        /// The assets's memory address
         /// </summary>
         private int memoryAddress;
 
 		private Point lastPositionClicked;
 
+        /// <summary>
+        /// Constructor that handles initialization and does animation setup.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="imageSource"></param>
+        /// <param name="label"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="number"></param>
+        /// <param name="parentCanvas"></param>
         public Asset(string id, string imageSource, string label, int x, int y, int number, Canvas parentCanvas)
         {
             InitializeComponent();
@@ -107,14 +117,16 @@ namespace Marbles
         /// <summary>
         ///  Returns the Asset object's ID attribute.
         /// </summary>
+        /// <returns>The asset's ID.</returns>
         public string GetID()
         {
             return id;
         }
 
         /// <summary>
-        /// Returns the Asset object's width attribute.
+        /// Returns the Asset's width attribute.
         /// </summary>
+        /// <returns>The asset's width.</returns>
         public int GetWidth()
         {
             return width;
@@ -122,6 +134,8 @@ namespace Marbles
 
         /// <summary>
         /// Set the Asset's width without animating the change.
+        /// Called after <see cref="VirtualMachine"/> completes execution to return
+        /// assets to their original state.
         /// </summary>
         /// <param name="width"></param>
         public void SetWidthNoAnimation(int width)
@@ -133,6 +147,7 @@ namespace Marbles
 
         /// <summary>
         /// Set the Asset's width, animating the change.
+        /// Called by <see cref="VirtualMachine"/> when an asset's width attribute is assigned to.
         /// </summary>
         /// <param name="width"></param>
         public async Task SetWidth(int width)
@@ -179,6 +194,7 @@ namespace Marbles
         /// <summary>
         /// Returns the Asset object's height attribute.
         /// </summary>
+        /// <returns>The asset's height.</returns>
         public int GetHeight()
         {
             return height;
@@ -186,6 +202,8 @@ namespace Marbles
 
         /// <summary>
         /// Set the Asset's height without animating the change.
+        /// Called after <see cref="VirtualMachine"/> completes execution to return
+        /// assets to their original state.
         /// </summary>
         /// <param name="height"></param>
         public void SetHeightNoAnimation(int height)
@@ -197,9 +215,9 @@ namespace Marbles
 
         /// <summary>
         /// Set the Asset's height, animating the change.
+        /// Called by <see cref="VirtualMachine"/> when an asset's height attribute is assigned to.
         /// </summary>
         /// <param name="height"></param>
-        /// <returns></returns>
         public async Task SetHeight(int height)
         {
             int originalHeight= this.height;
@@ -283,8 +301,8 @@ namespace Marbles
 
         /// <summary>
         /// Sets the (x, y) position of an Asset.
-        /// Used when we manually call this function within our code.
-        /// Use <see cref="SetPosition"/> when the user sets the position through the UI's code blocks.
+        /// Called after <see cref="VirtualMachine"/> completes execution to return
+        /// assets to their original state.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -299,8 +317,8 @@ namespace Marbles
 
         /// <summary>
         /// Sets the (x, y) position of an Asset.
-        /// Use this only when the user sets the position throught the UI's code blocks.
-        /// Otherwise, use <see cref="SetPositionNoAwait"/>.
+        /// Called when <see cref="VirtualMachine"/> executes an instruction that
+        /// updates an asset's position.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -320,6 +338,7 @@ namespace Marbles
         /// <summary>
         /// Move the horizontal position of the asset, animating the transition
         /// from one point in the Canvas to another.
+        /// Called when <see cref="VirtualMachine"/> executes a <see cref="Utilities.QuadrupleAction.move_x"/> action.
         /// </summary>
         /// <param name="displacement"></param>
         public async Task MoveX(int displacement)
@@ -342,6 +361,7 @@ namespace Marbles
         /// <summary>
         /// Move the vertical position of the asset, animating the transition
         /// from one point in the Canvas to another.
+        /// Called when <see cref="VirtualMachine"/> executes a <see cref="Utilities.QuadrupleAction.move_x"/> action.
         /// </summary>
         /// <param name="displacement"></param>
         public async Task MoveY(int displacement)
@@ -363,6 +383,8 @@ namespace Marbles
 
         /// <summary>
         /// Set the Asset's current rotation without animating the change.
+        /// Called after <see cref="VirtualMachine"/> completes execution to return
+        /// assets to their original state.
         /// </summary>
         /// <param name="rotation"></param>
         public void SetRotationNoAnimation(int rotation)
@@ -373,7 +395,8 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Rotate the asset a certain amount of degrees, animating the rotation.
+        /// Rotates the asset a certain amount of degrees, animating the rotation.
+        /// Called when <see cref="VirtualMachine"/> executes a <see cref="Utilities.QuadrupleAction.rotate"/> action.
         /// </summary>
         /// <param name="degrees"></param>
         public async Task Turn(int degrees)
@@ -396,6 +419,11 @@ namespace Marbles
             sb.Stop();
         }
 
+        /// <summary>
+        /// Rotates the asset 360 degrees.
+        /// Called when <see cref="VirtualMachine"/> executes a <see cref="Utilities.QuadrupleAction.spin"/> action.
+        /// </summary>
+        /// <returns></returns>
         public async Task Spin()
         {
             AssetImage.RenderTransform = ctImage;
@@ -410,12 +438,24 @@ namespace Marbles
             sb.Stop();
         }
 
+        /// <summary>
+        /// Sets <see cref="number"/>.
+        /// Called after <see cref="VirtualMachine"/> completes execution to return
+        /// assets to their original state.
+        /// </summary>
+        /// <param name="number"></param>
         public void SetNumberNoWait(int number)
         {
             this.number = number;
             AssetNumber.Text = number.ToString();
         }
 
+        /// <summary>
+        /// Sets <see cref="number"/>.
+        /// Called by <see cref="VirtualMachine"/> when an asset's value attribute is assigned to.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
         public async Task SetNumber(int number)
         {
             this.number = number;
@@ -425,12 +465,24 @@ namespace Marbles
             await Turn(0); // necessary for the SetNumber action to wait sb.Duration milliseconds afte completion
         }
 
+        /// <summary>
+        /// Sets <see cref="label"/>.
+        /// Called after <see cref="VirtualMachine"/> completes execution to return
+        /// assets to their original state.
+        /// </summary>
+        /// <param name="label"></param>
         public void SetLabelNoWait(string label)
         {
             this.label = label;
             AssetLabel.Text = label;
         }
 
+        /// <summary>
+        /// Sets <see cref="label"/>.
+        /// Called by <see cref="VirtualMachine"/> when an asset's label attribute is assigned to.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns></returns>
         public async Task SetLabel(string label)
         {
             this.label = label;
@@ -440,24 +492,34 @@ namespace Marbles
             await Turn(0); // necessary for the SetLabel action to wait sb.Duration milliseconds afte completion
         }
 
+        /// <summary>
+        /// Saves the position where the user started dragging an Asset menu item.
+        /// Called when a drag operation starts on an Asset object.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void UserControl_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
-            // sender: Marbles.Asset
             var asset = sender as Marbles.Asset;
             args.Data.Properties.Add("assetDragged", asset);
             args.Data.Properties.Add("xClicked", (int)(lastPositionClicked.X));
             args.Data.Properties.Add("yClicked", (int)(lastPositionClicked.Y));
         }
 
-
+        /// <summary>
+        /// Saves the position where the user clicked on an Asset menu item.
+        /// Called when the user clicks on an Asset menu item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UserControl_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            // sender: Marbles.Asset
             lastPositionClicked = e.GetCurrentPoint(relativeTo: AssetUserControl).Position;
         }
 
 		/// <summary>
-		/// Sets or modifies the memory address value
+		/// Sets the memory address value.
+        /// Called by <see cref="MemoryManager.SetAssetInMemory(Asset)"/>.
 		/// </summary>
 		/// <param name="mem"></param>
 		public void SetMemoryAddress(int mem)
@@ -466,18 +528,30 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Retrieves the memory address
+		/// Retrieves the memory address of the Asset.
+        /// Called by <see cref="QuadrupleManager"/> when reading an asset's attribute or action.
 		/// </summary>
+        /// <returns>A memory address.</returns>
 		public int GetMemoryAddress()
 		{
 			return memoryAddress;
 		}
 
+        /// <summary>
+        /// Sets the asset's x position. Animates the transition.
+        /// Called by <see cref="VirtualMachine"/> when an asset's x attribute is assigned to.
+        /// </summary>
+        /// <param name="newX"></param>
         public async Task SetPositionXAttribute(int newX)
         {
             await SetPosition(newX, y);
         }
 
+        /// <summary>
+        /// Sets the asset's y position. Animates the transition.
+        /// Called by <see cref="VirtualMachine"/> when an asset's y attribute is assigned to.
+        /// </summary>
+        /// <param name="newY"></param>
         public async Task SetPositionYAttribute(int newY)
         {
             await SetPosition(x, newY);

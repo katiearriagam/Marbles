@@ -135,7 +135,7 @@
     </Compile>
     <Compile Include="VariableFunctionTables\Function.cs" />
     <Compile Include="VariableFunctionTables\FunctionDirectory.cs" />
-    <Compile Include="VariableFunctionTables\FunctionMemory.cs" />
+    <Compile Include="MemoryManagement\FunctionMemory.cs" />
     <Compile Include="VariableFunctionTables\Variable.cs" />
     <Compile Include="Views\CanvasView.xaml.cs">
       <DependentUpon>CanvasView.xaml</DependentUpon>
