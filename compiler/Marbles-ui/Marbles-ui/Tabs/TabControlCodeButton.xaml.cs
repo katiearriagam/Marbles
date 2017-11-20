@@ -57,6 +57,12 @@ namespace Marbles
 			set { SetValue(GroupProperty, value); }
 		}
 
+        /// <summary>
+        /// Event invoked when a code instruction block is dragged from the rightmost sidebar.
+        /// Adds the ID of the block being dragged to argument data.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
 		private void TabControlCodeButton_DragStarting(UIElement sender, DragStartingEventArgs args)
 		{
 			args.Data.Properties.Add(Group, sender);

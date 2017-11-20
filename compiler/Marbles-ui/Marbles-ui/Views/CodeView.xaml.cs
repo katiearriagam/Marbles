@@ -41,7 +41,7 @@ namespace Marbles
         /// <summary>
         /// This function is an event called whenever the user changes from a different view
         /// to this view (CodeView). Reflects on code the assets that are currently in the
-        /// canvas, and enables the Compile button.
+        /// canvas, and sets the Compile button enable state.
         /// </summary>
         /// <param name="e"></param>
 		protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -52,9 +52,9 @@ namespace Marbles
         }
 
         /// <summary>
-        /// This function is an event called whenever the user clicks the Compile button.
-        /// The function prepares to compile by resetting all necessary values back to default and then
-        /// begins compilation.
+        /// This event is invoked when the user clicks the Compile button.
+        /// The function prepares to compile by resetting all necessary values back
+        /// to default and then begins compilation.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -64,12 +64,11 @@ namespace Marbles
             Utilities.linesOfCode = new List<CodeLine>();
 			ErrorPrinter.errorCount = 0;
 			ErrorPrinter.errorList = new Dictionary<int, List<string>>();
-			ErrorPrinter.warningList = new Dictionary<int, List<string>>();
             FunctionDirectory.Reset();
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-            
+            /*
 			Utilities.BlockToLineErrors.Clear();
 			BlocksWithErrorsInOrder.Clear();
 			Utilities.errorsInLines.Clear();
@@ -87,20 +86,19 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
 
             WriteCodeToFile(out string filePath);
-            
-           /*
+            */
+            ///*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
-            string filePath = Path.Combine(directoryPath, "testMarblesCode.txt");
-			*/
+            string filePath = Path.Combine(directoryPath, "testMarblesCode2.txt");
+			//*/
 
             AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
             QuadrupleManager.PrintQuadruples();
 
-            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) and " + ErrorPrinter.warningCount + " warning(s) found.");
-            ErrorPrinter.PrintWarnings();
+            Debug.WriteLine(ErrorPrinter.errorCount + " error(s) found.");
             ErrorPrinter.PrintErrors();
 
 			if (ErrorPrinter.errorCount == 0)
@@ -115,10 +113,9 @@ namespace Marbles
                 Utilities.RedCompile();
                 Utilities.DisableRunButton();
 
-				FillErrorsDictionary();
-				SetErrorsInUI();
+				//FillErrorsDictionary();
+				//SetErrorsInUI();
 
-				// TODO: Pass errors here
 				CompileButton.Background = Utilities.CompileButtonColor;
                 CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
             }
@@ -207,11 +204,11 @@ namespace Marbles
 			Scanner scanner = new Scanner(filePath);
 			Parser parser = new Parser(scanner);
             try { parser.Parse(); }
-            catch (Exception e) { }
+            catch (Exception) { }
 		}
 
         /// <summary>
-        /// This event is called after this Page is loaded. Subscribes different elements to an
+        /// This event is invoked after this Page is loaded. Subscribes different elements to an
         /// event that indicates that anything from that element has been modified. This is used
         /// to reset the Compile button when it is necessary to do so.
         /// </summary>
@@ -238,7 +235,7 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Event called when an element on the screen has been modified. If this event is fired,
+        /// Event invoked when an element on the screen has been modified. If this event is fired,
         /// the compile button goes to a state in which the user must compile again in order to run the program.
         /// This event is subscribed to in <see cref="CodeViewPage_Loaded(object, RoutedEventArgs)"/>.
         /// </summary>

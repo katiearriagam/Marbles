@@ -59,6 +59,12 @@ namespace Marbles
             this.DataContext = this;
         }
 
+        /// <summary>
+        /// Event invoked when the user drags an Asset from the rightmost sidebar.
+        /// Adds the Asset's data to argument data.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void TabControlAssetsButton_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
             args.Data.Properties.Add(Group, sender);
@@ -67,6 +73,12 @@ namespace Marbles
             args.Data.Properties.Add("yClicked", (int)(lastPositionClicked.Y));
 		}
 
+        /// <summary>
+        /// Event invoked when the user clicks an Asset on the rightmost sidebar.
+        /// Saves the position clicked relative to the Asset object in <see cref="lastPositionClicked"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItem_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             lastPositionClicked = e.GetCurrentPoint(relativeTo: MenuItem).Position;

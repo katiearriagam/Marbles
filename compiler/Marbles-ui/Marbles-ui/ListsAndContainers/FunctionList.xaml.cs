@@ -14,8 +14,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Marbles
 {
     public sealed partial class FunctionList : UserControl
@@ -25,6 +23,9 @@ namespace Marbles
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Calls the PrintCode function for the contained <see cref="FunctionInstructionList"/>.
+        /// </summary>
         public void PrintCode()
         {
             FunctionInstructionListTarget.PrintCode();

@@ -13,10 +13,11 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Marbles
 {
+    /// <summary>
+    /// Header control to switch between different input values.
+    /// </summary>
 	public sealed partial class TabHeader : UserControl
 	{
 		public static readonly DependencyProperty GlyphProperty = DependencyProperty.Register("Glyph", typeof(string), typeof(TabHeader), null);
@@ -34,7 +35,6 @@ namespace Marbles
 			get { return GetValue(LabelProperty) as string; }
 			set { SetValue(LabelProperty, value); }
 		}
-
 
 		public TabHeader()
 		{

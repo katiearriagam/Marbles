@@ -13,8 +13,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Marbles
 {
 	public sealed partial class TabValueButton : UserControl
@@ -57,6 +55,12 @@ namespace Marbles
 			set { SetValue(DragStartingProperty, value); }
 		}
 
+        /// <summary>
+        /// Event invoked when the user drags a value from the rightmost sidebar.
+        /// Adds the dragged value to argument data.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
 		private void TabValueButton_DragStarting(UIElement sender, DragStartingEventArgs args)
 		{
 			args.Data.Properties.Add(DragStartingId, sender);

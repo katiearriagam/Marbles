@@ -22,16 +22,21 @@ using Windows.UI.Xaml.Navigation;
 namespace Marbles
 {
     /// <summary>
-    /// View with graphical input blocks for the user to drag and drop into instructions.
+    /// View that displays error messages.
     /// </summary>
     public sealed partial class ErrorView : Page
     {
 		public ErrorView()
         {
             this.InitializeComponent();
-			this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+			this.NavigationCacheMode = NavigationCacheMode.Enabled;
 		}
 
+        /// <summary>
+        /// This function is an event called whenever the user changes from a different view
+        /// to this view (ErrorView). Regenerates the latest list of errors found.
+        /// </summary>
+        /// <param name="e"></param>
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			ErrorViewList.Items.Clear();

@@ -244,7 +244,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Retrieves an asset using an ID.
-		/// Called from the virtual machine whenever an asset property/behavior is needed.
+		/// Called by <see cref="VirtualMachine"/> whenever an asset property/behavior is needed.
 		/// </summary>
 		/// <param name="assetID"></param>
 		/// <returns>Asset object with the given ID (or null if it does not exist)</returns>
@@ -277,7 +277,7 @@ namespace Marbles
         }
 
 		/// <summary>
-		/// Get a default value given a Marbles data type.
+		/// Get a default value given a <see cref="SemanticCubeUtilities.DataTypes"/> value.
 		/// Called by methods that initialize memory addresses to set a default value.
 		/// </summary>
 		/// <param name="dt"></param>

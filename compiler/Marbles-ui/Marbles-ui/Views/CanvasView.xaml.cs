@@ -21,8 +21,8 @@ using Windows.UI.Xaml.Navigation;
 namespace Marbles
 {
     /// <summary>
-    /// View that contains a canvas where assets are manipulated, and buttons to navigate between
-    /// different views.
+    /// View that contains a canvas where assets are manipulated, and buttons to navigate
+    /// between different views.
     /// </summary>
     public sealed partial class CanvasView : Page
     {
@@ -34,16 +34,31 @@ namespace Marbles
         {
             InitializeComponent();
 			NavigationCacheMode = NavigationCacheMode.Enabled;
+
+            // Subscribe to Loaded and SizeChanged events on the Canvas and call Clip() when any of these triggers.
             MainCanvas.Loaded += (s, e) => Clip(MainCanvas);
             MainCanvas.SizeChanged += (s, e) => Clip(MainCanvas);
         }
 
+        /// <summary>
+        /// This function is an event called whenever the user changes from a different view
+        /// to this view (CanvasView). Sets the Run button enabled state.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
 			Run_Button.Background = Utilities.RunButtonColor;
             Run_Button.IsEnabled = Utilities.RunButtonEnabled;
         }
 
+        /// <summary>
+        /// Event invoked when a UI element is dropped on the canvas.
+        /// Gets all the information of the dropped asset and uses this to place it on the canvas.
+        /// If the Asset is new, generates a Modal View for creation. If the Asset was already on
+        /// the canvas, places the Asset on its new position.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void MainCanvas_Drop(object sender, DragEventArgs e)
         {
             cv = sender as Canvas;
@@ -78,16 +93,13 @@ namespace Marbles
             }
         }
 
-        public int GetCanvasWidth()
-        {
-            return (int)MainCanvas.ActualWidth;
-        }
-
-        public int GetCanvasHeight()
-        {
-            return (int)MainCanvas.ActualHeight;
-        }
-
+        /// <summary>
+        /// Event invoked when the 'Create' button of the Modal view is clicked.
+        /// Retrieves the ID, label, and value of the asset and creates a new asset
+        /// with this information.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void Modal_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
 			// prevents the user from adding an empty ID
@@ -114,7 +126,7 @@ namespace Marbles
 						}
 					}
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					IDTextBox.Text = "";
 					args.Cancel = true;
@@ -141,7 +153,7 @@ namespace Marbles
             {
                 Convert.ToInt32(NumberTextBox.Text);
             }
-            catch (Exception e)
+            catch (Exception)
             {
 				if (NumberTextBox.Text.Length != 0)
 				{
@@ -173,6 +185,13 @@ namespace Marbles
             Run_Button.IsEnabled = Utilities.RunButtonEnabled;
         }
 
+        /// <summary>
+        /// Event invoked when a UI element is dragged over the canvas.
+        /// Gets the information regarding the drag event to adjust the image's position according to where
+        /// the user clicked the asset element. Accepts the drag operation, allowing the Drop event to be invoked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainCanvas_DragOver(object sender, DragEventArgs e)
         {
             // Sender: Canvas
@@ -192,10 +211,15 @@ namespace Marbles
             
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
             e.DragUIOverride.IsGlyphVisible = false;
-
             e.DragUIOverride.IsCaptionVisible = false;
         }
 
+        /// <summary>
+        /// Event invoked when an Asset is dropped over the trash can icon.
+        /// Deletes the Asset from Canvas and updates the Run and Compile buttons' state.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteIcon_Drop(object sender, DragEventArgs e)
         {
             Utilities.BlueCompile();
@@ -209,6 +233,12 @@ namespace Marbles
 			      Utilities.assetsInCanvas.Remove(assetDragged);
         }
 
+        /// <summary>
+        /// Event invoked when an Asset is dragged over the trash can icon.
+        /// Accepts the drag operation, allowing the Drop event to be invoked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteIcon_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
@@ -216,6 +246,12 @@ namespace Marbles
             e.DragUIOverride.IsCaptionVisible = false;
         }
 
+        /// <summary>
+        /// Event invoked when the Label attribute's TextBox has changed.
+        /// Verify that the user does not input an invalid text value.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void LabelTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			var textBox = sender as TextBox;
@@ -230,6 +266,12 @@ namespace Marbles
 			}
 		}
 
+        /// <summary>
+        /// Event invoked when the ID attribute's TextBox has changed.
+        /// Verify that the user does not input an invalid ID value.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void IDTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			var textBox = sender as TextBox;
@@ -257,12 +299,25 @@ namespace Marbles
 				}
 			}
 		}
+
+        /// <summary>
+        /// Clips the Canvas to prevent elements from being rendered outside of it.
+        /// This function is called on the constructor when the Canvas loads and when
+        /// the size of the Canvas has changed.
+        /// </summary>
+        /// <param name="element"></param>
 		private new void Clip(FrameworkElement element)
         {
             var clip = new RectangleGeometry { Rect = new Rect(0, 0, element.ActualWidth, element.ActualHeight) };
             element.Clip = clip;
         }
 
+        /// <summary>
+        /// Event invoked when the 'Cancel' button of the Modal view is clicked.
+        /// Resets the Modal's current values.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
 		private void Modal_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
 			IDTextBox.Text = "";
@@ -272,8 +327,16 @@ namespace Marbles
 			LabelTextBoxBorder.BorderThickness = new Thickness(0.0);
 			NumberTextBoxBorder.BorderThickness = new Thickness(0.0);
 		}
-    
-		private async void Run_Button_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// This event is invoked when the user clicks the Run button.
+        /// Saves the original state of the Canvas, signals the Virtual Machine to start execution,
+        /// handles errors that arise on execution, prints and resets memory when execution completes,
+        /// and returns the Canvas back to its original state.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Run_Button_Click(object sender, RoutedEventArgs e)
 		{
             List<Tuple<int, int, int, int, int, int, string>> assetValues = new List<Tuple<int, int, int, int, int, int, string>>();
 

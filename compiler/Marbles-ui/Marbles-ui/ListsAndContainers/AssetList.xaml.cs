@@ -14,8 +14,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Marbles
 {
 	public sealed partial class AssetList : UserControl
@@ -25,6 +23,11 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
+        /// <summary>
+        /// Updates the <see cref="CreateAsset"/> blocks on the code view based on the
+        /// assets present in the Canvas.
+        /// Called by <see cref="CodeView.OnNavigatedTo(NavigationEventArgs)"/>.
+        /// </summary>
 		public void UpdateAssets()
 		{
 			Utilities.finalAssetsInCanvas.Clear();
@@ -35,6 +38,10 @@ namespace Marbles
 				Utilities.finalAssetsInCanvas.Add(itemAsset);
 			}
 		}
+
+        /// <summary>
+        /// Calls the PrintCode() method for all <see cref="CreateAsset"/> items in <see cref="AssetListView"/>.
+        /// </summary>
 		public void PrintCode()
 		{
             foreach (CreateAsset item in AssetListView.Items)

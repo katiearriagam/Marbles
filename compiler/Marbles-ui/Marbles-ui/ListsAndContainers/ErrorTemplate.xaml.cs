@@ -17,8 +17,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Marbles
 {
 	public sealed partial class ErrorTemplate : UserControl
@@ -28,10 +26,19 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
+        /// <summary>
+        /// Adds all the errors belonging to a specific block.
+        /// Called by <see cref="CodeView.SetErrorsInUI"/> to add compilation errors.
+        /// Called by <see cref="CanvasView.Run_Button_Click(object, RoutedEventArgs)"/> to add execution errors.
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="errors"></param>
+        /// <param name="brush"></param>
 		public void FillTemplate(UserControl block, List<string> errors, SolidColorBrush brush)
 		{
 			ErrorInBlockGrid.Background = brush;
 			Label.Text = Utilities.MapBlockTypeToLabel(block);
+
 			foreach (string error in errors)
 			{
 				var firstUpperCaseError = error;
@@ -39,6 +46,7 @@ namespace Marbles
 				{
 					firstUpperCaseError = error.First().ToString().ToUpper() + error.Substring(1);
 				}
+
 				var errorText = new TextBlock
 				{
 					FontFamily = new FontFamily("Segoe UI Light"),
@@ -49,6 +57,7 @@ namespace Marbles
 					TextAlignment = TextAlignment.Center,
 					Text = "\u2022 " + firstUpperCaseError +  "\n"
 				};
+
 				ErrorListInBlock.Items.Add(errorText);
 			}
 		}

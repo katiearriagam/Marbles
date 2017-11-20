@@ -9,7 +9,7 @@ namespace Marbles
     public static class FunctionDirectory
     {
         /// <summary>
-        /// Dictionary that stores all functions by using the ID (function name) as the key.
+        /// Dictionary that stores all functions by using the ID as the key.
         /// </summary>
         private static Dictionary<String, Function> FunctionDictionary;
 
@@ -18,7 +18,7 @@ namespace Marbles
         /// </summary>
         /// <remarks>
         /// Adds by default the function "_Global", which represents the global context 
-        /// of the program. This way, we can keep track of global variables.
+        /// of the program. This way we can keep track of global variables.
         /// </remarks>
         static FunctionDirectory()
         {
@@ -29,13 +29,13 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Returns a Function object given the function's name (ID).
+        /// Returns a Function object given the function's name.
         /// This function is called by <see cref="QuadrupleManager"/>, <see cref="Parser"/>, <see cref="VirtualMachine"/>,
         /// and <see cref="MemoryManager"/> to retrieve a function given its ID.
         /// </summary>
         /// <param name="funcID"></param>
         /// <returns>
-        /// A Function object with the given ID.
+        /// A <see cref="Function"/> object with the given ID.
         /// </returns>
         public static Function GetFunction(String funcID)
         {
@@ -51,11 +51,11 @@ namespace Marbles
 
         /// <summary>
         /// Returns a Function given its memory address.
-        /// This function is called by the VM when doing the ERA action.
+        /// This function is called by <see cref="VirtualMachine"/> when executing a <see cref="Utilities.QuadrupleAction.era"/> action.
         /// </summary>
         /// <param name="address"></param>
         /// <returns>
-        /// A Function object.
+        /// A <see cref="Function"/> object.
         /// </returns>
         public static Function GetFunctionWithAddress(int address)
         {

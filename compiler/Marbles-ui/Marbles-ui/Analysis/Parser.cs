@@ -29,8 +29,6 @@ using Marbles;
 using Marbles.Analysis;
 using System;
 
-
-
 public class Parser {
 	public const int _EOF = 0;
 	public const int _id = 1;
@@ -53,7 +51,6 @@ public class Parser {
 
 	// helper variables
 	public int AssetIndex = 0;
-
 
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
@@ -753,15 +750,7 @@ public class Errors {
 		count++;
         throw new Exception(s);
     }
-	
-	public virtual void Warning (int line, int col, string s) {
-		ErrorPrinter.AddWarning(line, s);
-	}
-	
-	public virtual void Warning(string s) {
-		ErrorPrinter.AddWarning(s);
-	}
-} // Errors
+} // End Errors
 
 
 public class FatalError: Exception {

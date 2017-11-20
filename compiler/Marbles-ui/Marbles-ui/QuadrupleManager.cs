@@ -628,7 +628,7 @@ namespace Marbles
 			}
 			else
 			{
-				throw new Exception("Function " + functionId + " does not exist.");
+				throw new Exception("Use of undeclared function " + functionId + ".");
 			}
 		}
 
@@ -671,8 +671,8 @@ namespace Marbles
 			}
 			else
 			{
-				throw new Exception("Function " + functionId + " does not exist.");
-			}
+                throw new Exception("Use of undeclared function " + functionId + ".");
+            }
 		}
 
         /// <summary>

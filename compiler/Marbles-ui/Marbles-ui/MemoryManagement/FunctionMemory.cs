@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Marbles
 {
+    /// <summary>
+    /// Manages the memory of Functions in the program.
+    /// </summary>
 	public class FunctionMemory
 	{
 		public Dictionary<int, object> memoryGlobal = new Dictionary<int, object>();
@@ -49,12 +52,14 @@ namespace Marbles
 			temporary = 1
 		}
 
-		/// <summary>
-		/// Gets the next available memory address for each scope and data type
-		/// </summary>
-		/// <param name="scope"></param>
-		/// <param name="type"></param>
-		public int GetNextAvailable(FunctionMemoryScope scope, SemanticCubeUtilities.DataTypes type)
+        /// <summary>
+        /// Gets the next available memory address for each scope and <see cref="SemanticCubeUtilities.DataTypes"/> value.
+        /// Called by <see cref="QuadrupleManager"/> to allot a space in a function's memory to a value.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="type"></param>
+        /// <returns>A memory address.</returns>
+        public int GetNextAvailable(FunctionMemoryScope scope, SemanticCubeUtilities.DataTypes type)
 		{
 			switch (scope)
 			{
@@ -104,13 +109,14 @@ namespace Marbles
 			return -1;
 		}
 
-		/// <summary>
-		/// Loads value into a memory address.
-		/// </summary>
-		/// <param name="memAddress"></param>
-		/// <param name="value"></param>
+        /// <summary>
+        /// Loads value into a function's memory address.
+        /// Called by instructions that store a new value in a function's memory.
+        /// </summary>
+        /// <param name="memAddress"></param>
+        /// <param name="value"></param>
         /// <returns>Address where the value was stored.</returns>
-		public int SetMemory(int memAddress, object value)
+        public int SetMemory(int memAddress, object value)
 		{
 			// insert a global number in memory
 			if (memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
@@ -169,12 +175,13 @@ namespace Marbles
 			throw new Exception("Out of memory");
 		}
 
-		/// <summary>
-		/// Gets the value stored in a memory address
-		/// </summary>
-		/// <param name="memAddress"></param>
-		/// <returns>Stored value</returns>
-		public object GetValueFromAddress(int memAddress)
+        /// <summary>
+        /// Gets the value stored in a memory address.
+        /// Called by <see cref="MemoryManager.GetValueFromAddress(int)"/> to retrieve values at a specific memory address.
+        /// </summary>
+        /// <param name="memAddress"></param>
+        /// <returns>The stored value</returns>
+        public object GetValueFromAddress(int memAddress)
 		{
 			if (memoryGlobal.ContainsKey(memAddress))
 			{
@@ -189,10 +196,10 @@ namespace Marbles
 		}
 
         /// <summary>
-        /// Returns a data type of an object stored in memory given a memory address.
+        /// Given a memory address, returns the <see cref="Type"/> of the object stored in that address.
         /// </summary>
         /// <param name="memAddress"></param>
-        /// <returns>A data type, or null if the memory address is invalid.</returns>
+        /// <returns>A <see cref="Type"/>, or null if the memory address is invalid.</returns>
         public static Type GetTypeFromAddress(int memAddress)
         {
             if ((memAddress >= lowestGlobalIntAddress && memAddress <= highestGlobalIntAddress)
@@ -215,63 +222,38 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Adds a variable to the global directory
+        /// Gets <see cref="memoryGlobal"/>.
         /// </summary>
-        /// <param name="newGlobalVariable"></param>
-        /// <returns>The variable address in the global directory</returns>
-        public int AddGlobalVariable(Variable newGlobalVariable)
-		{
-			// retrieve the memory address where the variable will live
-			int memorySpace = GetNextAvailable(FunctionMemoryScope.global, newGlobalVariable.GetDataType());
-
-			// if memory space is insufficient, throw and exception
-			if (memorySpace == -1) { throw new Exception("Out of global memory"); }
-
-			// pass on the memory address meant for the variable
-			newGlobalVariable.SetMemoryAddress(memorySpace);
-
-			// try to add variable to global directory
-			try
-			{
-				if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.number)
-				{
-					try { memorySpace = SetMemory(memorySpace, 0); }
-					catch (Exception e) { throw new Exception(e.Message); }
-				}
-				else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.text)
-				{
-					try { memorySpace = SetMemory(memorySpace, ""); }
-					catch (Exception e) { throw new Exception(e.Message); }
-				}
-				else if (newGlobalVariable.GetDataType() == SemanticCubeUtilities.DataTypes.boolean)
-				{
-					try { memorySpace = SetMemory(memorySpace, false); }
-					catch (Exception e) { throw new Exception(e.Message); }
-				}
-                totalSize++;
-			}
-			catch (Exception e)
-			{
-				throw new Exception(e.Message);
-			}
-			return memorySpace;
-		}
-
+        /// <returns>A dictionary representing the functions' global memory.</returns>
 		public Dictionary<int, object> GetMemoryGlobal()
 		{
 			return memoryGlobal;
 		}
 
+        /// <summary>
+        /// Gets <see cref="memoryTemporary"/>.
+        /// </summary>
+        /// <returns>A dictionary representing the functions' temporary memory.</returns>
 		public Dictionary<int, object> GetMemoryTemporary()
 		{
 			return memoryTemporary;
 		}
 
+        /// <summary>
+        /// Gets <see cref="totalSize"/>.
+        /// </summary>
+        /// <returns>The size in memory of the function.</returns>
 		public int FunctionMemorySize()
 		{
 			return totalSize;
 		}
 
+        /// <summary>
+        /// Given a memory address, returns the index it is found at.
+        /// Called by <see cref="MemoryManager.FunctionMemoryToMemoryManager"/>.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns>A zero-based index value.</returns>
 		public int GetIndexFromMemoryList(int address)
 		{
 			List<int> memoryList = MemoryKeysToList();
@@ -290,6 +272,11 @@ namespace Marbles
 			return found ? counter : -1;
 		}
 
+        /// <summary>
+        /// Combines both global and temporary memory addresses into a single, sorted <see cref="List{T}"/>.
+        /// Called by <see cref="FunctionMemory.GetIndexFromMemoryList(int)"/>.
+        /// </summary>
+        /// <returns>A sorted <see cref="List{T}"/>.</returns>
 		public List<int> MemoryKeysToList()
 		{
 			List<int> keys = memoryGlobal.Keys.ToList();
@@ -299,7 +286,8 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Resets memory.
+		/// Resets the function's memory.
+        /// Called by <see cref="Function.Reset"/>.
 		/// </summary>
 		public void Reset()
 		{
@@ -317,6 +305,11 @@ namespace Marbles
 			currentTempBoolAddress = lowestTempBoolAddress;
 		}
 
+        /// <summary>
+        /// Prints the function's memory.
+        /// Called by <see cref="QuadrupleManager.ExitFunction"/>.
+        /// </summary>
+        /// <param name="id"></param>
         public void PrintMemory(string id)
         {
             Debug.WriteLine("--- START LOCAL MEMORY [" + id + "] --- ");

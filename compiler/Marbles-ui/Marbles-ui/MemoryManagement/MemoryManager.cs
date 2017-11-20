@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Marbles
 {
+    /// <summary>
+    /// Manages the main memory of the program.
+    /// </summary>
 	public static class MemoryManager
 	{
 		public enum MemoryScope
@@ -93,10 +96,12 @@ namespace Marbles
 		public static int currentConstantBoolAddress = 12000;
 
 		/// <summary>
-		/// Gets the next available memory address for each scope and data type
+		/// Gets the next available memory address for each scope and <see cref="SemanticCubeUtilities.DataTypes"/> value.
+        /// Called by <see cref="QuadrupleManager"/> to allot a space in memory to a value.
 		/// </summary>
 		/// <param name="scope"></param>
 		/// <param name="type"></param>
+        /// <returns>A memory address.</returns>
 		public static int GetNextAvailable(MemoryScope scope, SemanticCubeUtilities.DataTypes type)
 		{
 			switch (scope)
@@ -173,24 +178,27 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Gets the next available memory address for assets
+		/// Gets the next available memory address for assets.
+        /// Called by <see cref="SetAssetInMemory(Asset)"/>.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>The memory address available for an asset.</returns>
 		public static int GetNextAssetAvailable()
 		{
 			if (currentAssetAddress + Enum.GetNames(typeof(AssetAttributes)).Length <= highestAssetAddress)
 			{
 				return currentAssetAddress;
 			}
+
 			return -1;
 		}
 
 		/// <summary>
-		/// Load an asset into memory
+		/// Loads an asset into memory.
+        /// Called by <see cref="Parser"/> when an Asset is read.
 		/// </summary>
 		/// <param name="memoryAddress"></param>
 		/// <param name="asset"></param>
-		/// <returns></returns>
+		/// <returns>The memory address where the asset was set.</returns>
 		public static int SetAssetInMemory(Asset asset)
 		{
 			int memoryAddress = GetNextAssetAvailable();
@@ -219,7 +227,7 @@ namespace Marbles
 
 				return memoryAddress;
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
                 throw;
 			}
@@ -227,6 +235,7 @@ namespace Marbles
 
 		/// <summary>
 		/// Loads value into a memory address.
+        /// Called by instructions that store a new value in main memory.
 		/// </summary>
 		/// <param name="memAddress"></param>
 		/// <param name="value"></param>
@@ -391,11 +400,12 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Retrieves the offset we try to access in local memory
+		/// Retrieves the offset we try to access in local memory.
+        /// Called by <see cref="VirtualMachine.MapAddressToLocalMemory(int)"/>.
 		/// </summary>
 		/// <param name="functionId"></param>
 		/// <param name="address"></param>
-		/// <returns></returns>
+		/// <returns>The memory address of an object in local memory.</returns>
 		public static int FunctionMemoryToMemoryManager(string functionId, int address)
 		{
 			Function currentFunctionInCallStack = FunctionDirectory.GetFunction(functionId);
@@ -403,9 +413,11 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Allocates the memory for a new function (in locals)
+		/// Allocates the memory for a new function (in locals).
+        /// Called by <see cref="VirtualMachine"/> when executing the <see cref="Utilities.QuadrupleAction.era"/> action.
 		/// </summary>
 		/// <param name="func"></param>
+        /// <returns>The first address in local memory that was allocated.</returns>
 		public static int AllocateLocalMemory(Function func)
 		{
 			if (currentLocalAddress + func.GetFunctionSize() <= highestLocalAddress)
@@ -446,7 +458,9 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Removes a function from local memory mapping
+		/// Removes a function from local memory mapping.
+        /// Called by <see cref="VirtualMachine"/> when executing <see cref="Utilities.QuadrupleAction.retorno"/>
+        /// and <see cref="Utilities.QuadrupleAction.endProc"/> actions.
 		/// </summary>
 		/// <param name="func"></param>
 		public static void DeallocateLocalMemory(int funcSize)
@@ -466,10 +480,11 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Gets the data type of an asset attribute
+		/// Gets the <see cref="SemanticCubeUtilities.DataTypes"/> of an asset attribute.
+        /// Called by <see cref="QuadrupleManager.ReadAssetAttribute(AssetAttributes)"/>.
 		/// </summary>
 		/// <param name="attribute"></param>
-		/// <returns>A data type</returns>
+		/// <returns>A <see cref="SemanticCubeUtilities.DataTypes"/> value.</returns>
         public static SemanticCubeUtilities.DataTypes AttributeToType(AssetAttributes attribute)
         {
             switch (attribute)
@@ -488,16 +503,17 @@ namespace Marbles
                     return SemanticCubeUtilities.DataTypes.number;
 				case AssetAttributes.label:
                     return SemanticCubeUtilities.DataTypes.text;
-                default: // will never execute as we limit the user with a drop-down
+                default: // will never execute as we limit the user's options with a drop-down
                     return SemanticCubeUtilities.DataTypes.invalidDataType;
             }
         }
 		
 		/// <summary>
-		/// Gets the value stored in a memory address
+		/// Gets the value stored in a memory address.
+        /// Called by <see cref="VirtualMachine"/> to retrieve values at a specific memory address.
 		/// </summary>
 		/// <param name="memAddress"></param>
-		/// <returns>Stored value</returns>
+		/// <returns>The stored value</returns>
 		public static object GetValueFromAddress(int memAddress)
 		{
             if (memoryGlobalAssets.ContainsKey(memAddress))
@@ -521,17 +537,16 @@ namespace Marbles
 				return memoryConstant[memAddress];
 			}
 
-			// if memory address does not exist, throw error
+			// if memory address does not exist, throw exception
 			throw new Exception("Memory address not currently set");
 		}
 
-		
-
         /// <summary>
-        /// Returns a data type of an object stored in memory given a memory address.
+        /// Returns the <see cref="Type"/> of an object stored in memory given a memory address.
+        /// Called by <see cref="QuadrupleManager.PopOperator(int)"/>.
         /// </summary>
         /// <param name="memAddress"></param>
-        /// <returns>A data type, or null if the memory address is invalid.</returns>
+        /// <returns>A <see cref="Type"/>, or null if the memory address is invalid.</returns>
         public static Type GetTypeFromAddress(int memAddress)
         {
 			// if memory belongs to asset memory
@@ -567,10 +582,10 @@ namespace Marbles
         }
 
         /// <summary>
-        /// Returns a memory scope given a memory address.
+        /// Returns a <see cref="MemoryScope"/> value given a memory address.
         /// </summary>
         /// <param name="memAddress"></param>
-        /// <returns>A MemoryScope enum value. This can be global, local, temporary, or constant.</returns>
+        /// <returns>A <see cref="MemoryScope"/> value.</returns>
         public static MemoryScope GetScopeFromAddress(int memAddress)
         {
             if (memAddress >= lowestAssetAddress && memAddress <= highestGlobalBoolAddress)
@@ -594,10 +609,11 @@ namespace Marbles
         }
         
 		/// <summary>
-		/// Adds a variable to the global directory
+		/// Adds a variable to the global directory.
+        /// Called when a new variable ID is read in global scope.
 		/// </summary>
 		/// <param name="newGlobalVariable"></param>
-		/// <returns>The variable address in the global directory</returns>
+		/// <returns>The variable address in the global directory where the variable was stored.</returns>
 		public static int AddGlobalVariable(Variable newGlobalVariable)
 		{
 			// retrieve the memory address where the variable will live
@@ -637,7 +653,8 @@ namespace Marbles
 		}
 
 		/// <summary>
-		/// Adds a function to the global directory to save the current value
+		/// Adds a function to the global directory to save the current value.
+        /// Called by <see cref="QuadrupleManager.EnterFunction(Function)"/>.
 		/// </summary>
 		/// <param name="func"></param>
 		public static void AddFunctionAsGlobalVariable(Function func)
@@ -660,7 +677,8 @@ namespace Marbles
 
         /// <summary>
         /// Reset all current entries in memory to their original values (before execution).
-        /// NOTE: This does not erase any entry, only resets their values.
+        /// NOTE: This does not erase any entry, only resets their values to their default.
+        /// Called by <see cref="CanvasView"/> after <see cref="VirtualMachine"/>'s execution has completed.
         /// </summary>
         public static void RunReset()
         {
@@ -704,7 +722,8 @@ namespace Marbles
         }
 
 		/// <summary>
-		/// Resets memory
+		/// Resets memory.
+        /// Called by <see cref="CodeView"/> before starting compilation.
 		/// </summary>
         public static void Reset()
         {
@@ -736,6 +755,11 @@ namespace Marbles
             currentConstantBoolAddress = lowestConstantBoolAddress;
         }
 
+        /// <summary>
+        /// Prints the memory addresses allocated in main memory.
+        /// Called by <see cref="CodeView"/> before execution and by
+        /// <see cref="CanvasView"/> after execution.
+        /// </summary>
         public static void PrintMemory()
         {
             Debug.WriteLine("--- START GLOBAL MEMORY ---");

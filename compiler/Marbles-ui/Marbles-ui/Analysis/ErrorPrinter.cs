@@ -16,12 +16,11 @@ namespace Marbles.Analysis
 	public static class ErrorPrinter
 	{
 		public static Dictionary<int, List<string> > errorList = new Dictionary<int, List<string>>();
-		public static Dictionary<int, List<string>> warningList = new Dictionary<int, List<string>>();
 		public static int errorCount = 0;
-		public static int warningCount = 0;
 
         /// <summary>
         /// Add a new error to the error list given its line and message.
+        /// Called by <see cref="Parser"/> when an error is found.
         /// </summary>
         /// <param name="line"></param>
         /// <param name="error"></param>
@@ -37,6 +36,7 @@ namespace Marbles.Analysis
 
         /// <summary>
         /// Add a new error to the error list given only its message.
+        /// Called by <see cref="Parser"/> when an error is found.
         /// </summary>
         /// <param name="error"></param>
 		public static void AddError(string error)
@@ -60,7 +60,9 @@ namespace Marbles.Analysis
 
         /// <summary>
         /// Returns a list of the lines in which each of the errors was found.
+        /// Called by <see cref="CodeView.FillErrorsDictionary"/> to populate the list of errors.
         /// </summary>
+        /// <returns>A list of line numbers that contain errors.</returns>
 		public static List<int> GetErrorLines()
 		{
 			return errorList.Keys.ToList();
@@ -68,8 +70,10 @@ namespace Marbles.Analysis
 
         /// <summary>
         /// Given a line number, returns all the errors found at that line, if any exists.
+        /// Called by <see cref="CodeView.FillErrorsDictionary"/> to populate the list of errors.
         /// </summary>
         /// <param name="line"></param>
+        /// <returns>A list of errors at a specific line number.</returns>
 		public static List<string> GetErrorsAtLine(int line)
 		{
 			if (!errorList.ContainsKey(line))
@@ -80,67 +84,8 @@ namespace Marbles.Analysis
 		}
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="warning"></param>
-		public static void AddWarning(int line, string warning)
-		{
-			if (!warningList.ContainsKey(line))
-			{
-				warningList.Add(line, new List<string>());
-			}
-			warningList[line].Add(warning);
-			warningCount++;
-		}
-
-        /// <summary>
-        /// Add a new warning to the warning list given only its message.
-        /// </summary>
-        /// <param name="warning"></param>
-		public static void AddWarning(string warning)
-		{
-			if (!warningList.ContainsKey(-1))
-			{
-				warningList.Add(-1, new List<string>());
-			}
-			warningList[-1].Add(warning);
-			warningCount++;
-		}
-
-        /// <summary>
-        /// Reset the warning list.
-        /// </summary>
-		public static void ClearWarning()
-		{
-			warningList.Clear();
-			warningCount = 0;
-		}
-
-        /// <summary>
-        /// Returns a list of the lines in which each of the warnings was found.
-        /// </summary>
-        /// <returns></returns>
-		public static List<int> GetWarningLines()
-		{
-			return warningList.Keys.ToList();
-		}
-
-        /// <summary>
-        /// Given a line number, returns all the warnings found at that line, if any exists.
-        /// </summary>
-        /// <param name="line"></param>
-		public static List<string> GetWarningsAtLine(int line)
-		{
-			if (!warningList.ContainsKey(line))
-			{
-				throw new ArgumentException();
-			}
-			return warningList[line];
-		}
-
-        /// <summary>
         /// Print the list of errors in console.
+        /// Called in <see cref="CodeView"/> after compiling.
         /// </summary>
         public static void PrintErrors()
         {
@@ -149,20 +94,6 @@ namespace Marbles.Analysis
                 foreach (string error in GetErrorsAtLine(errorLine))
                 {
                     Debug.WriteLine("Error in line " + errorLine + ": " + error);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Print the list of warnings in console.
-        /// </summary>
-        public static void PrintWarnings()
-        {
-            foreach (int warningLine in GetWarningLines())
-            {
-                foreach (string warning in GetWarningsAtLine(warningLine))
-                {
-                    Debug.WriteLine("Warning in line " + warningLine + ": " + warning);
                 }
             }
         }

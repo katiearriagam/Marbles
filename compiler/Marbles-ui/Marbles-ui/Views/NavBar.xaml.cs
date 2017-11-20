@@ -13,12 +13,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Marbles
 {
 	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
+	/// Page that controls the left-side navigation bar to change between views.
 	/// </summary>
 	public sealed partial class NavBar : Page
 	{
@@ -27,6 +25,12 @@ namespace Marbles
 			this.InitializeComponent();
 		}
 
+        /// <summary>
+        /// Event invoked when the current view loads.
+        /// Sets the default view to <see cref="CanvasView"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void NavView_Loaded(object sender, RoutedEventArgs e)
 		{
 			// set the initial selected item to canvas view
@@ -42,11 +46,23 @@ namespace Marbles
 			Utilities.ChangedPageHeader += new EventHandler(ChangedPageHeader);
 		}
 
+        /// <summary>
+        /// Event invoked when the page header changes.
+        /// Updates the header of the current Page.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void ChangedPageHeader(object sender, EventArgs e)
 		{
 			NavView.Header = Utilities.PageHeader;
 		}
 
+        /// <summary>
+        /// Event invoked when an item from the nav bar has been selected.
+        /// Navigates to the selected view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
 		private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
 		{
 			switch (args.InvokedItem)
@@ -69,6 +85,12 @@ namespace Marbles
 
 		}
 
+        /// <summary>
+        /// Event invoked when the nav bar selection has changed.
+        /// Navigates to the view corresponding to the changed selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
 		private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
 		{
 				NavigationViewItem item = args.SelectedItem as NavigationViewItem;

@@ -24,6 +24,12 @@ namespace Marbles
 
         public static event EventHandler SomethingChanged;
 
+        /// <summary>
+        /// Event invoked when the delete button of an instruction block is clicked.
+        /// Gets the parent element of the instruction block and removes the block from its children list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             SomethingChanged?.Invoke(this, EventArgs.Empty);

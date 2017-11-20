@@ -74,7 +74,7 @@ namespace Marbles
                 SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.Operators.or),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
 
-            // number - String
+            // number - text
             Cube.Add(new TypeTypeOperator(
                 SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.Operators.negative),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
@@ -160,7 +160,7 @@ namespace Marbles
                 SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.Operators.or),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
 
-            // number - Boolean
+            // number - boolean
             Cube.Add(new TypeTypeOperator(
                 SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.Operators.negative),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
@@ -246,7 +246,7 @@ namespace Marbles
                 SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.Operators.or),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
 
-            // String - String
+            // text - text
             Cube.Add(new TypeTypeOperator(
                 SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.Operators.negative),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
@@ -290,7 +290,7 @@ namespace Marbles
                 SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.Operators.or),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
 
-            // String - Boolean
+            // text - boolean
             Cube.Add(new TypeTypeOperator(
                 SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.Operators.negative),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
@@ -376,7 +376,7 @@ namespace Marbles
                 SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.text, SemanticCubeUtilities.Operators.or),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
 
-            // Boolean - Boolean
+            // boolean - boolean
             Cube.Add(new TypeTypeOperator(
                 SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.DataTypes.boolean, SemanticCubeUtilities.Operators.negative),
                 SemanticCubeUtilities.DataTypes.invalidDataType);
