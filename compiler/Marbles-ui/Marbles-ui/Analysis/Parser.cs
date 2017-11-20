@@ -582,7 +582,7 @@ public class Parser {
             // push a fake bottom
             QuadrupleManager.PushFakeBottom();
 			Get();
-			EXP_R();
+			SUPER_EXP();
 			Expect(12); // ')'
             // exit fake bottom
             QuadrupleManager.PopFakeBottom();
@@ -591,6 +591,7 @@ public class Parser {
 				Get();
 				QuadrupleManager.PushOperator(SemanticCubeUtilities.Operators.negative);
 			}
+
 			if (la.kind == 4) { // number constant
 				Get();
 				try { QuadrupleManager.ReadConstantNumber(Int32.Parse(t.val)); }
@@ -623,7 +624,11 @@ public class Parser {
 				try { QuadrupleManager.ReadConstantText(t.val); }
 				catch (Exception e) { SemErr(e.Message); }
 			} else SynErr(60); // invalid FACTOR
-		} else SynErr(61); // invalid FACTOR
+
+			try { QuadrupleManager.PopOperator(SemanticCubeUtilities.OperatorToPriority(SemanticCubeUtilities.Operators.negative)); }
+			catch (Exception e) { SemErr(e.Message); }
+		}
+		else SynErr(61); // invalid FACTOR
 	}
 
     // DONE
@@ -672,9 +677,9 @@ public class Errors {
 		string s;
 		switch (n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "ID expected"; break;
-			case 2: s = "TRUE expected"; break;
-			case 3: s = "FALSE expected"; break;
+			case 1: s = "Valid ID expected"; break;
+			case 2: s = "Boolean expected"; break;
+			case 3: s = "Boolean expected"; break;
 			case 4: s = "Numeric constant expected"; break;
 			case 5: s = "Text constant expected"; break;
 			case 6: s = "\"instructions\" expected"; break;
@@ -731,8 +736,8 @@ public class Errors {
 			case 57: s = "invalid ASSET BEHAVIOR"; break;
 			case 58: s = "invalid ASSET PROPERTY"; break;
 			case 59: s = "invalid OPERATOR"; break;
-			case 60: s = "invalid FACTOR"; break;
-			case 61: s = "invalid FACTOR"; break;
+			case 60: s = "invalid VALUE"; break;
+			case 61: s = "invalid VALUE"; break;
 			case 62: s = "invalid BOOL"; break;
 
 			default: s = "error " + n; break;

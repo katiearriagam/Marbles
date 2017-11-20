@@ -86,6 +86,10 @@ namespace Marbles
 			{
 				((Parenthesis)obj).PrintCode();
 			}
+			else if (varType == typeof(Negative))
+			{
+				((Negative)obj).PrintCode();
+			}
 			else if (varType == typeof(FunctionCall))
 			{
 				((FunctionCall)obj).PrintCode();

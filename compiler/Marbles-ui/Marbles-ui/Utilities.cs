@@ -112,6 +112,7 @@ namespace Marbles
             MathExpression,
             BooleanExpression,
 			Parenthesis,
+			Negative,
             AssetProperty,
             AssetFunction
         }
@@ -188,7 +189,6 @@ namespace Marbles
 			shapeToImagePath.Add(ShapeTypes.Coffee, "/Assets/coffee.png");
 			shapeToImagePath.Add(ShapeTypes.Cookie, "/Assets/cookie.png");
 			shapeToImagePath.Add(ShapeTypes.Pizza, "/Assets/pizza.png");
-
 			shapeToImagePath.Add(ShapeTypes.Chick, "/Assets/chick.png");
 			shapeToImagePath.Add(ShapeTypes.Crab, "/Assets/crab.png");
 			shapeToImagePath.Add(ShapeTypes.Fox, "/Assets/fox.png");
@@ -240,6 +240,7 @@ namespace Marbles
             operatorToAction.Add(SemanticCubeUtilities.Operators.equals, QuadrupleAction.equals);
             operatorToAction.Add(SemanticCubeUtilities.Operators.and, QuadrupleAction.and);
             operatorToAction.Add(SemanticCubeUtilities.Operators.or, QuadrupleAction.or);
+			operatorToAction.Add(SemanticCubeUtilities.Operators.negative, QuadrupleAction.negative);
         }
 
 		/// <summary>
