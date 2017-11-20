@@ -38,6 +38,11 @@ namespace UnitTests
             validTypesAndExpected.Add(new TypeTypeOperator(SemanticCubeUtilities.DataTypes.invalidDataType, SemanticCubeUtilities.DataTypes.number, SemanticCubeUtilities.Operators.negative), SemanticCubeUtilities.DataTypes.number);
         }
 
+        /// <summary>
+        /// Verifies that all <see cref="TypeTypeOperator"/> combinationss that return a valid
+        /// <see cref="SemanticCubeUtilities.DataTypes"/> return the correct data type.
+        /// Called automatically when running Unit Tests.
+        /// </summary>
         [TestMethod]
 		public void ValidTypes()
 		{
@@ -47,6 +52,10 @@ namespace UnitTests
 			}
 		}
 
+        /// <summary>
+        /// Verifies that all <see cref="TypeTypeOperator"/> combinations that do not match
+        /// return <see cref="SemanticCubeUtilities.DataTypes.invalidDataType"/>.
+        /// </summary>
 		[TestMethod]
 		public void InvalidTypes()
 		{
