@@ -453,7 +453,7 @@ namespace Marbles
 			}
 			else
 			{
-				throw new Exception("Local memory overflow.");
+				throw new Exception("Out of local memory.");
 			}
 		}
 
