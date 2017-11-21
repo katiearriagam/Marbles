@@ -1,0 +1,1097 @@
+﻿<Page
+    x:Class="Marbles.QuickReference"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+		<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="10" />
+			</Grid.ColumnDefinitions>
+
+			<Grid Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="10" />
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" 
+							Text="Here you will some tips and trick to help get you started with Marbles." 
+							Foreground="Gray"
+							FontWeight="Light"
+							Margin="10,0,0,0"
+							FontFamily="Segoe UI Light"
+							VerticalAlignment="Center"/>
+				</Grid>
+
+				<ListView x:Name="QuickReferenceList" Grid.Row="2"
+					ScrollViewer.VerticalScrollBarVisibility="Auto" 
+					ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+					ScrollViewer.HorizontalScrollMode="Disabled"                  
+					ScrollViewer.VerticalScrollMode="Enabled"
+					CanDrag="False"
+					CanDragItems="False"
+					CanReorderItems="False"
+					AllowDrop="False"
+					SelectionMode="None"
+					ReorderMode="Disabled">
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Background="Transparent" Orientation="Vertical" />
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+					<ListView.ItemContainerStyle>
+						<Style TargetType="ListViewItem">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+						</Style>
+					</ListView.ItemContainerStyle>
+					<ListView.Items>
+						<ListViewItem>
+							<Grid Background="#16a085" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Assets in canvas">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To create an asset, go to the canvas view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. Choose one of the assets from the assets menu on the right.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag it inside the canvas and assign a unique identifier to it (e.g. "myFish").</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Optionally, add a number and a label for your asset to display.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">If you wish to reposition an asset, do so by dragging it and dropping it in the new position.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">If you wish to delete an asset, do so by dragging it and dropping it in the trash bin icon.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#27ae60" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Declaring variables">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To declare a variable, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. On the menu at the right, go to the tab "Variables".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag the block that is labeled "Variable" and drop it inside any "Create variables here" block. A block for your variable should appear.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. Choose a type for your variable from the drop-down menu.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. Choose a name for your variable and write it in the textbox.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#2980b9" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Declaring functions">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To declare a function, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. On the menu at the right, go to the tab "Variables".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag the block that is labeled "Function" and drop it inside the "Create functions here" block. A block for your function should appear.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. Choose a type for your function from the drop-down menu.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. Choose a name for your function and write it in the textbox.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Optionally, add parameters to your function by clicking on the '+' button. Define the type and name of each parameter like you would when declaring a variable.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#8e44ad" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Assignments">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">You would use assignments to re-define the value of a variable of an asset property.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To assign a value to a variable or asset property, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. In the menu at the right, go to the tab labeled "Instructions".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag the block labeled "Assign" and drop it inside any "Add instructions here" block. You should see a block appearing with two blanks labeled "Drag a value here".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. For the block at the left, go to the "Value" tab on the menu, drag either the block labeled "Variable" or the block labeled "Property" and drop it on the blank.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. For the black at the right, go to the "Value" tab on the menu, drag any block from there and drop it on the blank.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Make sure you do not have any "Drag a value here" blanks (fill them with values like you did with the previous two).</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#2c3e50" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Interacting with assets">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Assets can change their properties as shown in the Assignments section, but you may also interact with them through their behaviors.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To interact with an asset behavior, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. In the menu at the right, go to the tab labeled "Instructions".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag the block labeled "Do" and drop it inside any "Add instructions here" block. You should see a block appearing with one labeled "Drag a value here".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. Go to the values tab and drag the block labeled "Behavior" and drop it in the "Drag a value here" blank.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. Add the ID of the asset you wish to interact with in the textbox that appeared with the previous drop.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">6. Select the method you want to use to interact with the asset (default is "spin").</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">7. If the method you chose displays blanks like the ones labeled "Drag a value here", those are the parameters you need to pass to the method. Add values here.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">These are the methods and the parameters they need:</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">spin</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Makes the asset do a 360-degrees spin. - Does not require any parameters.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">move_x</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Makes the asset move in the x-axis relative to its current position. - Requires a numeric value for the displacement in X.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">move_y</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Makes the asset move in the y-axis relative to its current position. - Requires a numeric value for the displacement in Y.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">rotate</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Makes the asset rotate. - Requires a numeric value for the number of degrees for rotation.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">set_position</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Changes the asset's position in canvas. - Requires two numeric values for the new position in X and Y.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#16a085" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Calling user-defined functions">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">You can call functions as values into assignments, as other function's parameters, to create recursion, etc.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To generate a call to a user-defined function, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. In the menu at the right, go to the tab labeled "Values".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag the block labeled "Function" and drop it inside any "Drag a value here" blank.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. You should see the call appearing. It contains a textbox, so you will need to write the name of the function you want to call there.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. If your function has parameters, you can pass them by clicking on '+'. This will add blanks to your call that you can fill with any block in the "Value" tab. Make sure you add the exact number of parameters and that each of them matched the type of what you defined in the function.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#27ae60" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Using conditional (IF) blocks">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">You can specify whether a set of instructions will execute based on a condition. This is what the IF block is for.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To add a conditional (IF) block, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. In the menu at the right, go to the tab labeled "Instruction".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. Drag the block labeled "If" and drop it inside any "Add instructions here" block.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. You should see the if block with a "Drag a value here blank". This is where you will add your  condition.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. From the "Values" tab, choose any boolean variable or function, or even a boolean constant (from the Constants sub-section). Better yet, build a more complex boolean expression (from the Expressions sub-section).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">6. Drop your boolean inside the "Drag a value here" blank in the IF block. Make sure you do not have any blanks left (keep adding booleans if you do!).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">7. Drop instructions inside your IF block. These instructions will only execute when the boolean at the beginning of the block results in a "true".</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#2980b9" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Using loop blocks">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">You can specify whether a set of instructions will execute based on a condition, just like using the IF block. However, loop blocks can perform instructions while a certain condition is met. We have two types of loop blocks.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">FOR block: performs the instructions for a given number of iterations.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To add a FOR block, go the code view and go to the "Instruction" tab on the menu at the right. Drag it and drop it inside any "Add instructions here" block.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. You will see a FOR block appearing with a blank that says "Drag a value here".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. You will need to fill the "Drag a value here" blank with a numeric value. This will indicate how many iterations the FOR block will do (how many times the instructions inside the block will execute.)</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. To fill the blank, go to the "Values" tab and choose any number variable or function, or even a number constant (from the Constants sub-section). Better yet, build a more complex mathematical expression (from the Expressions sub-section).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. Drop your number inside the "Drag a value here" blank in the FOR block. Make sure you do not have any blanks left (keep adding numeric expressions if you do!).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">6. Drop instructions inside your FOR block. These instructions will only execute the number of times you specified in the block.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords"></TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">WHILE block: performs the instructions over and over while a certain condition is true.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To add a WHILE block, go the code view and go to the "Instruction" tab on the menu at the right. Drag it and drop it inside any "Add instructions here" block.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. You will see a WHILE block appearing with a blank that says "Drag a value here".</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">3. You will need to fill the "Drag a value here" blank with a boolean condition. This will indicate the loop what it needs to check in order to decide whether to keep executing its instructions.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">4. To fill the blank, go to the "Values" tab and choose any boolean variable or function, or even a boolean constant (from the Constants sub-section). Better yet, build a more complex boolean expression (from the Expressions sub-section).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">5. Drop your boolean inside the "Drag a value here" blank in the WHILE block. Make sure you do not have any blanks left (keep adding boolean expressions if you do!).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">6. Drop instructions inside your WHILE block. These instructions will only for however long the condition in the WHILE is true.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+						<ListViewItem>
+							<Grid Background="#8e44ad" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<TextBlock
+									FontFamily = "Segoe UI Light"
+									FontWeight="Light"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center"
+									TextAlignment="Left"
+									Foreground="White"
+									FontSize="20"
+									Text="Compiling and running your code">
+								</TextBlock>
+								<ListView Grid.Row="1"
+									CanDrag="False"
+									CanDragItems="False"
+									CanReorderItems="False"
+									AllowDrop="False"
+									SelectionMode="None"
+									HorizontalContentAlignment="Stretch"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									ReorderMode="Disabled">
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Once you create your code, you will need to compile it before running</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">1. To compile your code, go to the code view.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">2. Click on the "Compile" button at the top right.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">If your code compiled successfully, the compile button will turn green and your code is now ready to run.</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">If your code has errors, the compile button will turn red and it will display a color-coded dot next to the block causing the error. If you navigate to the Errors view, you will find a block with the same color of the dot specifying details on what the error is to help you fix it. Once you fix your errors, re-compile your code. Repeat this process until the compile button turns green (meaning your code compiled successfully!).</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">Once your code compiles successfully, go to the canvas view and hit the "Run Code" button and see your code in action*!</TextBlock>
+									</ListViewItem>
+									<ListViewItem Foreground="White">
+										<TextBlock FontFamily = "Segoe UI Light"
+												FontWeight="Light"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												TextAlignment="Left"
+												Foreground="White"
+												TextWrapping="WrapWholeWords">* It is important to note that some errors are not caught by the compiler and will be thrown while running your code (e.g. attempting to perform a division by 0). The process to fix these is the same as compilation errors, except that the error will be thrown during execution-time.</TextBlock>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</ListViewItem>
+					</ListView.Items>
+					<ListView.Header>
+						<Grid Height="5" />
+					</ListView.Header>
+					<ListView.Footer>
+						<Grid Height="50" />
+					</ListView.Footer>
+				</ListView>
+			</Grid>
+		</Grid>
+	</Grid>
+</Page>
