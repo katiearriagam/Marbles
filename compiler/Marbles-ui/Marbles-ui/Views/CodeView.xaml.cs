@@ -68,7 +68,7 @@ namespace Marbles
             MemoryManager.Reset();
             QuadrupleManager.Reset();
 			UserControl main = new UserControl();
-            /*
+			///*
 			Utilities.BlockToLineErrors.Clear();
 			BlocksWithErrorsInOrder.Clear();
 			Utilities.errorsInLines.Clear();
@@ -86,14 +86,14 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
 
             WriteCodeToFile(out string filePath);
-            */
-            ///*
+            //*/
+			/*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
             string filePath = Path.Combine(directoryPath, "testMarblesCode2.txt");
-			//*/
+			*/
 
-            AnalyzeCode(filePath);
+			AnalyzeCode(filePath);
             
             MemoryManager.PrintMemory();
             QuadrupleManager.PrintQuadruples();
@@ -113,8 +113,8 @@ namespace Marbles
                 Utilities.RedCompile();
                 Utilities.DisableRunButton();
 
-				//FillErrorsDictionary();
-				//SetErrorsInUI();
+				FillErrorsDictionary();
+				SetErrorsInUI();
 
 				CompileButton.Background = Utilities.CompileButtonColor;
                 CompileButton.IsEnabled = Utilities.CompileButtonEnabled;
