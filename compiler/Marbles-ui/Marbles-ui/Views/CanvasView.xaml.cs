@@ -257,7 +257,7 @@ namespace Marbles
 			var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
-				if (textBox.Text[textBox.SelectionStart - 1] == '\"')
+				if (textBox.SelectionStart > 0 && textBox.Text[textBox.SelectionStart - 1] == '\"')
 				{
 					int pos = textBox.SelectionStart - 1;
 					textBox.Text = textBox.Text.Remove(pos, 1);
@@ -279,8 +279,8 @@ namespace Marbles
 			{
 				if (textBox.SelectionStart == 1)
 				{
-					if (!(Char.IsLetter(textBox.Text[textBox.SelectionStart - 1]) ||
-					textBox.Text[textBox.SelectionStart - 1] == '_'))
+					if (textBox.SelectionStart > 0 && (!(Char.IsLetter(textBox.Text[textBox.SelectionStart - 1]) ||
+					textBox.Text[textBox.SelectionStart - 1] == '_')))
 					{
 						int pos = textBox.SelectionStart - 1;
 						textBox.Text = textBox.Text.Remove(pos, 1);
@@ -289,8 +289,8 @@ namespace Marbles
 				}
 				else
 				{
-					if (!(Char.IsLetterOrDigit(textBox.Text[textBox.SelectionStart - 1]) ||
-					textBox.Text[textBox.SelectionStart - 1] == '_'))
+					if (textBox.SelectionStart > 0 && (!(Char.IsLetterOrDigit(textBox.Text[textBox.SelectionStart - 1]) ||
+					textBox.Text[textBox.SelectionStart - 1] == '_')))
 					{
 						int pos = textBox.SelectionStart - 1;
 						textBox.Text = textBox.Text.Remove(pos, 1);
