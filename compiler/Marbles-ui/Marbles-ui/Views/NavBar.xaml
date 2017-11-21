@@ -30,6 +30,11 @@
 					<FontIcon Glyph="&#xEA39;"/>
 				</NavigationViewItem.Icon>
 			</NavigationViewItem>
+			<NavigationViewItem Content="Help" Tag="Help">
+				<NavigationViewItem.Icon>
+					<FontIcon Glyph="&#xE946;"/>
+				</NavigationViewItem.Icon>
+			</NavigationViewItem>
 		</NavigationView.MenuItems>
 
 		<NavigationView.HeaderTemplate>
