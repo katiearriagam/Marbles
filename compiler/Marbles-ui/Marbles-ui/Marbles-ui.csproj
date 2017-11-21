@@ -238,6 +238,9 @@
     <Compile Include="InstructionBlocks\WhileBlock.xaml.cs">
       <DependentUpon>WhileBlock.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\QuickReference.xaml.cs">
+      <DependentUpon>QuickReference.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VirtualMachine.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -485,6 +488,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="InstructionBlocks\WhileBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QuickReference.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

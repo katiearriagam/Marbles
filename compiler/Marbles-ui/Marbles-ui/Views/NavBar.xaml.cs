@@ -81,6 +81,11 @@ namespace Marbles
 						sender.Header = "Errors";
 						ContentFrame.Navigate(typeof(ErrorView));
 						break;
+
+					case "Help":
+						sender.Header = "Help";
+						ContentFrame.Navigate(typeof(QuickReference));
+						break;
 			}
 
 		}
@@ -110,6 +115,11 @@ namespace Marbles
 					case "Errors":
 						sender.Header = "Errors";
 						ContentFrame.Navigate(typeof(ErrorView));
+						break;
+
+					case "Help":
+						sender.Header = "Help";
+						ContentFrame.Navigate(typeof(QuickReference));
 						break;
 			}
 		}
