@@ -47,7 +47,7 @@ namespace Marbles
             var textBox = sender as TextBox;
 			if (textBox.Text != "")
 			{
-				if (textBox.Text[textBox.SelectionStart - 1] == '\"')
+				if (textBox.SelectionStart > 0 && (textBox.Text[textBox.SelectionStart - 1] == '\"'))
 				{
 					int pos = textBox.SelectionStart - 1;
 					textBox.Text = textBox.Text.Remove(pos, 1);
