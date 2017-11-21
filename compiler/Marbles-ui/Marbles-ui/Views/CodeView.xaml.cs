@@ -87,6 +87,7 @@ namespace Marbles
 
             WriteCodeToFile(out string filePath);
             */
+
             ///*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);
@@ -113,8 +114,8 @@ namespace Marbles
                 Utilities.RedCompile();
                 Utilities.DisableRunButton();
 
-				//FillErrorsDictionary();
-				//SetErrorsInUI();
+				FillErrorsDictionary();
+				SetErrorsInUI();
 
 				CompileButton.Background = Utilities.CompileButtonColor;
                 CompileButton.IsEnabled = Utilities.CompileButtonEnabled;

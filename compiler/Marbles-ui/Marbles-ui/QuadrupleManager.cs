@@ -55,9 +55,9 @@ namespace Marbles
         private static bool hasReturn = false;
 
 		/// <summary>
-		/// An object of the last function that was called.
+		/// An stack of the last set of functions that were called.
 		/// </summary>
-		private static Function LastFunctionCalled;
+		private static Stack<Function> LastFunctionCalled = new Stack<Function>();
 
 		/// <summary>
 		/// An object of the last asset that was called.
@@ -65,9 +65,10 @@ namespace Marbles
 		private static Asset LastAssetCalled;
 
 		/// <summary>
-		/// Counter used to compare a called function's parameters against the actual called function's parameters
+		/// Stack of counters used to compare called functions' parameters against the actual
+        /// called function's parameters.
 		/// </summary>
-		private static int parameterCount = 0;
+		private static Stack<int> parameterCount = new Stack<int>();
 
         /// <summary>
         /// Boolean used to to determine if a function call is recursive
@@ -171,9 +172,10 @@ namespace Marbles
 				{
 					if (inFunction)
 					{
-						addressTemp = LastFunctionCalled.memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
-					}
-					else
+                        addressTemp = LastFunctionCalled.Peek().memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
+
+                    }
+                    else
 					{
 						addressTemp = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, SemanticCubeUtilities.DataTypes.number);
 					}
@@ -473,11 +475,11 @@ namespace Marbles
 					throw new Exception("Invalid operand: cannot apply negative to an invalid data type.");
 				}
 			}
-			LastFunctionCalled = FunctionDirectory.GetFunction(functionBeingCalledId);
+            LastFunctionCalled.Push(FunctionDirectory.GetFunction(functionBeingCalledId));
 
             // if we are inside a function, and a function call matches the name
-            // of such function, assume it's recursive
-            if (functionId == LastFunctionCalled.GetName()) { recursive = true; }
+            // of such function, then it's recursive
+            if (functionId == LastFunctionCalled.Peek().GetName()) { recursive = true; }
         }
 
         /// <summary>
@@ -489,16 +491,17 @@ namespace Marbles
 		{
             if (recursive)
             {
-                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, -1, LastFunctionCalled.GetLocation(), -1));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, -1, LastFunctionCalled.Peek().GetLocation(), -1));
+
                 recursiveCalls.Push(counter);
             }
             else
             {
-                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.GetFunctionSize(), LastFunctionCalled.GetLocation(), -1));
+                quadruples.Add(new Quadruple(Utilities.QuadrupleAction.era, LastFunctionCalled.Peek().GetFunctionSize(), LastFunctionCalled.Peek().GetLocation(), -1));
             }
 
             counter++;
-			parameterCount = 0;
+            parameterCount.Push(0);
             PushFakeBottom();
         }
 
@@ -510,22 +513,25 @@ namespace Marbles
 		public static void CallFunctionParameter()
 		{
 			SemanticCubeUtilities.DataTypes type = typeStack.Pop();
-            parameterCount++;
-            if (parameterCount > LastFunctionCalled.GetParameters().Count)
+            int paramCount = parameterCount.Pop() + 1;
+            parameterCount.Push(paramCount);
+            if (parameterCount.Peek() > LastFunctionCalled.Peek().GetParameters().Count)
+
             {
-                throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.GetParameters().Count + ".");
+                throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.Peek().GetParameters().Count + ".");
             }
-            if (type != LastFunctionCalled.GetParameters()[parameterCount - 1].GetDataType())
-			{
-				throw new Exception("Parameter types do not match.");
+            if (type != LastFunctionCalled.Peek().GetParameters()[parameterCount.Peek() - 1].GetDataType())
+            {
+                throw new Exception("Parameter types do not match.");
 			}
 
 			int param = operandStack.Pop();
 
-			// create a new parameter indicating what paremeter you are setting
-			// and pass on the address of its value
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount - 1));
-			counter++;
+            // create a new parameter indicating what paremeter you are setting
+            // and pass on the address of its value
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.param, param, parameterCount.Peek() - 1));
+
+            counter++;
         }
         
         /// <summary>
@@ -536,12 +542,12 @@ namespace Marbles
         /// </summary>
 		public static void CallFunctionClosingParenthesis()
 		{
-			if (parameterCount < LastFunctionCalled.GetParameters().Count)
-			{
-				throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.GetParameters().Count + ".");
-			}
+            if (parameterCount.Peek() < LastFunctionCalled.Peek().GetParameters().Count)
+            {
+                throw new Exception("Number of arguments on function call does not match. Expecting " + LastFunctionCalled.Peek().GetParameters().Count + ".");
+            }
             PopFakeBottom();
-            parameterCount = 0;
+            parameterCount.Pop();
 		}
 
         /// <summary>
@@ -551,26 +557,34 @@ namespace Marbles
         /// </summary>
 		public static void CallFunctionEnd()
 		{
-			quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, LastFunctionCalled.GetQuadrupleStart(), -1, -1));
+            quadruples.Add(new Quadruple(Utilities.QuadrupleAction.gosub, LastFunctionCalled.Peek().GetQuadrupleStart(), -1, -1));
+
             counter++;
 
-            int memAddressWhereFunctionLives = FunctionDirectory.GlobalFunction().GetGlobalVariables()[LastFunctionCalled.GetName()].GetMemoryAddress();
+            int memAddressWhereFunctionLives = FunctionDirectory.GlobalFunction().GetGlobalVariables()[LastFunctionCalled.Peek().GetName()].GetMemoryAddress();
+
             int tempGlobal;
             if (inFunction)
             {
-                tempGlobal = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, LastFunctionCalled.GetReturnType());
-                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.GetReturnType()));
+                tempGlobal = FunctionDirectory.GetFunction(functionId).memory.GetNextAvailable(FunctionMemory.FunctionMemoryScope.temporary, LastFunctionCalled.Peek().GetReturnType());
+
+                FunctionDirectory.GetFunction(functionId).memory.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.Peek().GetReturnType()));
+
                 quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
                 counter++;
             }
             else
             {
-                tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.GetReturnType());
-                MemoryManager.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.GetReturnType()));
+                tempGlobal = MemoryManager.GetNextAvailable(MemoryManager.MemoryScope.temporary, LastFunctionCalled.Peek().GetReturnType());
+
+                MemoryManager.SetMemory(tempGlobal, Utilities.GetDefaultValueFromType(LastFunctionCalled.Peek().GetReturnType()));
+
                 quadruples.Add(new Quadruple(Utilities.QuadrupleAction.equals, memAddressWhereFunctionLives, -1, tempGlobal));
                 counter++;
             }
-            PushOperand(tempGlobal, LastFunctionCalled.GetReturnType());
+            PushOperand(tempGlobal, LastFunctionCalled.Peek().GetReturnType());
+
+            LastFunctionCalled.Pop();
             recursive = false;
 		}
 
@@ -1140,8 +1154,14 @@ namespace Marbles
             counter = 0;
             inFunction = false;
             functionId = "";
-            LastFunctionCalled = null;
-            parameterCount = 0;
+            while (parameterCount.Count != 0) {
+                parameterCount.Pop();
+            }
+
+            while (LastFunctionCalled.Count != 0)
+            {
+                LastFunctionCalled.Pop();
+            }
         }
     }
 }
