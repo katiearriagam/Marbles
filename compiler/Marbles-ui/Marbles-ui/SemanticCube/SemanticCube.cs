@@ -428,9 +428,7 @@ namespace Marbles
         /// and an operator.
         /// </summary>
         /// <param name="tto"></param>
-        /// <returns>
-        /// A <see cref="SemanticCubeUtilities.DataTypes"/> type.
-        /// </returns>
+        /// <returns>A <see cref="SemanticCubeUtilities.DataTypes"/> type.</returns>
         public static SemanticCubeUtilities.DataTypes AnalyzeSemantics(TypeTypeOperator tto)
         {
             // handle the negative operator as a special case since it only uses one operand

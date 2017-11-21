@@ -90,14 +90,11 @@ namespace Marbles
 				Point pos = e.GetPosition(lv);
 				pos.Y += scrollViewer.VerticalOffset;
 
-				// Debug.WriteLine("X: " + pos.X + ", Y: " + pos.Y + ", offset: " + scrollViewer.VerticalOffset);
 				int count = 0;
 				int totalHeight = 0;
 
 				foreach (UserControl item in lv.Items)
 				{
-					// Debug.WriteLine("Min: " + totalHeight + ", Max: " + (int)(totalHeight + item.ActualHeight));
-
 					if (pos.Y > totalHeight && pos.Y < totalHeight + item.ActualHeight)
 					{
 						index = count;
@@ -146,6 +143,7 @@ namespace Marbles
 				ListView_SuspendDragAndDrop();
 				dropped = true;
 			}
+
 			TargetListView.CanReorderItems = true;
 		}
 
