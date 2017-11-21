@@ -46,8 +46,9 @@ namespace Marbles
 			savedInstructionPointer = new Stack<int>();
 			localMemoryAllocations = new Stack<int>();
 			CallStack = new Stack<Tuple<string, int>>();
-			LastFunctionCalled = null;
-		}
+			LastFunctionCalled = new Stack<Function>();
+            funcToAdd = new Stack<Tuple<string, int>>();
+        }
 
 		/// <summary>
 		/// Executes the instruction at position currentInstruction.
