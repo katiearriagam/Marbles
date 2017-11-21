@@ -60,9 +60,9 @@ namespace Marbles
 		private static Stack<Function> LastFunctionCalled = new Stack<Function>();
 
 		/// <summary>
-		/// An object of the last asset that was called.
+		/// An stack the last assets that were called.
 		/// </summary>
-		private static Asset LastAssetCalled;
+		private static Stack<Asset> LastAssetCalled = new Stack<Asset>();
 
 		/// <summary>
 		/// Stack of counters used to compare called functions' parameters against the actual
@@ -955,7 +955,7 @@ namespace Marbles
 			}
 			else
 			{
-				LastAssetCalled = FunctionDirectory.GlobalFunction().GetAssets()[id];
+				LastAssetCalled.Push(FunctionDirectory.GlobalFunction().GetAssets()[id]);
 			}
 		}
 
@@ -968,7 +968,7 @@ namespace Marbles
 		public static void DoBlock_ReadAssetAction(Utilities.AssetAction action)
 		{
 			// get the memory address of the asset
-			int memoryAdressOfAsset = LastAssetCalled.GetMemoryAddress();
+			int memoryAdressOfAsset = LastAssetCalled.Peek().GetMemoryAddress();
 
 			// possible parameters
 			int parameter1;
@@ -1043,6 +1043,8 @@ namespace Marbles
 					counter++;
 					break;
 			}
+
+            LastAssetCalled.Pop();
 		}
 
         /// <summary>
@@ -1053,7 +1055,7 @@ namespace Marbles
 		public static void ReadAssetAttribute(MemoryManager.AssetAttributes attribute)
 		{
 			// get the memory address of the asset
-			int memoryAdressOfAsset = LastAssetCalled.GetMemoryAddress();
+			int memoryAdressOfAsset = LastAssetCalled.Peek().GetMemoryAddress();
 
 			if (operatorStack.Count > 0 && operatorStack.Peek() == SemanticCubeUtilities.Operators.negative)
 			{
@@ -1065,6 +1067,8 @@ namespace Marbles
 
 			// add address to operands
 			PushOperand(memoryAdressOfAsset + (int)attribute, MemoryManager.AttributeToType(attribute));
+
+            LastAssetCalled.Pop();
 		}
 
         /// <summary>
@@ -1154,6 +1158,7 @@ namespace Marbles
             counter = 0;
             inFunction = false;
             functionId = "";
+
             while (parameterCount.Count != 0) {
                 parameterCount.Pop();
             }
@@ -1161,6 +1166,11 @@ namespace Marbles
             while (LastFunctionCalled.Count != 0)
             {
                 LastFunctionCalled.Pop();
+            }
+
+            while (LastAssetCalled.Count != 0)
+            {
+                LastAssetCalled.Pop();
             }
         }
     }
