@@ -86,7 +86,6 @@ namespace Marbles
             Utilities.linesOfCodeCount++;
 
             WriteCodeToFile(out string filePath);
-            //*/
 			/*
             string directoryPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "MarblesOutput");
             Directory.CreateDirectory(directoryPath);

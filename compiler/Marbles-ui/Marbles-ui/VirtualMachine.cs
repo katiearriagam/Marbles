@@ -18,8 +18,8 @@ namespace Marbles
         private static Stack<int> savedInstructionPointer = new Stack<int>();
         private static Stack<int> localMemoryAllocations = new Stack<int>();
 		private static Stack<Tuple<string, int>> CallStack = new Stack<Tuple<string, int>>(); 
-        public static Function LastFunctionCalled;
-        private static Tuple<string, int> funcToAdd;
+        public static Stack<Function> LastFunctionCalled = new Stack<Function>();
+        private static Stack<Tuple<string, int>> funcToAdd = new Stack<Tuple<string, int>>();
 
 		/// <summary>
 		/// Starts executing all quadruples until all of them have been processed.
@@ -244,20 +244,20 @@ namespace Marbles
                 int functionSize = quadruple.GetOperandOne();
                 int functionMemAddress = quadruple.GetOperandTwo();
 
-                LastFunctionCalled = FunctionDirectory.GetFunctionWithAddress(functionMemAddress);
+                LastFunctionCalled.Push(FunctionDirectory.GetFunctionWithAddress(functionMemAddress));
 
                 // Indicates the address in local memory where the function is loaded.
-                int functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled); // this can throw - but VM caller will catch it
-                funcToAdd = new Tuple<string, int>(LastFunctionCalled.GetName(), functionAddressInMemory);
+                int functionAddressInMemory = MemoryManager.AllocateLocalMemory(LastFunctionCalled.Peek()); // this can throw - but VM caller will catch it
+                funcToAdd.Push(new Tuple<string, int>(LastFunctionCalled.Peek().GetName(), functionAddressInMemory));
             }
             else if (action == Utilities.QuadrupleAction.param)
             {
                 int paramValueAddress = MapAddressToLocalMemory(quadruple.GetOperandOne());
                 
                 int paramIndex = quadruple.GetAssignee();
-                int pAddr = FunctionDirectory.GetFunction(funcToAdd.Item1).GetParameters()[paramIndex].GetMemoryAddress();
+                int pAddr = FunctionDirectory.GetFunction(funcToAdd.Peek().Item1).GetParameters()[paramIndex].GetMemoryAddress();
 
-                CallStack.Push(funcToAdd);
+                CallStack.Push(funcToAdd.Peek());
 
                 int destinationAddress = MapAddressToLocalMemory(pAddr);
 
@@ -270,7 +270,9 @@ namespace Marbles
                 savedInstructionPointer.Push(currentInstruction + 1);
                 currentInstruction = quadruple.GetOperandOne();
 
-                CallStack.Push(funcToAdd);
+                CallStack.Push(funcToAdd.Peek());
+                LastFunctionCalled.Pop();
+                funcToAdd.Pop();
             }
             else if (action == Utilities.QuadrupleAction.retorno)
             {
@@ -397,8 +399,8 @@ namespace Marbles
             }
             else
             {
-                s = funcToAdd.Item1;
-                addr = funcToAdd.Item2;
+                s = funcToAdd.Peek().Item1;
+                addr = funcToAdd.Peek().Item2;
             }
 
             int sum = MemoryManager.FunctionMemoryToMemoryManager(s, address);
