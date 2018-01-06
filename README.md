@@ -2,7 +2,7 @@
 Marbles is an interactive visual tool that aims to help users get started in the world of coding. It allows users to create and animate their own stories by adding assets to the canvas view and control their behavior using the code blocks in the code view of the application.
 
 ## Demo
-Watch a demo by clicking on the image below.
+Watch a very improvised demo by clicking on the image below.
 
 [![Click on the image to watch a demo :)](https://scontent.fntr6-1.fna.fbcdn.net/v/t31.0-8/26173824_1774152459285952_4660397476430013521_o.jpg?oh=a4e4bcc60dcb1270605b4adaba064b47&oe=5ABC5AF3)](https://www.youtube.com/watch?v=VdB575XHwSI)
 
