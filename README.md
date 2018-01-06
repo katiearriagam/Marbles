@@ -23,6 +23,12 @@ So you want to contribute to Marbles? Awesome! We'd love to see your PRs for thi
 - Is the code maintainable?
 
 ### Please write good code!
+Some of the attributes we look for in 'good' code are:
+- Readability
+- Mantainability
+- Scalability
+- Organized in an adequate path
+- ... :)
 
 #### C# and XAML conventions
 Marbles is written in C# and XAML. If you wish to contribute with the projects, please, make sure you are familiar with the coding standards for these languages. 
@@ -48,3 +54,6 @@ Here are a few things that we'd love to add to Marbles Studio in further version
 These are some options but you might have some cool ideas too and we'd love to see them.
 
 If you have any more questions, do let us know. :)
+
+## Credit
+Most of the assets used are from the open-source icon site [flaticon](https://www.flaticon.com/) and were published by [Freepik](https://www.flaticon.com/authors/freepik) and [Smashicons](https://www.flaticon.com/authors/smashicons).
