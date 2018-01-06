@@ -28,6 +28,7 @@ So you want to contribute to Marbles? Awesome! We'd love to see your PRs for thi
 Marbles is written in C# and XAML. If you wish to contribute with the projects, please, make sure you are familiar with the coding standards for these languages. 
 
 Here are some resources to help you with this:
+
 [C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)
 
 [XAML Coding Guidelines](https://github.com/cmaneu/xaml-coding-guidelines)
