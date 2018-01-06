@@ -1,0 +1,37 @@
+﻿<UserControl
+    x:Class="Marbles.ErrorTemplate"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+	<Grid x:Name="ErrorInBlockGrid" Background="Black" Padding="10" Margin="0,5" HorizontalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<TextBlock
+			x:Name="Label"
+			FontFamily = "Segoe UI Light"
+			FontWeight="Light"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Center"
+			TextAlignment="Left"
+			Foreground="White"
+			FontSize="20"
+			Text="Hello">
+		</TextBlock>
+		<ListView Grid.Row="1" x:Name="ErrorListInBlock"
+			CanDrag="False"
+			CanDragItems="False"
+			CanReorderItems="False"
+			AllowDrop="False"
+			SelectionMode="None"
+			ReorderMode="Disabled">
+		</ListView>
+    </Grid>
+</UserControl>

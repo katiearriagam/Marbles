@@ -1,0 +1,34 @@
+﻿<UserControl
+    x:Class="Marbles.Values"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="18"
+    d:DesignWidth="180"
+	AllowDrop="True"
+	Drop="Values_OnDrop"
+	DragOver="Values_OnDragOver"
+	DragLeave="Values_OnDragLeave"
+	BorderBrush="Gray">
+
+	<Grid>
+		<ScrollViewer
+			HorizontalScrollBarVisibility="Auto" 
+			VerticalScrollBarVisibility="Disabled">
+			<Grid Background="White">
+				<TextBlock
+					x:Name="DragAValueHere"
+					FontFamily="Segoe UI Light"
+					FontWeight="Light"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Foreground="Gray">
+					Drag a value here
+				</TextBlock>
+			</Grid>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

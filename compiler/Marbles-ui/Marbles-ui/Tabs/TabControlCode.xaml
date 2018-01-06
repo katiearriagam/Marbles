@@ -1,0 +1,189 @@
+﻿<UserControl
+    x:Class="Marbles.TabControlCode"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="400"
+    d:DesignWidth="300">
+
+	<!--Microsoft's default pivot item style-->
+	<!--source: https://msdn.microsoft.com/en-us/library/windows/apps/mt299143.aspx-->
+	<UserControl.Resources>
+		<Style x:Key="TabsStylePivotStyle" TargetType="PivotItem">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Margin" Value="{ThemeResource PivotItemMargin}"/>
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+			<Setter Property="VerticalContentAlignment" Value="Stretch" />
+			<Setter Property="IsTabStop" Value="False" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="PivotItem">
+						<Grid Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="Pivot">
+									<VisualState x:Name="Right" />
+									<VisualState x:Name="Left" />
+									<VisualState x:Name="Center" />
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</UserControl.Resources>
+	
+    <Grid>
+		<ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+			<Pivot Title="Code Blocks">
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Instructions" Glyph="&#xE7BC;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.HorizontalScrollMode="Disabled"                  
+						ScrollViewer.VerticalScrollMode="Enabled"
+						SelectionMode="None">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+									<Setter Property="VerticalContentAlignment" Value="Stretch" />
+								</Style>
+							</ListView.ItemContainerStyle>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Actions
+							</TextBlock>
+                            <local:TabControlCodeButton BackgroundColor="#10893E" Label="Assign" Glyph="&#xE94E;" Group="Instruction" DragStartingId="AssignInstantiator"/>
+                            <local:TabControlCodeButton BackgroundColor="#FFB900" Label="Do" Glyph="&#xEA47;" Group="Instruction" DragStartingId="DoInstantiator"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Loops
+							</TextBlock>
+                            <local:TabControlCodeButton BackgroundColor="#018574" Label="For" Glyph="&#xE8ED;" Group="Instruction" DragStartingId="ForInstantiator"/>
+                            <local:TabControlCodeButton BackgroundColor="#F7630C" Label="While" Glyph="&#xE8EE;" Group="Instruction" DragStartingId="WhileInstantiator"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Conditionals
+							</TextBlock>
+                            <local:TabControlCodeButton BackgroundColor="#881798" Label="If" Glyph="&#xE18A;" Group="Instruction" DragStartingId="IfInstantiator"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Miscellaneous
+							</TextBlock>
+                            <local:TabControlCodeButton BackgroundColor="#D13438" Label="Stop" Glyph="&#xE71A;" Group="Instruction" DragStartingId="StopInstantiator"/>
+						</ListView>
+					</Grid>
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Value" Glyph="&#xE94A;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.HorizontalScrollMode="Disabled"                  
+						ScrollViewer.VerticalScrollMode="Enabled"
+						SelectionMode="None">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+									<Setter Property="VerticalContentAlignment" Value="Stretch" />
+								</Style>
+							</ListView.ItemContainerStyle>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Calls
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#744DA9" Label="Variable" Glyph="&#xE7B8;" Group="ValueTemplate" DragStartingId="Variable"/>
+							<local:TabControlCodeButton BackgroundColor="#8764B8" Label="Function" Glyph="&#xE835;" Group="ValueTemplate" DragStartingId="Function"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Asset stuff
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#FF8C00" Label="Property" Glyph="&#xE7C6;" Group="ValueTemplate" DragStartingId="AssetProperty"/>
+							<local:TabControlCodeButton BackgroundColor="#FFB900" Label="Behavior" Glyph="&#xE7C7;" Group="ValueTemplate" DragStartingId="AssetFunction"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Constants
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#0063B1" Label="Number" Glyph="&#xECC6;" Group="ValueTemplate" DragStartingId="NumberConstant"/>
+							<local:TabControlCodeButton BackgroundColor="#0078D7" Label="Text" Glyph="&#xE9B2;" Group="ValueTemplate" DragStartingId="TextConstant"/>
+							<local:TabControlCodeButton BackgroundColor="#0099BC" Label="Boolean" Glyph="&#xEA61;" Group="ValueTemplate" DragStartingId="BooleanConstant"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Expressions
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#018574" Label="Math" Glyph="&#xE94A;" Group="ValueTemplate" DragStartingId="MathExpression"/>
+							<local:TabControlCodeButton BackgroundColor="#038387" Label="Boolean" Glyph="&#xE784;" Group="ValueTemplate" DragStartingId="BooleanExpression"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Miscellaneous
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#34495e" Label="Parenthesis" Glyph="&#xF168;" Group="ValueTemplate" DragStartingId="ParenthesisExpression"/>
+							<local:TabControlCodeButton BackgroundColor="#2c3e50" Label="Negative" Glyph="&#xE738;" Group="ValueTemplate" DragStartingId="NegativeValue"/>
+						</ListView>
+					</Grid>
+				</PivotItem>
+
+				<PivotItem Style="{StaticResource TabsStylePivotStyle}">
+					<PivotItem.Header>
+						<local:TabHeader Label="Variables" Glyph="&#xE7BC;" />
+					</PivotItem.Header>
+					<Grid Padding="0,10,0,10" Width="Auto" Margin="0,10,0,10">
+						<ListView ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						ScrollViewer.HorizontalScrollMode="Disabled"                  
+						ScrollViewer.VerticalScrollMode="Enabled"
+						SelectionMode="None">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+									<Setter Property="VerticalContentAlignment" Value="Stretch" />
+								</Style>
+							</ListView.ItemContainerStyle>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Variables
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#018574" Label="Variable" Glyph="&#xE91B;" Group="VariableTemplate" DragStartingId="CreateVariable"/>
+							<TextBlock 
+								Style="{StaticResource TitleTextBlockStyle}"
+								Foreground="Gray"
+								VerticalAlignment="Bottom">
+								Functions
+							</TextBlock>
+							<local:TabControlCodeButton BackgroundColor="#FFB900" Label="Function" Glyph="&#xE8A4;" Group="FunctionTemplate" DragStartingId="CreateFunction"/>
+							<local:TabControlCodeButton BackgroundColor="#FFB900" Label="Return" Glyph="&#xE72B;" Group="Instruction" DragStartingId="ReturnStatement"/>
+						</ListView>
+					</Grid>
+				</PivotItem>
+			</Pivot>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

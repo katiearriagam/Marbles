@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="Marbles.BooleanExpression"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+       d:DesignHeight="18"
+    d:DesignWidth="180">
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<local:Values Grid.Column="0"
+			x:Name="operandA"
+			Margin="2,0">
+		</local:Values>
+		<ComboBox Grid.Column="1"
+			x:Name="boolOperator"
+			FontFamily="Segoe UI Light"
+			FontWeight="Light"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Center"
+			VerticalContentAlignment="Center"
+			HorizontalContentAlignment="Stretch"
+			Width="Auto"
+			Margin="2,0"
+            SelectionChanged="boolOperator_SelectionChanged"
+			SelectedIndex="0">
+			<ComboBoxItem>and</ComboBoxItem>
+			<ComboBoxItem>or</ComboBoxItem>
+			<ComboBoxItem>==</ComboBoxItem>
+			<ComboBoxItem>!=</ComboBoxItem>
+			<ComboBoxItem>&lt;</ComboBoxItem>
+			<ComboBoxItem>&gt;</ComboBoxItem>
+			<ComboBoxItem>&lt;=</ComboBoxItem>
+			<ComboBoxItem>&gt;=</ComboBoxItem>
+		</ComboBox>
+		<local:Values Grid.Column="2"
+			x:Name="operandB"
+			Margin="2,0">
+		</local:Values>
+	</Grid>
+</UserControl>

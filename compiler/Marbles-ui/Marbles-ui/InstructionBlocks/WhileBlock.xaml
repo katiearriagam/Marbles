@@ -1,0 +1,64 @@
+﻿<UserControl
+    x:Class="Marbles.WhileBlock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Marbles"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+	<Grid Background="White">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+		
+		<Grid Grid.Column="0" Name="Container" Background="#F7630C" Padding="10" Width="Auto" Margin="0,5">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.10*" />
+			<RowDefinition Height="10" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+		<Grid Grid.Row="0" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+			<TextBlock Grid.Row="0" Grid.Column="0" 
+						   Foreground="White" 
+						   FontSize="20"
+						   Margin="0,10,10,10"
+						   IsTextSelectionEnabled="False"
+						   FontWeight="Light"
+						   FontFamily="Segoe UI Light"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left">
+                       while
+			</TextBlock>
+
+			<local:DragAValueHereContainer Grid.Column="1" x:Name="ValuesInput"></local:DragAValueHereContainer>
+			<local:DeleteBlockButton Grid.Column="2" HorizontalAlignment="Right" />
+		</Grid>
+		<Grid Grid.Row="2" Background="White" MinHeight="100">
+		</Grid>
+	</Grid>
+
+		<Grid x:Name="ErrorEllipseGrid" Grid.Column="1" Background="White" Padding="0" Width="Auto">
+			<Ellipse
+					x:Name="ErrorEllipse"
+					Fill="Red"
+					Height="0"
+					Width="0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"/>
+		</Grid>
+	</Grid>
+</UserControl>
